@@ -1,0 +1,78 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.1
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'lib/tasks/**/*'
+    - 'vendor/**/*'
+
+####################################
+## Customization for this project ##
+####################################
+
+# Disabled cops
+###############
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Layout/HashAlignment:
+  Enabled: false
+
+
+# Enabled but tweaked cops
+##########################
+
+# To be tweaked until we find the right balance
+Metrics/MethodLength:
+  Max: 12
+
+# https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashSyntax
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+  EnforcedShorthandSyntax: consistent
+
+# https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Naming/BlockForwarding
+Naming/BlockForwarding:
+  EnforcedStyle: explicit
+
+Rails/DynamicFindBy:
+  AllowedMethods:
+    - find_by_pages
+
+Rails/ActiveRecordAliases:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+RSpec/MultipleExpectations:
+  Max: 7
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/ExampleLength:
+  Max: 16

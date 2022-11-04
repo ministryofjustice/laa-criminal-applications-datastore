@@ -18,6 +18,10 @@
 !/tmp/pids/
 !/tmp/pids/.keep
 
+/coverage/
+/docker/
 
-# Ignore master key for decrypting credentials and more.
-/config/master.key
+# Ignore user's individual .env files
+.env.development.local
+.env.test.local
+.env.local
