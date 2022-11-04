@@ -22,18 +22,17 @@ jobs:
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
 
-    services:
-      dynamodb-local:
-        command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-        image: "amazon/dynamodb-local:latest"
-        container_name: dynamodb-local
-        ports:
-          - "8000:8000"
-        volumes:
-          - "./docker/dynamodb:/home/dynamodblocal/data"
-        working_dir: /home/dynamodblocal
-
     steps:
+      - name: Setup DynamoDB Local
+        uses: rrainn/dynamodb-action@a839324dce7bae1fafac6a62922e37675c6caf23
+        with:
+          dbPath: # undefined by default, if this is undefined inMemory will be used
+          sharedDb: # undefined by default
+          delayTransientStatuses: # undefined by default
+          optimizeDbBeforeStartup: # undefined by default
+          port: 8000
+          cors: '*'
+
       - name: Checkout code
         uses: actions/checkout@v3
 
