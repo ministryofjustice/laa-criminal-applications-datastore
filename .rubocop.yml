@@ -41,6 +41,8 @@ Style/TrailingCommaInArguments:
 Layout/HashAlignment:
   Enabled: false
 
+RSpec/NamedSubject:
+  Enabled: false
 
 # Enabled but tweaked cops
 ##########################
