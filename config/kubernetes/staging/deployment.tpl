@@ -35,7 +35,7 @@ spec:
             memory: 1Gi
         readinessProbe:
           httpGet:
-            path: /health
+            path: /ping
             port: 3000
             httpHeaders:
               - name: X-Forwarded-Proto
@@ -46,7 +46,7 @@ spec:
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /health
+            path: /ping
             port: 3000
             httpHeaders:
               - name: X-Forwarded-Proto
