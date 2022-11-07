@@ -1,15 +1,19 @@
 class CrimeApplication
   include Dynamoid::Document
 
-  # NOTE: once the table is created, changing
-  # these values will have no effect
-  table name: :crime_applications, key: :id
+  TABLE_NAME = ENV.fetch(
+    'APPLICATIONS_TABLE_NAME', 'crime_applications'
+  ).freeze
+
+  # NOTE: on cloud-platform, table names are not
+  # predictable, so we get these from the ENV
+  table name: TABLE_NAME, key: :id
 
   field :status
   field :version, :number
 
   field :created_at,    :datetime
-  field :submitted_at,  :datetime
+  range :submitted_at,  :datetime
   field :data_stamp,    :datetime
 
   field :provider_details,      :serialized, serializer: JSON
