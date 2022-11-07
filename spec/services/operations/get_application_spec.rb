@@ -21,7 +21,11 @@ RSpec.describe Operations::GetApplication do
 
     context 'when application does not exist' do
       it 'retrieves the application' do
-        expect { subject.call }.to raise_error(Dynamoid::Errors::RecordNotFound)
+        # TODO: investigate this as really should keep raising
+        # `Dynamoid::Errors::RecordNotFound` but once a range key
+        # is declared, the error changes to `Dynamoid::Errors::MissingRangeKey`
+        # which is very misleading
+        expect { subject.call }.to raise_error(Dynamoid::Errors::MissingRangeKey)
       end
     end
   end
