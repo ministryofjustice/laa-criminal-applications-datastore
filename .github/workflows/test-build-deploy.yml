@@ -19,6 +19,7 @@ jobs:
       RAILS_ENV: test
       DYNAMO_ENDPOINT: "http://127.0.0.1:8000"
       # Following AWS keys need to be present, but are just dummies!
+      AWS_REGION: 'eu-west-2'
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
 
