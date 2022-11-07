@@ -2,8 +2,6 @@ module Datastore
   module V1
     class Applications < Base
       version 'v1', using: :path
-      format :json
-      prefix :api
 
       # rubocop:disable Metrics/BlockLength
       resource :applications do

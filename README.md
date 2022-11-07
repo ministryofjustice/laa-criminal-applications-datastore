@@ -80,7 +80,8 @@ The `Datastore::V1::Applications` grape class is quite self explanatory and decl
 
 At the moment these endpoints are:
 
-* `POST api/v1/applications` to create an application, passing the payload in the body as `application`.
-* `GET api/v1/applications` list all applications (refer to the class for params)
-* `GET api/v1/applications/{id}` get an application by its ID
-* `PUT api/v1/applications/{id}` update an application by its ID (currently only `status` param)
+* `POST /api/v1/applications` to create an application, passing the payload in the body as `application`.
+* `GET /api/v1/applications` list all applications (refer to the class for params)
+* `GET /api/v1/applications/{id}` get an application by its ID
+* `PUT /api/v1/applications/{id}` update an application by its ID (currently only `status` param)
+* `GET /api/v1/health` checks connection to DynamoDB

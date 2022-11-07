@@ -8,6 +8,7 @@ gem 'rails', '~> 7.0.4'
 
 gem 'dynamoid', '~> 3.7.0'
 gem 'grape', '~> 1.6.2'
+gem 'grape-entity', '~> 0.10.2'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
