@@ -3,7 +3,7 @@ class CrimeApplication
 
   # NOTE: once the table is created, changing
   # these values will have no effect
-  table name: :crime_applications, key: :id, timestamps: false
+  table name: :crime_applications, key: :id
 
   field :status
   field :version, :number

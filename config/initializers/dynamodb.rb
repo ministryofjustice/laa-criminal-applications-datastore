@@ -10,6 +10,8 @@ Dynamoid.configure do |config|
   # (http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html).
   config.endpoint = ENV.fetch('DYNAMO_ENDPOINT', nil)
 
-  # AWS region, sensible default but can use ENV variable too
-  config.region = ENV.fetch('AWS_REGION', 'eu-west-2')
+  # Miscellanea config
+  config.timestamps = false
+  config.store_date_as_string = true
+  config.store_datetime_as_string = true
 end
