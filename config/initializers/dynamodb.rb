@@ -8,7 +8,7 @@ Dynamoid.configure do |config|
   # [Optional]. If provided, it communicates with the DB listening at the endpoint.
   # This is useful for testing with DynamoDB Local
   # (http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html).
-  config.endpoint = ENV.fetch('DYNAMO_ENDPOINT')
+  config.endpoint = ENV.fetch('DYNAMO_ENDPOINT', nil)
 
   # AWS region, sensible default but can use ENV variable too
   config.region = ENV.fetch('AWS_REGION', 'eu-west-2')
