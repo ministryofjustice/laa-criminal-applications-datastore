@@ -23,4 +23,12 @@ class CrimeApplication
 
   # global_secondary_index hash_key: :status,
   #                        range_key: :submitted_at
+
+  # Convenience method as dynamoid provided one
+  # forces you to always pass the range key.
+  def self.find(id, **options)
+    return super if options[:range_key]
+
+    where(id:).first || raise(Dynamoid::Errors::RecordNotFound)
+  end
 end
