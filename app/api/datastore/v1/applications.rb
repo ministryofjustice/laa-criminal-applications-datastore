@@ -12,10 +12,10 @@ module Datastore
                    desc: 'Used to limit the results when paginating.'
           optional :page_token, type: String,
                    desc: 'Used to request a page when paginating.'
-          optional :direction, type: String,
+          optional :sort, type: String,
                    values: Operations::ListApplications::INDEX_DIRECTIONS,
-                   default: Operations::ListApplications::SCAN_DIRECTION_FORWARD,
-                   desc: 'Used to request next page or previous page.'
+                   default: Operations::ListApplications::SCAN_DIRECTION_BACKWARD,
+                   desc: 'Used to sort by submitted_at (asc or desc).'
           optional :status, type: String, default: 'submitted',
                    desc: 'The status of the application.'
         end
@@ -23,7 +23,7 @@ module Datastore
           Operations::ListApplications.new(
             limit: params[:limit],
             page_token: params[:page_token],
-            direction: params[:direction],
+            sort: params[:sort],
             status: params[:status]
           ).call
         end

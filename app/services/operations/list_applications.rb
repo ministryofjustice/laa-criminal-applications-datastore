@@ -1,17 +1,17 @@
 module Operations
   class ListApplications
-    attr_reader :limit, :page_token, :direction,
+    attr_reader :limit, :page_token, :sort,
                 :status
 
     INDEX_DIRECTIONS = [
-      SCAN_DIRECTION_FORWARD  = 'forward'.freeze,
-      SCAN_DIRECTION_BACKWARD = 'backward'.freeze,
+      SCAN_DIRECTION_FORWARD  = 'asc'.freeze,
+      SCAN_DIRECTION_BACKWARD = 'desc'.freeze,
     ].freeze
 
-    def initialize(limit:, page_token:, direction:, status:)
+    def initialize(limit:, page_token:, sort:, status:)
       @limit = limit
       @page_token = page_token
-      @direction = direction
+      @sort = sort
       @status = status
     end
 
@@ -36,13 +36,13 @@ module Operations
     def pagination_details(metadata)
       {
         limit: limit,
-        direction: direction,
+        sort: sort,
         next_page_token: next_page(metadata),
       }
     end
 
     def scan_index_forward
-      direction.eql?(SCAN_DIRECTION_FORWARD)
+      sort.eql?(SCAN_DIRECTION_FORWARD)
     end
 
     def start_page

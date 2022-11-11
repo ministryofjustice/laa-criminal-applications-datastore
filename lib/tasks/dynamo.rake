@@ -23,4 +23,13 @@ namespace :dynamo do
   task list_tables: :environment do
     puts Dynamoid.adapter.list_tables
   end
+
+  desc 'Setup indexes'
+  task setup_indexes: :environment do
+    puts 'Setting up indexes...'
+
+    Rake::Task['indexes:StatusSubmittedAtIndex'].invoke
+
+    puts 'Finished setup of indexes.'
+  end
 end

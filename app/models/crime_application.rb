@@ -21,8 +21,10 @@ class CrimeApplication
   field :case_details,          :serialized, serializer: JSON
   field :interests_of_justice,  :serialized, serializer: JSON
 
-  # global_secondary_index hash_key: :status,
-  #                        range_key: :submitted_at
+  global_secondary_index hash_key: :status,
+                         range_key: :submitted_at,
+                         projected_attributes: :all,
+                         name: 'StatusSubmittedAtIndex'
 
   # Convenience method as dynamoid provided one
   # forces you to always pass the range key.
