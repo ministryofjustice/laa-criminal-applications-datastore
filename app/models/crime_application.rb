@@ -14,7 +14,7 @@ class CrimeApplication
 
   field :created_at,    :datetime
   range :submitted_at,  :datetime
-  field :data_stamp,    :datetime
+  field :date_stamp,    :datetime
 
   field :provider_details,      :serialized, serializer: JSON
   field :client_details,        :serialized, serializer: JSON
