@@ -32,7 +32,7 @@ namespace :indexes do
   def has_gsi_index?(table_name: CrimeApplication.table_name, name:)
     output = Dynamoid.adapter.client.describe_table(table_name:)
 
-    if output.table.global_secondary_indexes.pluck(:index_name).include?(name)
+    if output.table.global_secondary_indexes.to_a.pluck(:index_name).include?(name)
       puts "Table `#{table_name}` already has index #{name}"
       true
     else
