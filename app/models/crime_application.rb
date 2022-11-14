@@ -9,8 +9,10 @@ class CrimeApplication
   # predictable, so we get these from the ENV
   table name: TABLE_NAME, key: :id
 
+  field :schema_version, :number
+
   field :status
-  field :version, :number
+  field :usn, :integer
 
   field :created_at,    :datetime
   range :submitted_at,  :datetime
