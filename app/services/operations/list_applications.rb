@@ -15,11 +15,8 @@ module Operations
       @status = status
     end
 
-    # NOTE: pagination is not working as expected, probably
-    # we need to set the indexes correctly first
     def call
-      records, metadata = CrimeApplication
-                          .where(status:)
+      records, metadata = query
                           .scan_index_forward(scan_index_forward)
                           .record_limit(limit)
                           .start(start_page)
@@ -33,9 +30,18 @@ module Operations
 
     private
 
+    def query
+      CrimeApplication.where(status:)
+    end
+
+    def total
+      query.count
+    end
+
     def pagination_details(metadata)
       {
         limit: limit,
+        total: total,
         sort: sort,
         next_page_token: next_page(metadata),
       }
