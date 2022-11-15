@@ -63,6 +63,18 @@ module Datastore
             ).call
           end
         end
+
+        desc 'Delete an application by ID.'
+        params do
+          requires :id, type: String, desc: 'Application UUID.'
+        end
+        route_param :id do
+          delete do
+            Operations::DeleteApplication.new(
+              params[:id]
+            ).call
+          end
+        end
       end
       # rubocop:enable Metrics/BlockLength
     end

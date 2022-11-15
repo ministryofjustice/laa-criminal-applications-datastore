@@ -24,6 +24,13 @@ namespace :dynamo do
     puts Dynamoid.adapter.list_tables
   end
 
+  desc 'Destroy all crime applications'
+  task destroy_all: :environment do
+    raise RuntimeError if Rails.env.production?
+
+    puts CrimeApplication.destroy_all
+  end
+
   desc 'Setup indexes'
   task setup_indexes: :environment do
     puts 'Setting up indexes...'

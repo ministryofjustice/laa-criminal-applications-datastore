@@ -25,6 +25,11 @@ Once you have the DynamoDB Local running, create the tables with:
 * `rake dynamo:create_tables` (for the development dynamodb tables)
 * `RAILS_ENV=test rake dynamo:create_tables` (for the test dynamodb tables)
 
+And the indexes with:
+
+* `rake dynamo:setup_indexes`
+* `RAILS_ENV=test rake dynamo:setup_indexes`
+
 **3. Run the app locally**
 
 Once all the above is done, you should be able to run the application as follows:
@@ -54,6 +59,8 @@ There are a few handful rake tasks for DynamoDB:
 * `rake dynamoid:create_tables` - Will create tables from your models
 * `rake dynamoid:drop_tables` - Will drop all existing tables
 * `rake dynamoid:list_tables` - Will list all existing tables
+* `rake dynamo:setup_indexes` - Will create indexes if don't exist yet
+* `rake dynamo:destroy_all` - Destroy all existing crime applications
 
 ## Docker
 
@@ -84,4 +91,5 @@ At the moment these endpoints are:
 * `GET /api/v1/applications` list all applications (refer to the class for params)
 * `GET /api/v1/applications/{id}` get an application by its ID
 * `PUT /api/v1/applications/{id}` update an application by its ID (currently only `status` param)
+* `DELETE /api/v1/applications/{id}` delete an application by its ID
 * `GET /api/v1/health` checks connection to DynamoDB
