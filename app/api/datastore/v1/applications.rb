@@ -7,24 +7,21 @@ module Datastore
       resource :applications do
         desc 'Return applications with optional pagination.'
         params do
+          optional :status, type: String, default: 'submitted',
+                   desc: 'The status of the application.'
           optional :limit, type: Integer,
                    values: 1..200, default: 20,
                    desc: 'Used to limit the results when paginating.'
-          optional :page_token, type: String,
-                   desc: 'Used to request a page when paginating.'
           optional :sort, type: String,
                    values: Operations::ListApplications::INDEX_DIRECTIONS,
                    default: Operations::ListApplications::SCAN_DIRECTION_BACKWARD,
                    desc: 'Used to sort by submitted_at (asc or desc).'
-          optional :status, type: String, default: 'submitted',
-                   desc: 'The status of the application.'
+          optional :page_token, type: String,
+                   desc: 'Used to request a page when paginating.'
         end
         get do
           Operations::ListApplications.new(
-            limit: params[:limit],
-            page_token: params[:page_token],
-            sort: params[:sort],
-            status: params[:status]
+            status: params[:status], **params
           ).call
         end
 

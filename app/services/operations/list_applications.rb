@@ -1,6 +1,6 @@
 module Operations
   class ListApplications
-    attr_reader :limit, :page_token, :sort,
+    attr_reader :limit, :sort, :page_token,
                 :status
 
     INDEX_DIRECTIONS = [
@@ -8,11 +8,12 @@ module Operations
       SCAN_DIRECTION_BACKWARD = 'desc'.freeze,
     ].freeze
 
-    def initialize(limit:, page_token:, sort:, status:)
-      @limit = limit
-      @page_token = page_token
-      @sort = sort
+    def initialize(status:, **pagination_opts)
       @status = status
+
+      @limit = pagination_opts['limit']
+      @sort = pagination_opts['sort']
+      @page_token = pagination_opts['page_token']
     end
 
     def call
