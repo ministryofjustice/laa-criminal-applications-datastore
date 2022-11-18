@@ -10,6 +10,9 @@ gem 'dynamoid', '~> 3.7.0'
 gem 'grape', '~> 1.6.2'
 gem 'grape-entity', '~> 0.10.2'
 
+gem 'laa-criminal-legal-aid-schemas',
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]

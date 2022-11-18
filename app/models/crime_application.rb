@@ -12,7 +12,10 @@ class CrimeApplication
   field :schema_version, :number
 
   field :status
+
+  # These are the same, decide which one to go with
   field :usn, :integer
+  field :reference, :integer
 
   field :created_at,    :datetime
   range :submitted_at,  :datetime
