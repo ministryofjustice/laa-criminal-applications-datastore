@@ -1,7 +1,7 @@
 FROM ruby:3.1.2-alpine
 MAINTAINER LAA Crime Apply Team
 
-RUN apk --no-cache add --virtual build-deps build-base bash curl \
+RUN apk --no-cache add --virtual build-deps build-base git bash curl \
  && apk --no-cache add tzdata
 
 # add non-root user and group with alpine first available uid, 1000
