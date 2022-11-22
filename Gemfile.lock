@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/ministryofjustice/laa-criminal-legal-aid-schemas.git
-  revision: 90c960747d7a733e712845d13b56af4e410f8656
+  revision: 52178cea9a43128a08cb8e3756b723bc60e92880
   specs:
     laa-criminal-legal-aid-schemas (0.1.0)
+      dry-struct
       json-schema (~> 3.0.0)
 
 GEM
@@ -77,18 +78,18 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.656.0)
-    aws-sdk-core (3.166.0)
+    aws-partitions (1.664.0)
+    aws-sdk-core (3.168.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-dynamodb (1.78.0)
+    aws-sdk-dynamodb (1.79.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.2)
       aws-eventstream (~> 1, >= 1.0.2)
-    brakeman (5.3.1)
+    brakeman (5.4.0)
     builder (3.2.4)
     coderay (1.1.3)
     concurrent-ruby (1.1.10)
@@ -109,6 +110,11 @@ GEM
     dry-logic (1.4.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-struct (1.6.0)
+      dry-core (~> 1.0, < 2)
+      dry-types (>= 1.7, < 2)
+      ice_nine (~> 0.11)
       zeitwerk (~> 2.6)
     dry-types (1.7.0)
       concurrent-ruby (~> 1.0)
@@ -135,8 +141,9 @@ GEM
       multi_json (>= 1.3.2)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
     io-console (0.5.11)
-    irb (1.4.2)
+    irb (1.5.0)
       reline (>= 0.3.0)
     jmespath (1.6.1)
     json (2.6.2)
@@ -212,7 +219,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
-    regexp_parser (2.6.0)
+    regexp_parser (2.6.1)
     reline (0.3.1)
       io-console (~> 0.5)
     rexml (3.2.5)
@@ -233,7 +240,7 @@ GEM
       rspec-mocks (~> 3.11)
       rspec-support (~> 3.11)
     rspec-support (3.12.0)
-    rubocop (1.38.0)
+    rubocop (1.39.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -245,10 +252,10 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.23.0)
       parser (>= 3.1.1.0)
-    rubocop-performance (1.15.0)
+    rubocop-performance (1.15.1)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.17.2)
+    rubocop-rails (2.17.3)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
@@ -270,7 +277,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.5)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   ruby
