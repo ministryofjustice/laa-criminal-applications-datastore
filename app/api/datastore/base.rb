@@ -14,7 +14,7 @@ module Datastore
       error!({ status: 400, error: 'Record not unique' }, 400)
     end
 
-    rescue_from LaaCrimeSchemas::ValidationError do |ex|
+    rescue_from LaaCrimeSchemas::Errors::ValidationError do |ex|
       error!({ status: 400, error: ex.message }, 400)
     end
 

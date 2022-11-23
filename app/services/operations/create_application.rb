@@ -22,7 +22,7 @@ module Operations
       schema_validator = LaaCrimeSchemas::Validator.new(payload)
       return if schema_validator.valid?
 
-      raise LaaCrimeSchemas::ValidationError, schema_validator.fully_validate
+      raise LaaCrimeSchemas::Errors::ValidationError, schema_validator.fully_validate
     end
   end
 end
