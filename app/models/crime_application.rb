@@ -18,6 +18,8 @@ class CrimeApplication
   range :submitted_at,  :datetime
   field :date_stamp,    :datetime
 
+  field :ioj_passport,  :array
+
   field :provider_details,      :serialized, serializer: JSON
   field :client_details,        :serialized, serializer: JSON
   field :case_details,          :serialized, serializer: JSON
