@@ -16,6 +16,8 @@ The instructions assume you have [Homebrew](https://brew.sh) installed in your m
 * Copy `.env.development` to `.env.development.local` and modify with suitable values for your local machine
 * Copy `.env.test` to `.env.test.local` and modify with suitable values for your local machine
 
+**DynamoDB database**
+
 NOTE: the easiest way to get up and running locally is to run a DynamoDB Local instance in a docker container.  
 A docker-compose file is provided that allows that, and expose the instance by default in port 8000.  
 Spin up this instance with `docker-compose up dynamodb-local` and then make sure your .env local files point to that endpoint.
@@ -29,6 +31,16 @@ And the indexes with:
 
 * `rake dynamo:setup_indexes`
 * `RAILS_ENV=test rake dynamo:setup_indexes`
+
+**Postgres database**
+
+This service will also have a Postgres database (eventually it may _only_ have Postgres instead of DynamoDB).
+
+The setup is very similar to the above section.  
+After you've defined your DB configuration in the `.env.{development,test}.local` files, run the following:
+
+* `bin/rails db:prepare` (for the development database)
+* `RAILS_ENV=test bin/rails db:prepare` (for the test database)
 
 **3. Run the app locally**
 
@@ -52,13 +64,13 @@ Or you can run them individually:
 * `rake rubocop`
 * `rake brakeman`
 
-## Rake tasks
+## Dynamo rake tasks
 
 There are a few handful rake tasks for DynamoDB:
 
-* `rake dynamoid:create_tables` - Will create tables from your models
-* `rake dynamoid:drop_tables` - Will drop all existing tables
-* `rake dynamoid:list_tables` - Will list all existing tables
+* `rake dynamo:create_tables` - Will create tables from your models
+* `rake dynamo:drop_tables` - Will drop all existing tables
+* `rake dynamo:list_tables` - Will list all existing tables
 * `rake dynamo:setup_indexes` - Will create indexes if don't exist yet
 * `rake dynamo:destroy_all` - Destroy all existing crime applications
 
