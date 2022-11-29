@@ -6,6 +6,11 @@
 version: '3'
 
 services:
+  db:
+    image: postgres:14.6-alpine
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
   dynamodb-local:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     image: "amazon/dynamodb-local:latest"
@@ -22,15 +27,21 @@ services:
       RACK_ENV: production
       RAILS_ENV: production
       PORT: 3003
+      DISABLE_HTTPS: "1"
+      RAILS_SERVE_STATIC_FILES: "1"
       SECRET_KEY_BASE: 90957b5f6dab71710443434b3541698a2017f7dd01d9a19acae5b0fc8a64b3a6
       DYNAMO_ENDPOINT: http://dynamodb-local:8000
       # Following AWS keys need to be present, but are just dummies!
       AWS_REGION: 'eu-west-2'
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+      # Postgres
+      DATABASE_URL: postgresql://postgres@db/laa-criminal-applications-datastore
+      DATABASE_SSLMODE: disable
     ports:
       - "3003:3003"
     depends_on:
       - dynamodb-local
+      - db
     links:
       - dynamodb-local

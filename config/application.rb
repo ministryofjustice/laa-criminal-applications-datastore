@@ -2,6 +2,7 @@ require_relative "boot"
 
 require "rails"
 require "active_model/railtie"
+require "active_record/railtie"
 require "action_controller/railtie"
 # require "action_view/railtie"
 require "rails/test_unit/railtie"
@@ -22,6 +23,11 @@ module LaaCriminalApplicationsDatastore
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # This automatically adds id: :uuid to create_table in all future migrations
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ministryofjustice/laa-criminal-legal-aid-schemas.git
-  revision: 2d674da813a0d2b14dc15a1581afad540c5060de
+  revision: 02fc72cc0ddebbb0529cd95b997d778b409110f0
   specs:
     laa-criminal-legal-aid-schemas (0.1.0)
       dry-struct
@@ -78,8 +78,8 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.664.0)
-    aws-sdk-core (3.168.1)
+    aws-partitions (1.667.0)
+    aws-sdk-core (3.168.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -143,9 +143,9 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-console (0.5.11)
-    irb (1.5.0)
+    irb (1.5.1)
       reline (>= 0.3.0)
-    jmespath (1.6.1)
+    jmespath (1.6.2)
     json (2.6.2)
     json-schema (3.0.0)
       addressable (>= 2.8)
@@ -177,8 +177,9 @@ GEM
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     parallel (1.22.1)
-    parser (3.1.2.1)
+    parser (3.1.3.0)
       ast (~> 2.4.1)
+    pg (1.4.5)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -290,6 +291,7 @@ DEPENDENCIES
   grape (~> 1.6.2)
   grape-entity (~> 0.10.2)
   laa-criminal-legal-aid-schemas!
+  pg (~> 1.4)
   pry
   puma
   rails (~> 7.0.4)

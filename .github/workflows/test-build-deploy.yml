@@ -23,6 +23,19 @@ jobs:
       AWS_REGION: 'eu-west-2'
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+      # Postgres
+      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/laa-criminal-applications-datastore-test"
+
+    services:
+      postgres:
+        image: postgres:14.6-alpine
+        env:
+          POSTGRES_DB: laa-criminal-applications-datastore-test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Setup DynamoDB Local
@@ -43,8 +56,11 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Setup tables
+      - name: Setup test dynamodb tables
         run: bundle exec rake dynamoid:create_tables
+
+      - name: Setup test database
+        run: bin/rails db:prepare
 
       - name: Run linters and tests
         run: bundle exec rake
