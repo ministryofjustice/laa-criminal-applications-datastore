@@ -28,7 +28,7 @@ namespace :dynamo do
   task destroy_all: :environment do
     raise RuntimeError if Rails.env.production?
 
-    puts CrimeApplication.destroy_all
+    puts ::Dynamodb::CrimeApplication.destroy_all
   end
 
   desc 'Setup indexes'
