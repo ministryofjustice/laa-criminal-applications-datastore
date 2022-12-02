@@ -2,7 +2,7 @@ namespace :indexes do
   task StatusSubmittedAtIndex: :environment do
     unless has_gsi_index?(name: 'StatusSubmittedAtIndex')
       Dynamoid.adapter.client.update_table(
-        table_name: CrimeApplication.table_name,
+        table_name: ::Dynamodb::CrimeApplication.table_name,
         attribute_definitions: [
           { attribute_name: 'status', attribute_type: 'S' },
           { attribute_name: 'submitted_at', attribute_type: 'S' },
@@ -29,7 +29,7 @@ namespace :indexes do
 
   private
 
-  def has_gsi_index?(table_name: CrimeApplication.table_name, name:)
+  def has_gsi_index?(table_name: ::Dynamodb::CrimeApplication.table_name, name:)
     output = Dynamoid.adapter.client.describe_table(table_name:)
 
     if output.table.global_secondary_indexes.to_a.pluck(:index_name).include?(name)

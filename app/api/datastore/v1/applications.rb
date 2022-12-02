@@ -13,14 +13,14 @@ module Datastore
                    values: 1..200, default: 20,
                    desc: 'Used to limit the results when paginating.'
           optional :sort, type: String,
-                   values: Operations::ListApplications::INDEX_DIRECTIONS,
-                   default: Operations::ListApplications::SCAN_DIRECTION_BACKWARD,
+                   values: Operations::Dynamodb::ListApplications::INDEX_DIRECTIONS,
+                   default: Operations::Dynamodb::ListApplications::SCAN_DIRECTION_BACKWARD,
                    desc: 'Used to sort by submitted_at (asc or desc).'
           optional :page_token, type: String,
                    desc: 'Used to request a page when paginating.'
         end
         get do
-          Operations::ListApplications.new(
+          Operations::Dynamodb::ListApplications.new(
             status: params[:status], **params
           ).call
         end
@@ -30,7 +30,7 @@ module Datastore
           requires :application, type: JSON, desc: 'Application JSON payload.'
         end
         post do
-          Operations::CreateApplication.new(
+          Operations::Dynamodb::CreateApplication.new(
             payload: params[:application]
           ).call
         end
@@ -41,7 +41,7 @@ module Datastore
         end
         route_param :id do
           get do
-            Operations::GetApplication.new(
+            Operations::Dynamodb::GetApplication.new(
               params[:id]
             ).call
           end
@@ -54,7 +54,7 @@ module Datastore
         end
         route_param :id do
           put do
-            Operations::UpdateApplication.new(
+            Operations::Dynamodb::UpdateApplication.new(
               params[:id],
               payload: { status: params[:status] }
             ).call
@@ -67,7 +67,7 @@ module Datastore
         end
         route_param :id do
           delete do
-            Operations::DeleteApplication.new(
+            Operations::Dynamodb::DeleteApplication.new(
               params[:id]
             ).call
           end
