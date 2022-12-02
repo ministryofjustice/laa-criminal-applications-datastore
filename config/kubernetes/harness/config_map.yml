@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-harness
+  namespace: laa-criminal-applications-datastore-harness
+data:
+  ENV_NAME: harness
+  RACK_ENV: production
+  RAILS_ENV: production
+  RAILS_SERVE_STATIC_FILES: enabled

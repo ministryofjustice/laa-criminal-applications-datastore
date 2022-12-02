@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pdb-harness
+  namespace: laa-criminal-applications-datastore-harness
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: laa-criminal-applications-datastore-web-harness
