@@ -23,6 +23,19 @@ module Datastore
             CrimeApplication.find(params[:id]).application
           end
         end
+
+        desc 'Return applications with pagination.'
+        params do
+          use :pagination
+        end
+        get do
+          coll = CrimeApplication.page(params['page']).per(params['per_page'])
+
+          RecordsPage.new(
+            records: coll.pluck(:application),
+            pagination: Pagination.for_collection(coll)
+          )
+        end
       end
     end
   end

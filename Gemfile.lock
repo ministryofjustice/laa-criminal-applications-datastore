@@ -149,6 +149,10 @@ GEM
     json (2.6.2)
     json-schema (3.0.0)
       addressable (>= 2.8)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -290,6 +294,7 @@ DEPENDENCIES
   dynamoid (~> 3.7.0)
   grape (~> 1.6.2)
   grape-entity (~> 0.10.2)
+  kaminari-activerecord
   laa-criminal-legal-aid-schemas!
   pg (~> 1.4)
   pry

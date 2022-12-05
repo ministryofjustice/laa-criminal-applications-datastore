@@ -10,6 +10,7 @@ gem 'rails', '~> 7.0.4'
 gem 'dynamoid', '~> 3.7.0'
 gem 'grape', '~> 1.6.2'
 gem 'grape-entity', '~> 0.10.2'
+gem 'kaminari-activerecord'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas'
