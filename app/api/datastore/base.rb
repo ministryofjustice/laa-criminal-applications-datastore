@@ -10,7 +10,7 @@ module Datastore
       error!({ status: 500, error: 'Missing range key' }, 500)
     end
 
-    rescue_from Dynamoid::Errors::RecordNotUnique do
+    rescue_from ActiveRecord::RecordNotUnique, Dynamoid::Errors::RecordNotUnique do
       error!({ status: 400, error: 'Record not unique' }, 400)
     end
 
