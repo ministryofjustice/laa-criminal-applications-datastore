@@ -1,12 +1,59 @@
 require 'rails_helper'
 
 RSpec.describe Datastore::V2::Applications do
+  let(:application_id) { application.application['id'] }
+
+  let(:application) do
+    instance_double(
+      CrimeApplication,
+      application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+    )
+  end
+
+  describe 'GET /api/applications/:id' do
+    subject(:api_request) do
+      get "/api/v2/applications/#{application_id}"
+    end
+
+    context 'when found' do
+      before do
+        allow(CrimeApplication).to receive(:find)
+          .with(application_id)
+          .and_return(application)
+
+        api_request
+      end
+
+      it 'returns http status 200' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns the application details' do
+        expect(JSON.parse(response.body)).to match(application.application)
+      end
+    end
+
+    context 'when not found' do
+      before do
+        allow(CrimeApplication).to receive(:find) {
+          raise ActiveRecord::RecordNotFound
+        }
+
+        api_request
+      end
+
+      it 'returns http status Not Found' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe 'POST /api/applications' do
     subject(:api_request) do
       post '/api/v2/applications', params: { application: payload }
     end
 
-    let(:record) { instance_double(CrimeApplication, id: '1234567') }
+    let(:record) { instance_double(CrimeApplication, id: application_id) }
     let(:payload) { LaaCrimeSchemas.fixture(1.0).read }
 
     context 'with a valid request' do
@@ -29,7 +76,7 @@ RSpec.describe Datastore::V2::Applications do
       end
 
       it 'includes the record id in the response body' do
-        expect(JSON.parse(response.body)).to match({ 'id' => '1234567' })
+        expect(JSON.parse(response.body)).to match({ 'id' => application_id })
       end
     end
 
