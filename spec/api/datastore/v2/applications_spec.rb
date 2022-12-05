@@ -28,11 +28,8 @@ RSpec.describe Datastore::V2::Applications do
         expect(response).to have_http_status(:created)
       end
 
-      it 'includes the record id and status in the response body' do
-        expect(response.body).to match({
-          id: '1234567',
-          status: 'created'
-        }.to_json)
+      it 'includes the record id in the response body' do
+        expect(JSON.parse(response.body)).to match({ 'id' => '1234567' })
       end
     end
 

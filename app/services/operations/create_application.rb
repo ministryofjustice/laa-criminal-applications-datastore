@@ -13,7 +13,7 @@ module Operations
     def call
       app = CrimeApplication.create!(application: payload)
 
-      { id: app.id, status: :created }
+      { id: app.id }
     end
 
     private
