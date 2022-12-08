@@ -3,7 +3,6 @@ module Datastore
     class Applications < Base
       version 'v1', using: :path
 
-      # rubocop:disable Metrics/BlockLength
       resource :applications do
         desc 'Return applications with optional pagination.'
         params do
@@ -73,7 +72,6 @@ module Datastore
           end
         end
       end
-      # rubocop:enable Metrics/BlockLength
     end
   end
 end

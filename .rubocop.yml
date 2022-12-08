@@ -52,6 +52,8 @@ RSpec/NamedSubject:
 Metrics/MethodLength:
   Max: 12
 
+Metrics/BlockLength:
+  AllowedMethods: resource
 # https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashSyntax
 Style/HashSyntax:
   EnforcedStyle: ruby19_no_mixed_keys
@@ -79,3 +81,7 @@ RSpec/NestedGroups:
 
 RSpec/ExampleLength:
   Max: 16
+
+RSpec/DescribeClass:
+  Exclude:
+    - '**/spec/api/**/*'

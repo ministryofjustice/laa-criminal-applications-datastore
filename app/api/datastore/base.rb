@@ -19,7 +19,22 @@ module Datastore
     end
 
     helpers do
-      # Add helpers here
+      params :pagination do
+        optional(
+          :page,
+          type: Integer,
+          default: 1,
+          desc: 'Page to fetch.'
+        )
+
+        optional(
+          :per_page,
+          type: Integer,
+          default: 20,
+          desc: 'Number of results to return per page.',
+          values: 1..200
+        )
+      end
     end
   end
 end

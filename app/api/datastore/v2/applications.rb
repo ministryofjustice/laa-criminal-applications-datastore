@@ -20,8 +20,19 @@ module Datastore
         end
         route_param :id do
           get do
-            CrimeApplication.find(params[:id]).application
+            Datastore::Entities::CrimeApplication.represent CrimeApplication.find(params[:id])
           end
+        end
+
+        desc 'Return applications with pagination.'
+        params do
+          use :pagination
+        end
+        get do
+          collection = CrimeApplication.page(params['page']).per(params['per_page'])
+
+          present :records, collection, with: Datastore::Entities::CrimeApplication
+          present :pagination, collection, with: Datastore::Entities::Pagination
         end
       end
     end
