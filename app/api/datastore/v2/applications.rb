@@ -20,7 +20,7 @@ module Datastore
         end
         route_param :id do
           get do
-            CrimeApplication.find(params[:id]).application
+            Datastore::Entities::CrimeApplication.represent CrimeApplication.find(params[:id])
           end
         end
 
@@ -29,12 +29,10 @@ module Datastore
           use :pagination
         end
         get do
-          coll = CrimeApplication.page(params['page']).per(params['per_page'])
+          collection = CrimeApplication.page(params['page']).per(params['per_page'])
 
-          RecordsPage.new(
-            records: coll.pluck(:application),
-            pagination: Pagination.for_collection(coll)
-          )
+          present :records, collection, with: Datastore::Entities::CrimeApplication
+          present :pagination, collection, with: Datastore::Entities::Pagination
         end
       end
     end

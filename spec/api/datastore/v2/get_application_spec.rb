@@ -4,8 +4,7 @@ RSpec.describe 'get application' do
   let(:application_id) { application.application['id'] }
 
   let(:application) do
-    instance_double(
-      CrimeApplication,
+    CrimeApplication.new(
       application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
