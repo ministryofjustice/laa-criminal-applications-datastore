@@ -85,3 +85,7 @@ RSpec/ExampleLength:
 RSpec/DescribeClass:
   Exclude:
     - '**/spec/api/**/*'
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - '**/spec/api/datastore/v2/list_applications_spec.rb'
