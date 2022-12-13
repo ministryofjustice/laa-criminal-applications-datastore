@@ -8,6 +8,7 @@ module Datastore
         params do
           optional :search, type: JSON, desc: 'Search JSON.' do
             optional :application_ids, type: Array
+            optional :search_text, type: String
           end
           optional :pagination, type: JSON, desc: 'Pagination JSON.' do
             use :pagination

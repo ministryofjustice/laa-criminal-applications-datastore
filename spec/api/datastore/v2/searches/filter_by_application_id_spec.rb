@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'searches' do
+RSpec.describe 'searches filter by id' do
   subject(:api_request) do
     post '/api/v2/searches', params: { search:, pagination: }
   end

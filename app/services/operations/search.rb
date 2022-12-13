@@ -18,9 +18,9 @@ module Operations
     delegate :page, :per_page, to: :pagination
 
     def query
-      return @scope if filter.application_ids.empty?
+      return @scope unless filter.active?
 
-      @scope.where(id: filter.application_ids)
+      @scope = filter.apply_to_scope(@scope)
     end
 
     def sort_by
