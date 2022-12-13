@@ -11,7 +11,7 @@ describe CrimeApplication do
 
   describe '#create' do
     subject(:create) do
-      described_class.create(valid_attributes)
+      described_class.create!(valid_attributes)
     end
 
     it 'persists the application' do

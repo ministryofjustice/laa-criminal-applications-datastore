@@ -27,9 +27,28 @@ module Datastore
         desc 'Return applications with pagination.'
         params do
           use :pagination
+
+          optional(
+            :status,
+            type: String,
+            default: nil,
+            desc: 'The status of the application.',
+            values: CrimeApplication::STATUSES
+          )
+
+          optional(
+            :sort,
+            type: Symbol,
+            default: :descending,
+            desc: 'Sort order for the records.',
+            values: %i[descending ascending]
+          )
         end
+
         get do
-          collection = CrimeApplication.page(params['page']).per(params['per_page'])
+          collection = Operations::ListApplications.new(
+            **params.symbolize_keys
+          ).call
 
           present :records, collection, with: Datastore::Entities::CrimeApplication
           present :pagination, collection, with: Datastore::Entities::Pagination
