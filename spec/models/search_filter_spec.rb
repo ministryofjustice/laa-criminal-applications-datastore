@@ -15,13 +15,13 @@ describe SearchFilter do
     context 'when aplication_ids are given' do
       let(:params) { { application_ids: [SecureRandom.uuid] } }
 
-      it { is_expected.to have_key 'application_ids' }
+      it { is_expected.to include 'application_ids' }
     end
 
     context 'when query text is provided' do
       let(:params) { { search_text: 'John Deere 6000001' } }
 
-      it { is_expected.to have_key 'search_text' }
+      it { is_expected.to include 'search_text' }
     end
   end
 

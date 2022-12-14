@@ -6,7 +6,7 @@ class SearchFilter
   attribute :search_text, :string
 
   def active_filters
-    attributes.compact_blank
+    attributes.compact_blank.keys
   end
 
   def active?
@@ -14,17 +14,21 @@ class SearchFilter
   end
 
   def apply_to_scope(scope)
-    active_filters.each_pair do |key, value|
-      case key.to_sym
-      when :application_ids
-        scope = scope.where(id: value)
-      when :search_text
-        query = value.split.join('&')
-        scope = scope.where('searchable_text @@ to_tsquery(?)', query)
-      else
-        raise 'Filter not found'
-      end
+    active_filters.each do |f|
+      scope = send("filter_#{f}", scope)
     end
+
     scope
+  end
+
+  private
+
+  def filter_application_ids(scope)
+    scope.where(id: application_ids)
+  end
+
+  def filter_search_text(scope)
+    query_text = search_text.split.join('&')
+    scope.where('searchable_text @@ to_tsquery(?)', query_text)
   end
 end

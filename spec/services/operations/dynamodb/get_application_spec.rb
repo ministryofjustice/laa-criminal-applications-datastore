@@ -12,7 +12,7 @@ RSpec.describe Operations::Dynamodb::GetApplication do
     context 'when application exists' do
       before do
         allow(
-          ::Dynamodb::CrimeApplication
+          Dynamodb::CrimeApplication
         ).to receive(:where).with(query).and_return([document])
       end
 
