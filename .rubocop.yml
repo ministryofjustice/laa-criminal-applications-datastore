@@ -89,3 +89,4 @@ RSpec/DescribeClass:
 Rails/SkipsModelValidations:
   Exclude:
     - '**/spec/api/datastore/v2/list_applications_spec.rb'
+    - '**/spec/api/datastore/v2/searches/*'
