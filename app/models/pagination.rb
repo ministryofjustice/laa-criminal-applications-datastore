@@ -8,4 +8,8 @@ class Pagination
 
   attribute :page, :integer, default: DEFAULT_PAGE
   attribute :per_page, :integer, default: DEFAULT_PER_PAGE
+
+  def apply_to_scope(scope)
+    scope.page(page).per(per_page)
+  end
 end

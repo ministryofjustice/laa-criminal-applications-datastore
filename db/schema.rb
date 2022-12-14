@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_08_165036) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_13_102206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_08_165036) do
     t.text "status", default: "submitted", null: false
     t.datetime "submitted_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "returned_at", precision: nil
+    t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (application ->> 'reference'::text)))", stored: true
+    t.index ["searchable_text"], name: "index_crime_applications_on_searchable_text", using: :gin
     t.index ["status", "returned_at"], name: "index_crime_applications_on_status_and_returned_at", order: { returned_at: :desc }
     t.index ["status", "submitted_at"], name: "index_crime_applications_on_status_and_submitted_at", order: { submitted_at: :desc }
   end
