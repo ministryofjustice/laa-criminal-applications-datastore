@@ -9,10 +9,6 @@ class SearchFilter
     attributes.compact_blank.keys
   end
 
-  def active?
-    !active_filters.empty?
-  end
-
   def apply_to_scope(scope)
     active_filters.each do |f|
       scope = send("filter_#{f}", scope)

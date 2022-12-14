@@ -25,20 +25,6 @@ describe SearchFilter do
     end
   end
 
-  describe '#active?' do
-    subject(:active) { search_filter.active? }
-
-    context 'when there are no active filters' do
-      it { is_expected.to be false }
-    end
-
-    context 'when there is an active filter' do
-      let(:params) { { application_ids: [SecureRandom.uuid] } }
-
-      it { is_expected.to be true }
-    end
-  end
-
   context 'when a non existant filter is provided' do
     let(:params) { { case_file: '1' } }
 
