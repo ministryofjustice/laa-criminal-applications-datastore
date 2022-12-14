@@ -47,7 +47,7 @@ module Datastore
 
         get do
           collection = Operations::ListApplications.new(
-            **params.symbolize_keys
+            **declared(params).symbolize_keys
           ).call
 
           present :records, collection, with: Datastore::Entities::CrimeApplication
