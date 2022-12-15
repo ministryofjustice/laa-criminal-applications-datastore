@@ -9,7 +9,10 @@ module Datastore
           optional :search, type: JSON, desc: 'Search JSON.' do
             optional :application_ids, type: Array
             optional :search_text, type: String
+            optional :submitted_after, type: DateTime
+            optional :submitted_before, type: DateTime
           end
+
           optional :pagination, type: JSON, desc: 'Pagination JSON.' do
             use :pagination
           end
