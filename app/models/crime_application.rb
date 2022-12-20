@@ -8,6 +8,9 @@ class CrimeApplication < ApplicationRecord
   validates :status, presence: true, inclusion: { in: STATUSES }
 
   scope :by_status, ->(status) { where(status:) }
+  scope :by_office, lambda { |office_code|
+    where("application->'provider_details'->>'office_code' = ?", office_code)
+  }
 
   private
 

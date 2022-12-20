@@ -146,5 +146,26 @@ RSpec.describe 'list applications' do
         end
       end
     end
+
+    describe 'office_code filter' do
+      context 'when office_code matches any application' do
+        let(:query) { '?office_code=1A123B' }
+
+        it 'returns only matching applications' do
+          expect(records.size).to be(1)
+          expect(
+            records.first.dig('provider_details', 'office_code')
+          ).to eq('1A123B')
+        end
+      end
+
+      context 'when office_code does not match any application' do
+        let(:query) { '?office_code=XYZ123' }
+
+        it 'does not return applications' do
+          expect(records.size).to be(0)
+        end
+      end
+    end
   end
 end
