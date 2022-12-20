@@ -5,7 +5,8 @@ module Operations
       ascending: :asc
     }.freeze
 
-    def initialize(page:, per_page:, status:, sort:)
+    def initialize(office_code:, page:, per_page:, status:, sort:)
+      @office_code = office_code
       @page = page
       @per_page = per_page
       @status = status
@@ -21,12 +22,16 @@ module Operations
 
     private
 
-    attr_reader :page, :per_page, :status, :sort_direction
+    attr_reader :status, :office_code,
+                :page, :per_page, :sort_direction
 
     def query
-      return @scope if status.nil?
+      scope = @scope
 
-      @scope.by_status(status)
+      scope = scope.by_status(status) if status.present?
+      scope = scope.by_office(office_code) if office_code.present?
+
+      scope
     end
 
     def sort_by

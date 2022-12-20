@@ -37,6 +37,13 @@ module Datastore
           )
 
           optional(
+            :office_code,
+            type: String,
+            default: nil,
+            desc: 'The office account number handling the application.'
+          )
+
+          optional(
             :sort,
             type: Symbol,
             default: :descending,
