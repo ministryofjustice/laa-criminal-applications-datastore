@@ -5,6 +5,7 @@ module Datastore
       expose :submitted_at
       expose :applicant_name
       expose :reference
+      expose :status
 
       private
 
