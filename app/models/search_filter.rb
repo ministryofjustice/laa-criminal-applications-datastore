@@ -2,7 +2,8 @@ class SearchFilter
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attribute :application_ids, array: true, default: -> { [] }
+  attribute :application_id_in, array: true, default: -> { [] }
+  attribute :application_id_not_in, array: true, default: -> { [] }
   attribute :search_text, :string
   attribute :submitted_after, :datetime
   attribute :submitted_before, :datetime
@@ -29,8 +30,12 @@ class SearchFilter
     scope.where('submitted_at <  ?', submitted_before)
   end
 
-  def filter_application_ids(scope)
-    scope.where(id: application_ids)
+  def filter_application_id_in(scope)
+    scope.where(id: application_id_in)
+  end
+
+  def filter_application_id_not_in(scope)
+    scope.where.not(id: application_id_not_in)
   end
 
   def filter_search_text(scope)

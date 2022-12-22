@@ -12,10 +12,28 @@ describe SearchFilter do
       it { is_expected.to be_empty }
     end
 
-    context 'when aplication_ids are given' do
-      let(:params) { { application_ids: [SecureRandom.uuid] } }
+    context 'when aplication_id_in given' do
+      let(:params) { { application_id_in: [SecureRandom.uuid] } }
 
-      it { is_expected.to include 'application_ids' }
+      it { is_expected.to include 'application_id_in' }
+    end
+
+    context 'when aplication_id_in is empty array' do
+      let(:params) { { application_id_in: [] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'when aplication_id_not_in given' do
+      let(:params) { { application_id_not_in: [SecureRandom.uuid] } }
+
+      it { is_expected.to include 'application_id_not_in' }
+    end
+
+    context 'when aplication_id_not_in is empty array' do
+      let(:params) { { application_id_not_in: [] } }
+
+      it { is_expected.to be_empty }
     end
 
     context 'when query text is provided' do

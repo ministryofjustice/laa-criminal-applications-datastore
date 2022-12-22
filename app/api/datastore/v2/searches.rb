@@ -7,7 +7,8 @@ module Datastore
         desc 'Search the Datastore.'
         params do
           optional :search, type: JSON, desc: 'Search JSON.' do
-            optional :application_ids, type: Array
+            optional :application_id_in, type: Array
+            optional :application_id_not_in, type: Array
             optional :search_text, type: String
             optional :submitted_after, type: DateTime
             optional :submitted_before, type: DateTime
@@ -19,7 +20,8 @@ module Datastore
         end
 
         post do
-          search = Operations::Search.new(**declared(params).symbolize_keys).call
+          search_params = declared(params).symbolize_keys
+          search = Operations::Search.new(**search_params).call
           present :pagination, search, with: Datastore::Entities::Pagination
           present :records, search, with: Datastore::Entities::SearchResult
         end
