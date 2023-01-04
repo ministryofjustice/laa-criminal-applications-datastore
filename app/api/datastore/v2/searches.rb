@@ -15,7 +15,7 @@ module Datastore
           end
 
           optional :pagination, type: JSON, desc: 'Pagination JSON.' do
-            use :pagination
+            use :pagination, max_per_page: 10_000
           end
         end
 

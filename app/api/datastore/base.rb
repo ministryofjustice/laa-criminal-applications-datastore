@@ -19,7 +19,7 @@ module Datastore
     end
 
     helpers do
-      params :pagination do
+      params :pagination do |options|
         optional(
           :page,
           type: Integer,
@@ -32,7 +32,7 @@ module Datastore
           type: Integer,
           default: Pagination::DEFAULT_PER_PAGE,
           desc: 'Number of results to return per page.',
-          values: 1..Pagination::MAX_PER_PAGE
+          values: 1..options.fetch(:max_per_page, Pagination::MAX_PER_PAGE)
         )
       end
     end
