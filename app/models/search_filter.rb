@@ -4,6 +4,7 @@ class SearchFilter
 
   attribute :application_id_in, array: true, default: -> { [] }
   attribute :application_id_not_in, array: true, default: -> { [] }
+  attribute :status, array: true, default: -> { [] }
   attribute :search_text, :string
   attribute :submitted_after, :datetime
   attribute :submitted_before, :datetime
@@ -36,6 +37,10 @@ class SearchFilter
 
   def filter_application_id_not_in(scope)
     scope.where.not(id: application_id_not_in)
+  end
+
+  def filter_status(scope)
+    scope.where(status:)
   end
 
   def filter_search_text(scope)
