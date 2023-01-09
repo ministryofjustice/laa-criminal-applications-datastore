@@ -1,6 +1,18 @@
 module Datastore
   module V1
     class Applications < Base
+      rescue_from Dynamoid::Errors::RecordNotFound do
+        error!({ status: 404, error: 'Record not found' }, 404)
+      end
+
+      rescue_from Dynamoid::Errors::MissingRangeKey do
+        error!({ status: 500, error: 'Missing range key' }, 500)
+      end
+
+      rescue_from Dynamoid::Errors::RecordNotUnique do
+        error!({ status: 400, error: 'Record not unique' }, 400)
+      end
+
       version 'v1', using: :path
 
       resource :applications do

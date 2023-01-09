@@ -7,17 +7,24 @@ module Status
       @error = error
     end
 
-    def self.call
-      begin
-        Dynamoid::Tasks::Database.ping
-        status = 200
-        error  = nil
-      rescue StandardError => e
-        status = 503
-        error  = e.message
+    class << self
+      def call
+        if databases_connected?
+          status = :ok
+          error = nil
+        else
+          status = :service_unavailable
+          error = 'Database Connection Error'
+        end
+
+        new(status:, error:)
       end
 
-      new(status:, error:)
+      def databases_connected?
+        ActiveRecord::Base.connection.active? && Dynamoid::Tasks::Database.ping
+      rescue StandardError
+        false
+      end
     end
   end
 end

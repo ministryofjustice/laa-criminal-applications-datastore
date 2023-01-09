@@ -1,11 +1,15 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
-SimpleCov.minimum_coverage 50 # TODO: increase to 100 slowly
+SimpleCov.minimum_coverage 100
 
 SimpleCov.start 'rails' do
   add_filter 'config/initializers'
   add_filter 'spec/'
+
+  # TODO: remove when v1 code satisfies coverage requirement
+  add_filter 'app/api/datastore/v1'
+  add_filter 'app/services/operations/dynamodb'
 end
 
 RSpec.configure do |config|

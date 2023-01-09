@@ -2,15 +2,11 @@ require 'laa_crime_schemas'
 
 module Datastore
   class Base < Grape::API
-    rescue_from ActiveRecord::RecordNotFound, Dynamoid::Errors::RecordNotFound do
+    rescue_from ActiveRecord::RecordNotFound do
       error!({ status: 404, error: 'Record not found' }, 404)
     end
 
-    rescue_from Dynamoid::Errors::MissingRangeKey do
-      error!({ status: 500, error: 'Missing range key' }, 500)
-    end
-
-    rescue_from ActiveRecord::RecordNotUnique, Dynamoid::Errors::RecordNotUnique do
+    rescue_from ActiveRecord::RecordNotUnique do
       error!({ status: 400, error: 'Record not unique' }, 400)
     end
 
