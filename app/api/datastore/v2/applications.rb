@@ -34,7 +34,7 @@ module Datastore
             type: String,
             default: nil,
             desc: 'The status of the application.',
-            values: CrimeApplication::STATUSES
+            values: Types::APPLICATION_STATUSES
           )
 
           optional(

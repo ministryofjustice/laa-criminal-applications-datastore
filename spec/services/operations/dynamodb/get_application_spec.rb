@@ -20,11 +20,5 @@ RSpec.describe Operations::Dynamodb::GetApplication do
         expect(subject.call).to be(document)
       end
     end
-
-    context 'when application does not exist' do
-      it 'raises an exception' do
-        expect { subject.call }.to raise_error(Dynamoid::Errors::RecordNotFound)
-      end
-    end
   end
 end

@@ -1,11 +1,9 @@
 class CrimeApplication < ApplicationRecord
   attr_readonly :application, :submitted_at, :id
 
-  STATUSES = %w[submitted returned].freeze
-
   before_validation :set_id, on: :create
 
-  validates :status, presence: true, inclusion: { in: STATUSES }
+  validates :status, presence: true, inclusion: { in: Types::APPLICATION_STATUSES }
 
   scope :by_status, ->(status) { where(status:) }
   scope :by_office, lambda { |office_code|

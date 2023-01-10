@@ -102,7 +102,7 @@ RSpec.describe 'list applications' do
         expect(returned_statuses).to match %w[submitted returned]
       end
 
-      CrimeApplication::STATUSES.each do |status|
+      Types::APPLICATION_STATUSES.each do |status|
         context "when '#{status}'" do
           let(:query) { "?status=#{status}" }
 
