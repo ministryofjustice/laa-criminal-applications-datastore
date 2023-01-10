@@ -11,6 +11,12 @@ class CrimeApplication < ApplicationRecord
   scope :by_office, lambda { |office_code|
     where("application->'provider_details'->>'office_code' = ?", office_code)
   }
+  scope :by_applicant_name, lambda { |sort_direction|
+                              order(
+                                Arel.sql("application->'client_details'->'applicant'->>'last_name'")
+                                .send(sort_direction)
+                              )
+                            }
 
   private
 

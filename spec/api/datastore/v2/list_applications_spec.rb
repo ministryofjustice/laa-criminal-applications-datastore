@@ -168,4 +168,39 @@ RSpec.describe 'list applications' do
       end
     end
   end
+
+  describe 'order' do
+    subject(:records) do
+      JSON.parse(response.body).fetch('records')
+    end
+
+    before do
+      CrimeApplication.insert_all [
+        {
+          application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
+          status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
+        },
+        {
+          application: { 'client_details' => { 'applicant' => { 'last_name' => 'ZEBRA' } } },
+          status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now
+        }
+      ]
+
+      get "/api/v2/applications#{query}"
+    end
+
+    let(:query) { '?order=applicant_name&sort=descending' }
+
+    it 'returns applications ordered by applicant last_name' do
+      expect(records.size).to be(2)
+
+      expect(
+        records.first.dig('client_details', 'applicant', 'last_name')
+      ).to eq('ZEBRA')
+
+      expect(
+        records.last.dig('client_details', 'applicant', 'last_name')
+      ).to eq('Pound')
+    end
+  end
 end
