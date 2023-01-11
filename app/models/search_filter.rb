@@ -5,6 +5,7 @@ class SearchFilter
   attribute :application_id_in, array: true, default: -> { [] }
   attribute :application_id_not_in, array: true, default: -> { [] }
   attribute :status, array: true, default: -> { [] }
+  attribute :applicant_date_of_birth, :date
   attribute :search_text, :string
   attribute :submitted_after, :datetime
   attribute :submitted_before, :datetime
@@ -22,6 +23,13 @@ class SearchFilter
   end
 
   private
+
+  def filter_applicant_date_of_birth(scope)
+    scope.where(
+      "application->'client_details'->'applicant'->>'date_of_birth' = ?::text",
+      applicant_date_of_birth
+    )
+  end
 
   def filter_submitted_after(scope)
     scope.where('submitted_at >  ?', submitted_after)
