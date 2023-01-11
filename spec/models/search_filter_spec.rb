@@ -36,6 +36,12 @@ describe SearchFilter do
       it { is_expected.to be_empty }
     end
 
+    context 'when applicant_date_of_birth is blank' do
+      let(:params) { { application_id_not_in: '' } }
+
+      it { is_expected.to be_empty }
+    end
+
     context 'when query text is provided' do
       let(:params) { { search_text: 'John Deere 6000001' } }
 

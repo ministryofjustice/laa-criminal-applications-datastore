@@ -9,8 +9,15 @@ module Datastore
           optional :search, type: JSON, desc: 'Search JSON.' do
             optional :application_id_in, type: Array
             optional :application_id_not_in, type: Array
-            optional :status, type: Array[String], values: LaaCrimeSchemas::Types::APPLICATION_STATUSES
             optional :search_text, type: String
+            optional :applicant_date_of_birth, type: Date
+
+            optional(
+              :status,
+              type: Array[String],
+              values: LaaCrimeSchemas::Types::APPLICATION_STATUSES
+            )
+
             optional :submitted_after, type: DateTime
             optional :submitted_before, type: DateTime
           end
