@@ -5,6 +5,7 @@ class SearchFilter
   attribute :application_id_in, array: true, default: -> { [] }
   attribute :application_id_not_in, array: true, default: -> { [] }
   attribute :status, array: true, default: -> { [] }
+  attribute :review_status, array: true, default: -> { [] }
   attribute :applicant_date_of_birth, :date
   attribute :search_text, :string
   attribute :submitted_after, :datetime
@@ -49,6 +50,10 @@ class SearchFilter
 
   def filter_status(scope)
     scope.where(status:)
+  end
+
+  def filter_review_status(scope)
+    scope.where(review_status:)
   end
 
   def filter_search_text(scope)

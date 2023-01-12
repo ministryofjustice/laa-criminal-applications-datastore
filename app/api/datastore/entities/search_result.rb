@@ -6,6 +6,7 @@ module Datastore
       expose :applicant_name
       expose :reference
       expose :status
+      expose :review_status
 
       private
 
