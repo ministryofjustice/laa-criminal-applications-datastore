@@ -15,7 +15,13 @@ module Datastore
             optional(
               :status,
               type: Array[String],
-              values: LaaCrimeSchemas::Types::APPLICATION_STATUSES
+              values: Types::APPLICATION_STATUSES
+            )
+
+            optional(
+              :review_status,
+              type: Array[String],
+              values: Types::REVIEW_APPLICATION_STATUSES
             )
 
             optional :submitted_after, type: DateTime

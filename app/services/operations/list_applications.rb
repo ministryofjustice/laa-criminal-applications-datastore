@@ -40,8 +40,6 @@ module Operations
         :submitted_at
       when 'returned'
         :returned_at
-      when 'completed'
-        :completed_at
       end
     end
   end
