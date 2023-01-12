@@ -1,5 +1,5 @@
 class CrimeApplication < ApplicationRecord
-  attr_readonly :application, :submitted_at, :id
+  attr_readonly :submitted_at, :id
 
   before_validation :set_id, on: :create
 
