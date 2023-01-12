@@ -25,6 +25,7 @@ module Datastore
         end
 
         desc 'Return applications with pagination.'
+        # rubocop:disable Metrics/BlockLength
         params do
           use :pagination
 
@@ -50,7 +51,15 @@ module Datastore
             desc: 'Sort order for the records.',
             values: %i[descending ascending]
           )
+
+          optional(
+            :order,
+            type: String,
+            default: nil,
+            desc: 'Order records by provided attribute'
+          )
         end
+        # rubocop:enable Metrics/BlockLength
 
         get do
           collection = Operations::ListApplications.new(
