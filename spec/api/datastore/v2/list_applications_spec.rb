@@ -14,8 +14,9 @@ RSpec.describe 'list applications' do
 
     before do
       CrimeApplication.insert_all(
-        Array.new(10) { { status: 'submitted' } } +
-        Array.new(11) { { status: 'returned' } }
+        Array.new(9) { { status: 'submitted' } } +
+        Array.new(11) { { status: 'returned' } } +
+        Array.new(1) { { status: 'completed' } }
       )
       api_request
     end
@@ -75,11 +76,15 @@ RSpec.describe 'list applications' do
       CrimeApplication.insert_all [
         {
           application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
-          status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
+          status: 'submitted', submitted_at: 1.day.ago, returned_at: nil, completed_at: nil
         },
         {
           application: {},
-          status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now
+          status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now, completed_at: nil
+        },
+        {
+          application: {},
+          status: 'completed', submitted_at: 1.month.ago, returned_at: 1.day.ago, completed_at: Time.zone.now
         }
       ]
 
@@ -98,8 +103,8 @@ RSpec.describe 'list applications' do
 
     describe 'status filter' do
       it 'defaults to show all statuses' do
-        expect(records.size).to be(2)
-        expect(returned_statuses).to match %w[submitted returned]
+        expect(records.size).to be(3)
+        expect(returned_statuses).to match %w[submitted returned completed]
       end
 
       Types::APPLICATION_STATUSES.each do |status|
@@ -123,7 +128,7 @@ RSpec.describe 'list applications' do
 
       describe 'sort' do
         it 'defaults to descending' do
-          expect(records.size).to be(2)
+          expect(records.size).to be(3)
           expect(records.first['status']).to eq('submitted')
         end
 
@@ -131,8 +136,8 @@ RSpec.describe 'list applications' do
           let(:query) { '?sort=ascending' }
 
           it 'the records are returned in ascending order' do
-            expect(records.size).to be(2)
-            expect(records.first['status']).to eq('returned')
+            expect(records.size).to be(3)
+            expect(records.first['status']).to eq('completed')
           end
         end
 
@@ -140,7 +145,7 @@ RSpec.describe 'list applications' do
           let(:query) { '?sort=descending' }
 
           it 'the records are returned in descending order' do
-            expect(records.size).to be(2)
+            expect(records.size).to be(3)
             expect(records.first['status']).to eq('submitted')
           end
         end
