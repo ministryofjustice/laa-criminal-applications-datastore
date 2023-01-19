@@ -34,7 +34,15 @@ describe CrimeApplication do
       before { create }
 
       it 'has the same id as the document' do
-        expect(application).not_to be_nil
+        expect(application.id).to match(application_attributes['id'])
+      end
+
+      it 'has the same status as the document' do
+        expect(application.status).to match(application_attributes['status'])
+      end
+
+      it 'has the same return reason as the document' do
+        expect(application.return_reason).to match(application_attributes['return_reason'])
       end
     end
   end

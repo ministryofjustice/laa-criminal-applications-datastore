@@ -1,7 +1,7 @@
 class CrimeApplication < ApplicationRecord
   attr_readonly :application, :submitted_at, :id
 
-  before_validation :set_id, on: :create
+  before_validation :set_attributes_from_payload, on: :create
 
   validates :status, presence: true, inclusion: { in: Types::APPLICATION_STATUSES }
 
@@ -12,10 +12,21 @@ class CrimeApplication < ApplicationRecord
 
   private
 
-  def set_id
+  # rubocop:disable Metrics/AbcSize
+  def set_attributes_from_payload
     return unless id.nil?
     return unless application
 
-    self.id = application.fetch('id')
+    assign_attributes(
+      id: application.fetch('id'),
+      status: application.fetch('status'),
+      submitted_at: application.fetch('submitted_at'),
+      returned_at: application.fetch('returned_at', nil),
+      searchable_text: application.fetch('searchable_text', nil),
+      review_completed_at: application.fetch('review_completed_at', nil),
+      review_received_at: application.fetch('review_received_at', nil),
+      return_reason: application.fetch('return_reason', nil)
+    )
   end
+  # rubocop:enable Metrics/AbcSize
 end
