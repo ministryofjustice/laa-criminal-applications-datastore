@@ -14,6 +14,10 @@ module Datastore
       error!({ status: 400, error: ex.message }, 400)
     end
 
+    rescue_from Errors::AlreadyReturned do
+      error!({ status: 409, error: 'Already Returned' }, 409)
+    end
+
     helpers do
       params :pagination do
         optional(

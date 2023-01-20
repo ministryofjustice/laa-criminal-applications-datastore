@@ -1,5 +1,6 @@
 module Datastore
   module V2
+    # TODO: rename "Searching"
     class Searches < Base
       version 'v2', using: :path
 
