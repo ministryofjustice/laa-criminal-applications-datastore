@@ -35,7 +35,7 @@ RSpec.describe 'searches filter by status' do
 
     it 'returns records with a status in statuses' do
       expect(records.count).to be 3
-      expect(records.pluck('status').uniq).to eq(%w[submitted returned])
+      expect(records.pluck('status').uniq).to match(%w[submitted returned])
     end
   end
 end

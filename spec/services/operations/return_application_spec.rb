@@ -48,7 +48,7 @@ describe Operations::ReturnApplication do
       context 'when application is not found' do
         let(:application_id) { SecureRandom.uuid }
 
-        it 'raises AlreadyReturned error' do
+        it 'raises RecordNotFound error' do
           expect { call }.to raise_error ActiveRecord::RecordNotFound
         end
       end
@@ -94,9 +94,11 @@ describe Operations::ReturnApplication do
       end
 
       it 'raises ActiveRecord::RecordInvalid error and does not update the application' do
-        expect do
-          call
-        end.to raise_error ActiveRecord::RecordInvalid, 'Validation failed: Reason type is not included in the list'
+        expect { call }.to raise_error(
+          ActiveRecord::RecordInvalid,
+          'Validation failed: Reason type is not included in the list'
+        )
+
         expect(application.reload.status).to eq('submitted')
       end
     end
