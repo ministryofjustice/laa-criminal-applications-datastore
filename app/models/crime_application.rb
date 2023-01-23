@@ -1,4 +1,6 @@
 class CrimeApplication < ApplicationRecord
+  has_one :return_details, dependent: :destroy
+
   attr_readonly :application, :submitted_at, :id
 
   before_validation :set_id, on: :create
@@ -9,6 +11,10 @@ class CrimeApplication < ApplicationRecord
   scope :by_office, lambda { |office_code|
     where("application->'provider_details'->>'office_code' = ?", office_code)
   }
+
+  def returned?
+    !returned_at.nil?
+  end
 
   private
 
