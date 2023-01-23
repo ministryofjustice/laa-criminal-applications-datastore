@@ -12,7 +12,6 @@ describe Operations::ReturnApplication do
   let(:return_details) do
     {
       reason_type: Types::RETURN_REASONS.sample,
-      reason_text: 'Text for reason type',
       details: 'Detailed reason why the application is being returned'
     }
   end
@@ -64,12 +63,6 @@ describe Operations::ReturnApplication do
           it { is_expected.not_to be_nil }
         end
 
-        describe '#reason_text' do
-          subject(:reason_type) { detail.reason_text }
-
-          it { is_expected.to eq 'Text for reason type' }
-        end
-
         describe '#detail' do
           subject(:reason_type) { detail.details }
 
@@ -88,7 +81,6 @@ describe Operations::ReturnApplication do
       let(:return_details) do
         {
           reason_type: 'not_a_valid_type',
-          reason_text: 'Text for reason type',
           details: 'Detailed reason why the application is being returned'
         }
       end

@@ -11,7 +11,6 @@ module Datastore
           requires :return_details, type: JSON do
             requires :reason_type, type: String, values: Types::RETURN_REASONS
             requires :details, type: String, desc: 'Detailed reason for return'
-            requires :reason_text, type: String, desc: 'Return reason text'
           end
         end
 

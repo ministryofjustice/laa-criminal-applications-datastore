@@ -10,7 +10,6 @@ RSpec.describe 'create application' do
   let(:return_details) do
     {
       reason_type: Types::RETURN_REASONS.sample,
-      reason_text: 'Text for reason type',
       details: 'Detailed reason why the application is being returned'
     }
   end
