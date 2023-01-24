@@ -52,6 +52,9 @@ RSpec/NamedSubject:
 Metrics/MethodLength:
   Max: 12
 
+Metrics/ParameterLists:
+  Max: 6
+
 Metrics/BlockLength:
   AllowedMethods: resource
 # https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashSyntax
@@ -77,7 +80,7 @@ RSpec/MultipleExpectations:
   Max: 7
 
 RSpec/NestedGroups:
-  Max: 5
+  Max: 6
 
 RSpec/ExampleLength:
   Max: 16
