@@ -16,6 +16,8 @@ module Operations
           returned_at: return_details.created_at
         )
       end
+
+      application
     end
 
     private
