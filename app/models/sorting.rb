@@ -19,19 +19,19 @@ class Sorting
   DEFAULT_DIRECTION = :desc
 
   attribute :sort_by, :string, default: DEFAULT_SORT_BY
-  attribute :direction, :string, default: DEFAULT_DIRECTION
+  attribute :sort_direction, :string, default: DEFAULT_DIRECTION
 
   def apply_to_scope(scope)
-    scope.order({ sort_column => sort_direction })
+    scope.order({ column => direction })
   end
 
   private
 
-  def sort_column
+  def column
     SORT_COLUMNS.fetch(sort_by.to_sym)
   end
 
-  def sort_direction
-    SORT_DIRECTIONS.fetch(direction.to_sym)
+  def direction
+    SORT_DIRECTIONS.fetch(sort_direction.to_sym)
   end
 end

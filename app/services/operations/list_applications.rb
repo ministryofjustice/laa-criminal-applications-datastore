@@ -1,10 +1,10 @@
 module Operations
   class ListApplications
-    def initialize(office_code:, status:, page:, per_page:, order:, sort:)
+    def initialize(office_code:, status:, page:, per_page:, sort_by:, sort_direction:)
       @office_code = office_code
       @status = status
       @pagination = Pagination.new(page:, per_page:)
-      @sorting = Sorting.new(sort_by: order, direction: sort)
+      @sorting = Sorting.new(sort_by:, sort_direction:)
       @scope = CrimeApplication
     end
 

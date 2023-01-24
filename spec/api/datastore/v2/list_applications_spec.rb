@@ -125,14 +125,14 @@ RSpec.describe 'list applications' do
         end
       end
 
-      describe 'sort' do
+      describe 'sort_by' do
         it 'defaults to `submitted_at` descending' do
           expect(records.size).to be(2)
           expect(records.first['status']).to eq('submitted')
         end
 
         context 'when ascending is specified' do
-          let(:query) { '?sort=ascending' }
+          let(:query) { '?sort_direction=ascending' }
 
           it 'the records are returned in ascending order' do
             expect(records.size).to be(2)
@@ -141,7 +141,7 @@ RSpec.describe 'list applications' do
         end
 
         context 'when descending is specified' do
-          let(:query) { '?sort=descending' }
+          let(:query) { '?sort_direction=descending' }
 
           it 'the records are returned in descending order' do
             expect(records.size).to be(2)
@@ -197,7 +197,7 @@ RSpec.describe 'list applications' do
       context 'when status is `submitted`' do
         context 'when sorting by `submitted_at`' do
           context 'when direction is `ascending`' do
-            let(:query) { '?status=submitted&order=submitted_at&sort=asc' }
+            let(:query) { '?status=submitted&sort_by=submitted_at&sort_direction=asc' }
 
             it 'the records are returned in ascending order' do
               expect(records.size).to be(2)
@@ -208,7 +208,7 @@ RSpec.describe 'list applications' do
           end
 
           context 'when direction is `descending`' do
-            let(:query) { '?status=submitted&order=submitted_at&sort=desc' }
+            let(:query) { '?status=submitted&sort_by=submitted_at&sort_direction=desc' }
 
             it 'the records are returned in ascending order' do
               expect(records.size).to be(2)
@@ -223,7 +223,7 @@ RSpec.describe 'list applications' do
       context 'when status is `returned`' do
         context 'when sorting by `submitted_at`' do
           context 'when direction is `ascending`' do
-            let(:query) { '?status=returned&order=submitted_at&sort=asc' }
+            let(:query) { '?status=returned&sort_by=submitted_at&sort_direction=asc' }
 
             it 'the records are returned in ascending order' do
               expect(records.size).to be(2)
@@ -234,7 +234,7 @@ RSpec.describe 'list applications' do
           end
 
           context 'when direction is `descending`' do
-            let(:query) { '?status=returned&order=submitted_at&sort=desc' }
+            let(:query) { '?status=returned&sort_by=submitted_at&sort_direction=desc' }
 
             it 'the records are returned in ascending order' do
               expect(records.size).to be(2)
@@ -247,7 +247,7 @@ RSpec.describe 'list applications' do
 
         context 'when sorting by `returned_at`' do
           context 'when direction is ascending' do
-            let(:query) { '?status=returned&order=returned_at&sort=asc' }
+            let(:query) { '?status=returned&sort_by=returned_at&sort_direction=asc' }
 
             it 'the records are returned in ascending order' do
               expect(records.size).to be(2)
@@ -258,7 +258,7 @@ RSpec.describe 'list applications' do
           end
 
           context 'when direction is descending' do
-            let(:query) { '?status=returned&order=returned_at&sort=desc' }
+            let(:query) { '?status=returned&sort_by=returned_at&sort_direction=desc' }
 
             it 'the records are returned in ascending order' do
               expect(records.size).to be(2)

@@ -5,7 +5,7 @@ module Datastore
 
       params :sorting do
         optional(
-          :order,
+          :sort_by,
           type: Symbol,
           description: 'Column to sort by the records.',
           default: Sorting::DEFAULT_SORT_BY,
@@ -13,7 +13,7 @@ module Datastore
         )
 
         optional(
-          :sort,
+          :sort_direction,
           type: Symbol,
           description: 'Sorting direction for the records.',
           default: Sorting::DEFAULT_DIRECTION,
