@@ -9,7 +9,7 @@ module Datastore
         params do
           requires :application_id, type: String, desc: 'Crime Application UUID'
           requires :return_details, type: JSON do
-            requires :reason_type, type: String, values: Types::RETURN_REASONS
+            requires :reason, type: String, values: Types::RETURN_REASONS
             requires :details, type: String, desc: 'Detailed reason for return'
           end
         end
