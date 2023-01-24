@@ -1,29 +1,24 @@
 module Operations
   class ListApplications
-    SORT_DIRECTIONS = {
-      descending: :desc,
-      ascending: :asc
-    }.freeze
-
-    def initialize(office_code:, page:, per_page:, status:, sort:)
+    def initialize(office_code:, status:, page:, per_page:, order:, sort:)
       @office_code = office_code
-      @page = page
-      @per_page = per_page
       @status = status
-      @sort_direction = SORT_DIRECTIONS.fetch(sort)
+      @pagination = Pagination.new(page:, per_page:)
+      @sorting = Sorting.new(sort_by: order, direction: sort)
       @scope = CrimeApplication
     end
 
     def call
-      query
-        .order({ sort_by => sort_direction })
-        .page(page).per(per_page)
+      pagination.apply_to_scope(
+        sorting.apply_to_scope(
+          query
+        )
+      )
     end
 
     private
 
-    attr_reader :status, :office_code,
-                :page, :per_page, :sort_direction
+    attr_reader :office_code, :status, :pagination, :sorting
 
     def query
       scope = @scope
@@ -32,15 +27,6 @@ module Operations
       scope = scope.by_office(office_code) if office_code.present?
 
       scope
-    end
-
-    def sort_by
-      case status
-      when 'submitted', nil
-        :submitted_at
-      when 'returned'
-        :returned_at
-      end
     end
   end
 end

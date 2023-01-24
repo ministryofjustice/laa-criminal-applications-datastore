@@ -72,7 +72,13 @@ RSpec.describe 'list applications' do
     end
 
     before do
-      CrimeApplication.insert_all [
+      CrimeApplication.insert_all(applications)
+
+      get "/api/v2/applications#{query}"
+    end
+
+    let(:applications) do
+      [
         {
           application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
           status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
@@ -82,8 +88,6 @@ RSpec.describe 'list applications' do
           status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now
         }
       ]
-
-      get "/api/v2/applications#{query}"
     end
 
     let(:returned_statuses) { records.pluck('status').uniq }
@@ -122,7 +126,7 @@ RSpec.describe 'list applications' do
       end
 
       describe 'sort' do
-        it 'defaults to descending' do
+        it 'defaults to `submitted_at` descending' do
           expect(records.size).to be(2)
           expect(records.first['status']).to eq('submitted')
         end
@@ -164,6 +168,105 @@ RSpec.describe 'list applications' do
 
         it 'does not return applications' do
           expect(records.size).to be(0)
+        end
+      end
+    end
+
+    describe 'sorting' do
+      let(:applications) do
+        [
+          {
+            application: { submitted_at: 1.day.ago, returned_at: nil },
+            status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
+          },
+          {
+            application: { submitted_at: 2.days.ago, returned_at: nil },
+            status: 'submitted', submitted_at: 2.days.ago, returned_at: nil
+          },
+          {
+            application: { submitted_at: 1.week.ago, returned_at: 8.days.ago },
+            status: 'returned', submitted_at: 1.week.ago, returned_at: 8.days.ago
+          },
+          {
+            application: { submitted_at: 2.weeks.ago, returned_at: 5.days.ago },
+            status: 'returned', submitted_at: 2.weeks.ago, returned_at: 5.days.ago
+          },
+        ]
+      end
+
+      context 'when status is `submitted`' do
+        context 'when sorting by `submitted_at`' do
+          context 'when direction is `ascending`' do
+            let(:query) { '?status=submitted&order=submitted_at&sort=asc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('submitted'))
+              expect(records.first['submitted_at']).to be < records.second['submitted_at']
+            end
+          end
+
+          context 'when direction is `descending`' do
+            let(:query) { '?status=submitted&order=submitted_at&sort=desc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('submitted'))
+              expect(records.first['submitted_at']).to be > records.second['submitted_at']
+            end
+          end
+        end
+      end
+
+      context 'when status is `returned`' do
+        context 'when sorting by `submitted_at`' do
+          context 'when direction is `ascending`' do
+            let(:query) { '?status=returned&order=submitted_at&sort=asc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('returned'))
+              expect(records.first['submitted_at']).to be < records.second['submitted_at']
+            end
+          end
+
+          context 'when direction is `descending`' do
+            let(:query) { '?status=returned&order=submitted_at&sort=desc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('returned'))
+              expect(records.first['submitted_at']).to be > records.second['submitted_at']
+            end
+          end
+        end
+
+        context 'when sorting by `returned_at`' do
+          context 'when direction is ascending' do
+            let(:query) { '?status=returned&order=returned_at&sort=asc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('returned'))
+              expect(records.first['returned_at']).to be < records.second['returned_at']
+            end
+          end
+
+          context 'when direction is descending' do
+            let(:query) { '?status=returned&order=returned_at&sort=desc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('returned'))
+              expect(records.first['returned_at']).to be > records.second['returned_at']
+            end
+          end
         end
       end
     end
