@@ -16,27 +16,8 @@ The instructions assume you have [Homebrew](https://brew.sh) installed in your m
 * Copy `.env.development` to `.env.development.local` and modify with suitable values for your local machine
 * Copy `.env.test` to `.env.test.local` and modify with suitable values for your local machine
 
-**DynamoDB database**
-
-NOTE: the easiest way to get up and running locally is to run a DynamoDB Local instance in a docker container.  
-A docker-compose file is provided that allows that, and expose the instance by default in port 8000.  
-Spin up this instance with `docker-compose up dynamodb-local` and then make sure your .env local files point to that endpoint.
-
-Once you have the DynamoDB Local running, create the tables with:
-
-* `rake dynamo:create_tables` (for the development dynamodb tables)
-* `RAILS_ENV=test rake dynamo:create_tables` (for the test dynamodb tables)
-
-And the indexes with:
-
-* `rake dynamo:setup_indexes`
-* `RAILS_ENV=test rake dynamo:setup_indexes`
-
 **Postgres database**
 
-This service will also have a Postgres database (eventually it may _only_ have Postgres instead of DynamoDB).
-
-The setup is very similar to the above section.  
 After you've defined your DB configuration in the `.env.{development,test}.local` files, run the following:
 
 * `bin/rails db:prepare` (for the development database)
@@ -64,19 +45,9 @@ Or you can run them individually:
 * `rake rubocop`
 * `rake brakeman`
 
-## Dynamo rake tasks
-
-There are a few handful rake tasks for DynamoDB:
-
-* `rake dynamo:create_tables` - Will create tables from your models
-* `rake dynamo:drop_tables` - Will drop all existing tables
-* `rake dynamo:list_tables` - Will list all existing tables
-* `rake dynamo:setup_indexes` - Will create indexes if don't exist yet
-* `rake dynamo:destroy_all` - Destroy all existing crime applications
-
 ## Docker
 
-The application can be run inside a docker container. This will take care of the ruby environment, DynamoDB Local 
+The application can be run inside a docker container. This will take care of the ruby environment,  
 and any other dependency for you, without having to configure anything in your machine.
 
 * `docker-compose up`
@@ -86,22 +57,16 @@ The application will be run in "production" mode, so will be as accurate as poss
 **NOTE:** never use `docker-compose` for a real production environment. This is only provided to test a local container. The
 actual docker images used in the cluster are built as part of the deploy pipeline.
 
-Additionally, to only run the DynamoDB Local, use:
-
-* `docker-compose up dynamodb-local`
-
-This is the recommended way for development as code changes are visible immediately.
-
 ## API (work in progress)
 
-There is a basic RESTful API to store and retrieve documents from DynamoDB.  
-The `Datastore::V1::Applications` grape class is quite self explanatory and declares what are the endpoints and their parameters (optional or required).
+There is a basic RESTful API to store and retrieve documents from the database.  
+The `Datastore::V2::Applications` grape class is quite self explanatory and declares what are the endpoints and their parameters (optional or required).
 
 At the moment these endpoints are:
 
-* `POST /api/v1/applications` to create an application, passing the payload in the body as `application`.
-* `GET /api/v1/applications` list all applications (refer to the class for params)
-* `GET /api/v1/applications/{id}` get an application by its ID
-* `PUT /api/v1/applications/{id}` update an application by its ID (currently only `status` param)
-* `DELETE /api/v1/applications/{id}` delete an application by its ID
-* `GET /api/v1/health` checks connection to DynamoDB
+* `POST /api/v2/applications` to create an application, passing the payload in the body as `application`.
+* `POST /api/v2/searches` performs searches (refer to the class for params)
+* `GET /api/v2/applications` list all applications (refer to the class for params)
+* `GET /api/v2/applications/{id}` get an application by its ID
+* `PUT /api/v2/applications/{id}/return` returns an application by its ID
+* `GET /api/v2/health` checks connection to the database

@@ -7,7 +7,6 @@ gem 'pg', '~> 1.4'
 gem 'puma'
 gem 'rails', '~> 7.0.4'
 
-gem 'dynamoid', '~> 3.7.0'
 gem 'grape', '~> 1.6.2'
 gem 'grape-entity', '~> 0.10.2'
 gem 'kaminari-activerecord'

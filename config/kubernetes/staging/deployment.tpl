@@ -67,28 +67,3 @@ spec:
               secretKeyRef:
                 name: rds-instance
                 key: url
-          - name: AWS_REGION
-            valueFrom:
-              secretKeyRef:
-                name: crime-applications-dynamodb-output
-                key: aws_region
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: crime-applications-dynamodb-output
-                key: access_key_id
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: crime-applications-dynamodb-output
-                key: secret_access_key
-          - name: APPLICATIONS_TABLE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: crime-applications-dynamodb-output
-                key: table_name
-          - name: APPLICATIONS_TABLE_ARN
-            valueFrom:
-              secretKeyRef:
-                name: crime-applications-dynamodb-output
-                key: table_arn
