@@ -13,7 +13,7 @@ module Operations
 
         application.update!(
           status: Types::ApplicationStatus['returned'],
-          returned_at: Time.zone.now
+          returned_at: return_details.created_at
         )
       end
     end
