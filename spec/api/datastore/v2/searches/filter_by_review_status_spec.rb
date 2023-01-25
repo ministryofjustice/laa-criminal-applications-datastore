@@ -23,8 +23,9 @@ RSpec.describe 'searches filter by review status' do
 
   it 'defaults to returning all statuses' do
     expect(records.count).to be 4
-    expect(records.pluck('review_status').uniq).to eq(%w[application_received returned_to_provider
-                                                         ready_for_assessment])
+    expect(records.pluck('review_status').uniq).to eq(
+      %w[application_received returned_to_provider ready_for_assessment]
+    )
   end
 
   describe 'filtering by "returned_to_provider"' do
