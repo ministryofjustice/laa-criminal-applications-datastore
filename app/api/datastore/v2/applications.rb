@@ -26,6 +26,7 @@ module Datastore
 
         desc 'Return applications with pagination.'
         params do
+          use :sorting
           use :pagination
 
           optional(
@@ -41,14 +42,6 @@ module Datastore
             type: String,
             default: nil,
             desc: 'The office account number handling the application.'
-          )
-
-          optional(
-            :sort,
-            type: Symbol,
-            default: :descending,
-            desc: 'Sort order for the records.',
-            values: %i[descending ascending]
           )
         end
 
