@@ -13,9 +13,13 @@ module Operations
 
         application.update!(
           status: Types::ApplicationStatus['returned'],
-          returned_at: return_details.created_at
+          review_status: Types::ReviewApplicationStatus['returned_to_provider'],
+          returned_at: return_details.created_at,
+          reviewed_at: Time.zone.now
         )
       end
+
+      application
     end
 
     private

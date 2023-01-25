@@ -18,7 +18,8 @@ module Datastore
           resource :return do
             put do
               return_params = declared(params).symbolize_keys
-              Operations::ReturnApplication.new(**return_params).call
+              app = Operations::ReturnApplication.new(**return_params).call
+              present app, with: Datastore::Entities::CrimeApplication
             end
           end
         end

@@ -31,8 +31,17 @@ describe Operations::ReturnApplication do
           .from('submitted').to('returned')
       end
 
+      it "updates the application's review status to 'returned_to_provider'" do
+        expect { call }.to change { application.reload.review_status }.to('returned_to_provider')
+      end
+
       it "sets application's 'returned_at'" do
         expect { call }.to change { application.reload.returned_at.class }
+          .from(NilClass).to(ActiveSupport::TimeWithZone)
+      end
+
+      it "sets application's 'reviewed_at'" do
+        expect { call }.to change { application.reload.reviewed_at.class }
           .from(NilClass).to(ActiveSupport::TimeWithZone)
       end
 
