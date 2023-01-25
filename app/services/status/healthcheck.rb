@@ -21,7 +21,7 @@ module Status
       end
 
       def databases_connected?
-        ActiveRecord::Base.connection.active? && Dynamoid::Tasks::Database.ping
+        ActiveRecord::Base.connection.active?
       rescue StandardError
         false
       end
