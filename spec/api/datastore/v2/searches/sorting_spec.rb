@@ -18,9 +18,36 @@ RSpec.describe 'Sorting applications' do
     {}
   end
 
-  let(:records_count) { JSON.parse(response.body).fetch('records').count }
+  let(:records) { JSON.parse(response.body).fetch('records') }
+  let(:records_count) { records.count }
+
+  let(:applications) do
+    [
+      {
+        application: {},
+        status: 'submitted', submitted_at: 1.day.ago, returned_at: nil,
+        reviewed_at: nil
+      },
+      {
+        application: {},
+        status: 'submitted', submitted_at: 2.days.ago, returned_at: nil,
+        reviewed_at: nil
+      },
+      {
+        application: {},
+        status: 'returned', submitted_at: 1.week.ago, returned_at: 8.days.ago,
+        reviewed_at: 8.days.ago
+      },
+      {
+        application: {},
+        status: 'returned', submitted_at: 2.weeks.ago, returned_at: 5.days.ago,
+        reviewed_at: 5.days.ago
+      },
+    ]
+  end
 
   before do
+    CrimeApplication.insert_all(applications)
     api_request
   end
 
@@ -56,80 +83,75 @@ RSpec.describe 'Sorting applications' do
       end
     end
 
-    # context 'when status is `submitted`' do
-    #   context 'when sorting by `submitted_at`' do
-    #     context 'when direction is `ascending`' do
-    #       let(:query) { '?status=submitted&sort_by=submitted_at&sort_direction=asc' }
+    context 'when a search is performed' do
+      let(:search) do
+        {
+          status: %w[submitted returned]
+        }
+      end
 
-    #       it 'the records are returned in ascending order' do
-    #         expect(records.size).to be(2)
+      context 'when sorting by `submitted_at`' do
+        context 'when direction is `ascending`' do
+          let(:sorting_params) do
+            {
+              'sort_direction' => 'ascending',
+              'sort_by' => 'submitted_at'
+            }
+          end
 
-    #         expect(records.pluck('status')).to all(eq('submitted'))
-    #         expect(records.first['submitted_at']).to be < records.second['submitted_at']
-    #       end
-    #     end
+          it 'the records are returned in ascending order' do
+            expect(records_count).to be(4)
 
-    #     context 'when direction is `descending`' do
-    #       let(:query) { '?status=submitted&sort_by=submitted_at&sort_direction=desc' }
+            expect(records.first['submitted_at']).to be < records.second['submitted_at']
+          end
+        end
 
-    #       it 'the records are returned in ascending order' do
-    #         expect(records.size).to be(2)
+        context 'when direction is `descending`' do
+          let(:sorting_params) do
+            {
+              'sort_direction' => 'descending',
+              'sort_by' => 'submitted_at'
+            }
+          end
 
-    #         expect(records.pluck('status')).to all(eq('submitted'))
-    #         expect(records.first['submitted_at']).to be > records.second['submitted_at']
-    #       end
-    #     end
-    #   end
-    # end
+          it 'the records are returned in ascending order' do
+            expect(records.size).to be(4)
 
-    # context 'when status is `returned`' do
-    #   context 'when sorting by `submitted_at`' do
-    #     context 'when direction is `ascending`' do
-    #       let(:query) { '?status=returned&sort_by=submitted_at&sort_direction=asc' }
+            expect(records.first['submitted_at']).to be > records.second['submitted_at']
+          end
+        end
+      end
 
-    #       it 'the records are returned in ascending order' do
-    #         expect(records.size).to be(2)
+      context 'when sorting by `reviewed_at`' do
+        context 'when direction is `ascending`' do
+          let(:sorting_params) do
+            {
+              'sort_direction' => 'ascending',
+              'sort_by' => 'reviewed_at'
+            }
+          end
 
-    #         expect(records.pluck('status')).to all(eq('returned'))
-    #         expect(records.first['submitted_at']).to be < records.second['submitted_at']
-    #       end
-    #     end
+          it 'the records are returned in ascending order' do
+            expect(records_count).to be(4)
 
-    #     context 'when direction is `descending`' do
-    #       let(:query) { '?status=returned&sort_by=submitted_at&sort_direction=desc' }
+            expect(records.first['reviewed_at']).to be < records.second['reviewed_at']
+          end
+        end
 
-    #       it 'the records are returned in ascending order' do
-    #         expect(records.size).to be(2)
+        context 'when direction is `descending`' do
+          let(:sorting_params) do
+            {
+              'sort_direction' => 'descending',
+              'sort_by' => 'reviewed_at'
+            }
+          end
 
-    #         expect(records.pluck('status')).to all(eq('returned'))
-    #         expect(records.first['submitted_at']).to be > records.second['submitted_at']
-    #       end
-    #     end
-    #   end
-
-    #   context 'when sorting by `returned_at`' do
-    #     context 'when direction is ascending' do
-    #       let(:query) { '?status=returned&sort_by=returned_at&sort_direction=asc' }
-
-    #       it 'the records are returned in ascending order' do
-    #         expect(records.size).to be(2)
-
-    #         expect(records.pluck('status')).to all(eq('returned'))
-    #         expect(records.first['returned_at']).to be < records.second['returned_at']
-    #       end
-    #     end
-
-    #     context 'when direction is descending' do
-    #       let(:query) { '?status=returned&sort_by=returned_at&sort_direction=desc' }
-
-    #       it 'the records are returned in ascending order' do
-    #         expect(records.size).to be(2)
-
-    #         expect(records.pluck('status')).to all(eq('returned'))
-    #         expect(records.first['returned_at']).to be > records.second['returned_at']
-    #       end
-    #     end
-    #   end
-    # end
+          it 'the records are returned in ascending order' do
+            expect(records.first['reviewed_at']).to be_nil
+            expect(records.third['reviewed_at']).to be > records.fourth['reviewed_at']
+          end
+        end
+      end
+    end
   end
 end
