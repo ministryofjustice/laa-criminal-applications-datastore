@@ -29,6 +29,10 @@ module Datastore
             optional :submitted_before, type: DateTime
           end
 
+          optional :sorting, type: JSON, desc: 'Sorting JSON.', default: Sorting.new.attributes do
+            use :sorting
+          end
+
           optional :pagination, type: JSON, desc: 'Pagination JSON.' do
             use :pagination
           end
@@ -36,9 +40,12 @@ module Datastore
 
         post do
           search_params = declared(params).symbolize_keys
-          search = Operations::Search.new(**search_params).call
-          present :pagination, search, with: Datastore::Entities::Pagination
-          present :records, search, with: Datastore::Entities::SearchResult
+          search = Operations::Search.new(**search_params)
+          records = search.call
+
+          present :pagination, records, with: Datastore::Entities::Pagination
+          present :sorting, search.sorting, with: Datastore::Entities::Sorting
+          present :records, records, with: Datastore::Entities::SearchResult
         end
       end
     end
