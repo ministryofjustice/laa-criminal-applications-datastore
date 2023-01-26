@@ -29,10 +29,10 @@ class Sorting
   private
 
   def column
-    SORT_COLUMNS.fetch(sort_by&.to_sym || DEFAULT_SORT_BY)
+    SORT_COLUMNS.fetch(sort_by.to_sym)
   end
 
   def direction
-    SORT_DIRECTIONS.fetch(sort_direction&.to_sym || DEFAULT_DIRECTION)
+    SORT_DIRECTIONS.fetch(sort_direction.to_sym)
   end
 end

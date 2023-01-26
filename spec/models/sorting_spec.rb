@@ -28,13 +28,5 @@ describe Sorting do
         expect(scope).to have_received(:order).with({ reviewed_at: :asc })
       end
     end
-
-    context 'when nil sort_by specified' do
-      let(:params) { { sort_by: nil, sort_direction: nil } }
-
-      it 'orders by defaults submitted_at:desc' do
-        expect(scope).to have_received(:order).with({ submitted_at: :desc })
-      end
-    end
   end
 end

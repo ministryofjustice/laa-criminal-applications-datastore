@@ -29,7 +29,7 @@ module Datastore
             optional :submitted_before, type: DateTime
           end
 
-          optional :sorting, type: JSON, desc: 'Sorting JSON.' do
+          optional :sorting, type: JSON, desc: 'Sorting JSON.', default: Sorting.new.attributes do
             use :sorting
           end
 
