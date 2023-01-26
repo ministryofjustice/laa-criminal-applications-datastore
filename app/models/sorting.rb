@@ -13,6 +13,7 @@ class Sorting
     reference: :reference,
     submitted_at: :submitted_at,
     returned_at: :returned_at,
+    reviewed_at: :reviewed_at,
   }.freeze
 
   DEFAULT_SORT_BY = :submitted_at
