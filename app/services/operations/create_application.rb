@@ -11,11 +11,13 @@ module Operations
     end
 
     def call
-      app = CrimeApplication.create!(application: payload)
+      CrimeApplication.transaction do
+        app = CrimeApplication.create!(application: payload)
 
-      SupersedeApplication.new(application_id: parent_id).call if parent_id
+        SupersedeApplication.new(application_id: parent_id).call if parent_id
 
-      { id: app.id }
+        { id: app.id }
+      end
     end
 
     private
