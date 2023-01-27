@@ -11,9 +11,13 @@ module Operations
     end
 
     def call
-      app = CrimeApplication.create!(application: payload)
+      CrimeApplication.transaction do
+        app = CrimeApplication.create!(application: payload)
 
-      { id: app.id }
+        SupersedeApplication.new(application_id: parent_id).call if parent_id
+
+        { id: app.id }
+      end
     end
 
     private
@@ -23,6 +27,10 @@ module Operations
       return if schema_validator.valid?
 
       raise LaaCrimeSchemas::Errors::ValidationError, schema_validator.fully_validate
+    end
+
+    def parent_id
+      payload.fetch('parent_id', nil)
     end
   end
 end
