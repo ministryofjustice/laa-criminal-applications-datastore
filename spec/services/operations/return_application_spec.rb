@@ -46,7 +46,7 @@ describe Operations::ReturnApplication do
       end
 
       context 'when application has already been returned' do
-        before { application.update(returned_at: 1.day.ago) }
+        before { application.update(status: :returned, returned_at: 1.day.ago) }
 
         it 'raises AlreadyReturned error' do
           expect { call }.to raise_error Errors::AlreadyReturned

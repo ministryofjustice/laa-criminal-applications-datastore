@@ -24,6 +24,10 @@ RSpec.describe 'create application' do
           application: JSON.parse(payload)
         ).and_return(record)
 
+        allow(
+          Operations::SupersedeApplication
+        ).to receive(:new).and_return(double.as_null_object)
+
         api_request
       end
 
@@ -39,6 +43,20 @@ RSpec.describe 'create application' do
 
       it 'includes the record id in the response body' do
         expect(JSON.parse(response.body)).to match({ 'id' => application_id })
+      end
+
+      it 'does not perform superseding on first submissions' do
+        expect(Operations::SupersedeApplication).not_to have_received(:new)
+      end
+
+      context 'when is a resubmission' do
+        let(:payload) { JSON.dump(JSON.parse(super()).merge('parent_id' => '12345')) }
+
+        it 'supersedes the parent application' do
+          expect(
+            Operations::SupersedeApplication
+          ).to have_received(:new).with(application_id: '12345')
+        end
       end
     end
 
