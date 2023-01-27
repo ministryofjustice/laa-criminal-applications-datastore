@@ -10,10 +10,11 @@ class Sorting
   }.freeze
 
   SORT_COLUMNS = {
-    reference: :reference,
-    submitted_at: :submitted_at,
-    returned_at: :returned_at,
-    reviewed_at: :reviewed_at,
+    applicant_name: [:applicant_last_name, :applicant_first_name],
+    reference: [:reference],
+    returned_at: [:returned_at],
+    reviewed_at: [:reviewed_at],
+    submitted_at: [:submitted_at]
   }.freeze
 
   DEFAULT_SORT_BY = :submitted_at
@@ -23,12 +24,16 @@ class Sorting
   attribute :sort_direction, :string, default: DEFAULT_DIRECTION
 
   def apply_to_scope(scope)
-    scope.order({ column => direction })
+    scope.order(**order_params)
   end
 
   private
 
-  def column
+  def order_params
+    column_names.index_with { direction }
+  end
+
+  def column_names
     SORT_COLUMNS.fetch(sort_by.to_sym)
   end
 

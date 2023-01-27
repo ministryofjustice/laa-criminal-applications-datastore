@@ -28,5 +28,15 @@ describe Sorting do
         expect(scope).to have_received(:order).with({ reviewed_at: :asc })
       end
     end
+
+    context 'with a compound sort' do
+      let(:params) { { sort_by: :applicant_name } }
+
+      it 'orders by both columns' do
+        expect(scope).to have_received(:order).with(
+          { applicant_last_name: :desc, applicant_first_name: :desc, }
+        )
+      end
+    end
   end
 end
