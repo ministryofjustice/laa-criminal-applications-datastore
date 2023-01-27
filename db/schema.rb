@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_25_091219) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_27_125227) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,12 +18,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_25_091219) do
     t.jsonb "application"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "status", default: "submitted", null: false
+    t.string "status", default: "submitted", null: false
     t.datetime "submitted_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "returned_at", precision: nil
     t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (application ->> 'reference'::text)))", stored: true
     t.datetime "reviewed_at", precision: nil
     t.string "review_status"
+    t.virtual "reference", type: :integer, as: "((application ->> 'reference'::text))::integer", stored: true
+    t.virtual "applicant_first_name", type: :string, as: "(application #>> '{client_details,applicant,first_name}'::text[])", stored: true
+    t.virtual "applicant_last_name", type: :string, as: "(application #>> '{client_details,applicant,last_name}'::text[])", stored: true
+    t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
+    t.index ["reference"], name: "index_crime_applications_on_reference"
     t.index ["searchable_text"], name: "index_crime_applications_on_searchable_text", using: :gin
     t.index ["status", "returned_at"], name: "index_crime_applications_on_status_and_returned_at", order: { returned_at: :desc }
     t.index ["status", "reviewed_at"], name: "index_crime_applications_on_status_and_reviewed_at", order: { reviewed_at: :desc }
