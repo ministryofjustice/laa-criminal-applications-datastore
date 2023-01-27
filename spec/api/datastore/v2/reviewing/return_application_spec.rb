@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'create application' do
+RSpec.describe 'return application' do
   let(:application) do
     CrimeApplication.create!(
       application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
@@ -69,7 +69,7 @@ RSpec.describe 'create application' do
 
     context 'with a returned application' do
       before do
-        application.update!(returned_at: 1.week.ago)
+        application.update!(status: :returned, returned_at: 1.week.ago)
       end
 
       it 'does not record the return details' do

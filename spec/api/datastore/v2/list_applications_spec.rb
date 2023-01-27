@@ -86,6 +86,10 @@ RSpec.describe 'list applications' do
         {
           application: {},
           status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now
+        },
+        {
+          application: {},
+          status: 'superseded', submitted_at: 1.month.ago, returned_at: 1.week.ago
         }
       ]
     end
@@ -102,11 +106,11 @@ RSpec.describe 'list applications' do
 
     describe 'status filter' do
       it 'defaults to show all statuses' do
-        expect(records.size).to be(2)
-        expect(returned_statuses).to match %w[submitted returned]
+        expect(records.size).to be(3)
+        expect(returned_statuses).to match %w[submitted returned superseded]
       end
 
-      Types::APPLICATION_STATUSES.each do |status|
+      CrimeApplication.statuses.each_key do |status|
         context "when '#{status}'" do
           let(:query) { "?status=#{status}" }
 
@@ -122,31 +126,6 @@ RSpec.describe 'list applications' do
 
         it 'an error is returned' do
           expect(response.body).to match 'status does not have a valid value'
-        end
-      end
-
-      describe 'sort_by' do
-        it 'defaults to `submitted_at` descending' do
-          expect(records.size).to be(2)
-          expect(records.first['status']).to eq('submitted')
-        end
-
-        context 'when ascending is specified' do
-          let(:query) { '?sort_direction=ascending' }
-
-          it 'the records are returned in ascending order' do
-            expect(records.size).to be(2)
-            expect(records.first['status']).to eq('returned')
-          end
-        end
-
-        context 'when descending is specified' do
-          let(:query) { '?sort_direction=descending' }
-
-          it 'the records are returned in descending order' do
-            expect(records.size).to be(2)
-            expect(records.first['status']).to eq('submitted')
-          end
         end
       end
     end
@@ -191,6 +170,14 @@ RSpec.describe 'list applications' do
             application: { submitted_at: 2.weeks.ago, returned_at: 5.days.ago },
             status: 'returned', submitted_at: 2.weeks.ago, returned_at: 5.days.ago
           },
+          {
+            application: { submitted_at: 1.month.ago, returned_at: 3.weeks.ago },
+            status: 'superseded', submitted_at: 1.month.ago, returned_at: 3.weeks.ago
+          },
+          {
+            application: { submitted_at: 2.months.ago, returned_at: 7.weeks.ago },
+            status: 'superseded', submitted_at: 2.months.ago, returned_at: 7.weeks.ago
+          },
         ]
       end
 
@@ -210,7 +197,7 @@ RSpec.describe 'list applications' do
           context 'when direction is `descending`' do
             let(:query) { '?status=submitted&sort_by=submitted_at&sort_direction=desc' }
 
-            it 'the records are returned in ascending order' do
+            it 'the records are returned in descending order' do
               expect(records.size).to be(2)
 
               expect(records.pluck('status')).to all(eq('submitted'))
@@ -260,11 +247,39 @@ RSpec.describe 'list applications' do
           context 'when direction is descending' do
             let(:query) { '?status=returned&sort_by=returned_at&sort_direction=desc' }
 
-            it 'the records are returned in ascending order' do
+            it 'the records are returned in descending order' do
               expect(records.size).to be(2)
 
               expect(records.pluck('status')).to all(eq('returned'))
               expect(records.first['returned_at']).to be > records.second['returned_at']
+            end
+          end
+        end
+      end
+
+      # NOTE: all statuses behave the same, this is just a sanity check,
+      # no need to test all combinations again for `superseded`
+      context 'when status is `superseded`' do
+        context 'when sorting by `submitted_at`' do
+          context 'when direction is `ascending`' do
+            let(:query) { '?status=superseded&sort_by=submitted_at&sort_direction=asc' }
+
+            it 'the records are returned in ascending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('superseded'))
+              expect(records.first['submitted_at']).to be < records.second['submitted_at']
+            end
+          end
+
+          context 'when direction is `descending`' do
+            let(:query) { '?status=superseded&sort_by=submitted_at&sort_direction=desc' }
+
+            it 'the records are returned in descending order' do
+              expect(records.size).to be(2)
+
+              expect(records.pluck('status')).to all(eq('superseded'))
+              expect(records.first['submitted_at']).to be > records.second['submitted_at']
             end
           end
         end

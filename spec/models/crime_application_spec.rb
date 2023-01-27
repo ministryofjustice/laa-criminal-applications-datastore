@@ -36,6 +36,12 @@ describe CrimeApplication do
       it 'has the same id as the document' do
         expect(application).not_to be_nil
       end
+
+      it 'has the same `submitted_at` as the document' do
+        expect(
+          application.submitted_at
+        ).to eq(application_attributes['submitted_at'])
+      end
     end
   end
 end
