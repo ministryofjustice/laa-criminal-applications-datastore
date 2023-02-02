@@ -18,6 +18,9 @@ jobs:
       RACK_ENV: test
       RAILS_ENV: test
       DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/laa-criminal-applications-datastore-test"
+      AWS_REGION: 'eu-west-2'
+      LOCAL_ELASTICMQ_URL: http://localhost:9324
+      SQS_MAAT_QUEUE_URL: http://localhost:9324/test_submitted_applications_for_maat
 
     services:
       postgres:
