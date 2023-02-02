@@ -23,6 +23,29 @@ After you've defined your DB configuration in the `.env.{development,test}.local
 * `bin/rails db:prepare` (for the development database)
 * `RAILS_ENV=test bin/rails db:prepare` (for the test database)
 
+**ElasticMQ**
+
+Technically not required to setup or have this running just yet, but might be neccessary for some functionality.  
+If interested, go ahead and expand this section.  
+
+<details>
+<summary>Run ElasticMQ and queue processor</summary>
+
+The datastore requires for some functionality a message queue. This message queue is AWS SQS on cloud-deployed 
+environments (i.e. kubernetes) but it is not practical to use AWS SQS for local development.
+
+[ElasticMQ](https://github.com/softwaremill/elasticmq) is used instead, as an in-memory message queue with an 
+Amazon SQS-compatible interface.
+
+NOTE: the easiest way to get this up and running locally is to run an ElasticMQ instance in a docker container.  
+A docker-compose file is provided that allows that, and expose the instance by default in port 9324 (and port 9325 for 
+the queues inspector).  
+Spin up this instance with `docker-compose up elasticmq` and then make sure your .env local files point to that endpoint, 
+which by default they will.
+
+In order to process enqueued jobs, run the worker with `./shoryuken.sh start` and stop it with `./shoryuken.sh stop`.
+</details>
+
 **3. Run the app locally**
 
 Once all the above is done, you should be able to run the application as follows:

@@ -5,6 +5,7 @@ require "active_model/railtie"
 require "active_record/railtie"
 require "action_controller/railtie"
 # require "action_view/railtie"
+require "active_job/railtie"
 require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -23,6 +24,8 @@ module LaaCriminalApplicationsDatastore
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.active_job.queue_adapter = :shoryuken
 
     # This automatically adds id: :uuid to create_table in all future migrations
     config.generators do |g|
