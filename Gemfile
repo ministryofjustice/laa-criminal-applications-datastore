@@ -11,6 +11,10 @@ gem 'grape', '~> 1.6.2'
 gem 'grape-entity', '~> 0.10.2'
 gem 'kaminari-activerecord'
 
+# SQS message processor
+gem 'aws-sdk-sqs'
+gem 'shoryuken'
+
 # Temporarily until 2.8.1 is released
 # https://github.com/mikel/mail/issues/1541
 gem 'mail', '< 2.8.0'
@@ -33,4 +37,5 @@ group :test do
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
+  gem 'webmock'
 end
