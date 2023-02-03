@@ -11,9 +11,10 @@ Shoryuken.configure_server do |config|
   config.cache_visibility_timeout = true
 end
 
-# For both, client and server
+# For both, client and server, when running the queues locally
 if ENV['LOCAL_ELASTICMQ_URL'].present?
   Shoryuken.sqs_client = Aws::SQS::Client.new(
-    endpoint: ENV['LOCAL_ELASTICMQ_URL']
+    endpoint: ENV['LOCAL_ELASTICMQ_URL'],
+    region: 'eu-west-2' # required, but irrelevant locally
   )
 end

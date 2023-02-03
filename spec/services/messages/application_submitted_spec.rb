@@ -11,14 +11,18 @@ describe Messages::ApplicationSubmitted do
     instance_double(Aws::SQS::Client, send_message: true)
   end
 
+  let(:queue_url) { 'http://sqs-test/queue-name' }
+
   before do
+    allow(ENV).to receive(:fetch).with('SQS_MAAT_QUEUE_URL').and_return(queue_url)
+
     allow(Rails.logger).to receive(:info)
     allow(Shoryuken).to receive(:sqs_client).and_return(sqs_client)
   end
 
-  describe '#process' do
+  describe '#publish' do
     before do
-      subject.process
+      subject.publish
     end
 
     it 'logs the action' do
@@ -29,7 +33,7 @@ describe Messages::ApplicationSubmitted do
       expect(
         sqs_client
       ).to have_received(:send_message).with(
-        queue_url: 'http://localhost:9324/test_submitted_applications_for_maat',
+        queue_url: queue_url,
         message_body: '{"foo":"bar"}'
       )
     end

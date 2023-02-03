@@ -13,7 +13,7 @@ describe ApplicationSubmittedJob do
   end
 
   describe '.queue_name' do
-    it { expect(described_class.queue_name).to eq('test_datastore_submissions') }
+    it { expect(described_class.queue_name).to eq('datastore_submissions') }
   end
 
   describe '#perform' do
@@ -21,8 +21,8 @@ describe ApplicationSubmittedJob do
       described_class.perform_now(crime_application)
     end
 
-    it 'calls the messaging service to process the submission' do
-      expect(queue).to have_received(:process)
+    it 'calls the service to publish the message' do
+      expect(queue).to have_received(:publish)
     end
   end
 end
