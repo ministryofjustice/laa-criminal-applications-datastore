@@ -9,7 +9,7 @@ RSpec.describe 'search with text' do
   let(:records) { JSON.parse(response.body).fetch('records') }
 
   before do
-    details = %i[John Deere 1010 Ken John 1020 Jonathan Deere 1030].each_slice(3)
+    details = %i[Jenni Deere 1010 David Brown 1020 Jenny Deere 1030].each_slice(3)
     CrimeApplication.insert_all(
       details.map do |first_name, last_name, reference|
         {
@@ -34,15 +34,15 @@ RSpec.describe 'search with text' do
   end
 
   context 'when first name is searched' do
-    let(:search) { { search_text: 'John' } }
+    let(:search) { { search_text: 'Jenni' } }
 
-    it 'shows results that match the first name' do
-      expect(records.pluck('reference')).to match([1010, 1020])
+    it 'shows results that match the first name or alternative spelling' do
+      expect(records.pluck('reference')).to match([1010, 1030])
     end
   end
 
   context 'when reference is included' do
-    let(:search) { { search_text: 'Deere 1030' } }
+    let(:search) { { search_text: 'Jenni Deere 1030' } }
 
     it 'shows results that match the reference name' do
       expect(records.pluck('reference')).to match([1030])
@@ -58,10 +58,18 @@ RSpec.describe 'search with text' do
   end
 
   context 'when first and last name are searched' do
-    let(:search) { { search_text: 'John Deere' } }
+    let(:search) { { search_text: 'Jenni Deere' } }
 
     it 'shows results that match the full name' do
-      expect(records.pluck('reference')).to match([1010])
+      expect(records.pluck('reference')).to match([1010, 1030])
+    end
+  end
+
+  context 'when a name is indexed differently' do
+    let(:search) { { search_text: 'Jenny', status: ['submitted'] } }
+
+    it 'shows results that match the full name' do
+      expect(records.pluck('reference')).to match([1010, 1030])
     end
   end
 end

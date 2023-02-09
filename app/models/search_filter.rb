@@ -57,7 +57,6 @@ class SearchFilter
   end
 
   def filter_search_text(scope)
-    query_text = search_text.split.join('&')
-    scope.where('searchable_text @@ to_tsquery(?)', query_text)
+    scope.where("searchable_text @@ plainto_tsquery('english', ?)", search_text)
   end
 end
