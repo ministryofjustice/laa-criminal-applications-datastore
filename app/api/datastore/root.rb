@@ -3,7 +3,7 @@ module Datastore
     format :json
     prefix :api
 
-    # auth :jwt unless Rails.env.test?
+    # auth :jwt
 
     mount V2::Health
     mount V2::Applications

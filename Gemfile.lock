@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/ministryofjustice/simple-jwt-auth.git
-  revision: 8c5e442d0fc242cc785f07cabd69b3af89d1e11b
+  revision: 174ad91cd1d9ba13e990ab98be2e9db21dc8b625
   specs:
     simple-jwt-auth (0.0.1)
       json
