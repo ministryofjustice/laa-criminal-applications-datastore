@@ -6,6 +6,14 @@ GIT
       dry-struct
       json-schema (~> 3.0.0)
 
+GIT
+  remote: https://github.com/ministryofjustice/simple-jwt-auth.git
+  revision: 8c5e442d0fc242cc785f07cabd69b3af89d1e11b
+  specs:
+    simple-jwt-auth (0.0.1)
+      json
+      jwt
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -149,6 +157,7 @@ GEM
     json (2.6.3)
     json-schema (3.0.0)
       addressable (>= 2.8)
+    jwt (2.7.0)
     kaminari-activerecord (1.2.2)
       activerecord
       kaminari-core (= 1.2.2)
@@ -319,6 +328,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   shoryuken
+  simple-jwt-auth!
   simplecov
   webmock
 
