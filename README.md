@@ -92,4 +92,5 @@ At the moment these endpoints are:
 * `GET /api/v2/applications` list all applications (refer to the class for params)
 * `GET /api/v2/applications/{id}` get an application by its ID
 * `PUT /api/v2/applications/{id}/return` returns an application by its ID
+* `PUT /api/v2/applications/{id}/complete` marks an application as complete
 * `GET /api/v2/health` checks connection to the database
