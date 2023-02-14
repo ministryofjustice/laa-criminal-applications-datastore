@@ -67,3 +67,13 @@ spec:
               secretKeyRef:
                 name: rds-instance
                 key: url
+          - name: API_AUTH_SECRET_APPLY
+            valueFrom:
+              secretKeyRef:
+                name: api-auth-secrets
+                key: crime_apply
+          - name: API_AUTH_SECRET_REVIEW
+            valueFrom:
+              secretKeyRef:
+                name: api-auth-secrets
+                key: crime_review
