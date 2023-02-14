@@ -11,6 +11,9 @@ gem 'grape', '~> 1.6.2'
 gem 'grape-entity', '~> 0.10.2'
 gem 'kaminari-activerecord'
 
+# Datastore API authentication
+gem 'moj-simple-jwt-auth', '0.0.1'
+
 # SQS message processor
 gem 'aws-sdk-sqs'
 gem 'shoryuken'
@@ -21,9 +24,6 @@ gem 'mail', '< 2.8.0'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas'
-
-gem 'simple-jwt-auth',
-    github: 'ministryofjustice/simple-jwt-auth'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
