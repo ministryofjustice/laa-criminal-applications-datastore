@@ -3,7 +3,8 @@ module Datastore
     format :json
     prefix :api
 
-    # auth :jwt
+    # JWT auth middleware from `moj-simple-jwt-auth` gem
+    auth :jwt
 
     mount V2::Health
     mount V2::Applications
