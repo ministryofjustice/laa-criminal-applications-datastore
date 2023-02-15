@@ -5,8 +5,10 @@ module Operations
       @return_details = @application.build_return_details(return_details)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def call
       raise Errors::AlreadyReturned if application.returned?
+      raise Errors::AlreadyCompleted if application.assessment_completed?
 
       application.transaction do
         return_details.save!
@@ -21,6 +23,7 @@ module Operations
 
       application
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 

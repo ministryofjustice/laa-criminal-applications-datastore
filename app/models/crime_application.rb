@@ -3,6 +3,7 @@ class CrimeApplication < ApplicationRecord
 
   attr_readonly :application, :submitted_at, :id
   enum status: Types::ApplicationStatus.mapping
+  enum review_status: Types::ReviewApplicationStatus.mapping
 
   before_validation :shift_payload_attributes, on: :create
 

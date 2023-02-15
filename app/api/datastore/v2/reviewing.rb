@@ -4,8 +4,7 @@ module Datastore
       version 'v2', using: :path
 
       resource :applications do
-        desc 'Return an applcation.'
-
+        desc 'Return an application to provider.'
         params do
           requires :application_id, type: String, desc: 'Crime Application UUID'
           requires :return_details, type: JSON do
@@ -19,6 +18,21 @@ module Datastore
             put do
               return_params = declared(params).symbolize_keys
               app = Operations::ReturnApplication.new(**return_params).call
+              present app, with: Datastore::Entities::CrimeApplication
+            end
+          end
+        end
+
+        desc 'Mark an application as complete.'
+        params do
+          requires :application_id, type: String, desc: 'Crime Application UUID'
+        end
+
+        route_param :application_id do
+          resource :complete do
+            put do
+              complete_params = declared(params).symbolize_keys
+              app = Operations::CompleteApplication.new(**complete_params).call
               present app, with: Datastore::Entities::CrimeApplication
             end
           end

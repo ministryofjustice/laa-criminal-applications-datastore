@@ -20,5 +20,9 @@ module Datastore
     rescue_from Errors::AlreadyReturned do
       error!({ status: 409, error: 'Already Returned' }, 409)
     end
+
+    rescue_from Errors::AlreadyCompleted do
+      error!({ status: 409, error: 'Already Completed' }, 409)
+    end
   end
 end

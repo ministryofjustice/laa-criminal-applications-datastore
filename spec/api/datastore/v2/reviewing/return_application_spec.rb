@@ -78,7 +78,18 @@ RSpec.describe 'return application' do
       end
     end
 
-    context 'with an unkown application' do
+    context 'with a completed application' do
+      before do
+        application.update!(review_status: :assessment_completed, reviewed_at: 1.week.ago)
+      end
+
+      it 'raises a 409 error' do
+        api_request
+        expect(response).to have_http_status :conflict
+      end
+    end
+
+    context 'with an unknown application' do
       subject(:api_request) do
         put(
           "/api/v2/applications/#{SecureRandom.uuid}/return",
