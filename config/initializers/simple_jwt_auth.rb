@@ -1,8 +1,9 @@
 require 'simple_jwt_auth'
 
 SimpleJwtAuth.configure do |config|
-  config.logger = Logger.new(STDOUT)
-  config.logger.level = Logger::DEBUG
+  # Log level inherited from Rails logger, by default
+  # `debug` in development/test and `info` in production
+  config.logger = Rails.logger
 
   # A map of consumers of the API and their secrets
   # On kubernetes, secrets are created by terraform
