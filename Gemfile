@@ -11,6 +11,9 @@ gem 'grape', '~> 1.6.2'
 gem 'grape-entity', '~> 0.10.2'
 gem 'kaminari-activerecord'
 
+# Datastore API authentication
+gem 'moj-simple-jwt-auth', '0.0.1'
+
 # SQS message processor
 gem 'aws-sdk-sqs'
 gem 'shoryuken'
