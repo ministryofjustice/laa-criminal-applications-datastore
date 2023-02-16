@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_27_125227) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_16_165844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,7 +23,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_27_125227) do
     t.datetime "returned_at", precision: nil
     t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (application ->> 'reference'::text)))", stored: true
     t.datetime "reviewed_at", precision: nil
-    t.string "review_status"
+    t.string "review_status", default: "application_received", null: false
     t.virtual "reference", type: :integer, as: "((application ->> 'reference'::text))::integer", stored: true
     t.virtual "applicant_first_name", type: :string, as: "(application #>> '{client_details,applicant,first_name}'::text[])", stored: true
     t.virtual "applicant_last_name", type: :string, as: "(application #>> '{client_details,applicant,last_name}'::text[])", stored: true
