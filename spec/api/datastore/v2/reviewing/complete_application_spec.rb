@@ -17,7 +17,7 @@ RSpec.describe 'complete application' do
     context 'with a submitted application' do
       it 'marks the application as complete' do
         expect { api_request }.to change { application.reload.review_status }
-          .from(nil).to('assessment_completed')
+          .from('application_received').to('assessment_completed')
       end
 
       it 'records reviewed_at' do
