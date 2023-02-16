@@ -7,7 +7,7 @@ gem 'pg', '~> 1.4'
 gem 'puma'
 gem 'rails', '~> 7.0.4'
 
-gem 'grape', '~> 1.6.2'
+gem 'grape', '~> 1.7.0'
 gem 'grape-entity', '~> 0.10.2'
 gem 'kaminari-activerecord'
 
@@ -17,10 +17,6 @@ gem 'moj-simple-jwt-auth', '0.0.1'
 # SQS message processor
 gem 'aws-sdk-sqs'
 gem 'shoryuken'
-
-# Temporarily until 2.8.1 is released
-# https://github.com/mikel/mail/issues/1541
-gem 'mail', '< 2.8.0'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas'
