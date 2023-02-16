@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ministryofjustice/laa-criminal-legal-aid-schemas.git
-  revision: 2530eda6f3b1c89bfa7f18230bba684b6d6e3419
+  revision: 79de69687adb7f596206e3835f5b77ba867a99ea
   specs:
     laa-criminal-legal-aid-schemas (0.1.1)
       dry-struct
@@ -78,12 +78,15 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.711.0)
+    aws-partitions (1.712.0)
     aws-sdk-core (3.170.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
+    aws-sdk-sns (1.60.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-sqs (1.53.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
@@ -265,7 +268,7 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.26.0)
       parser (>= 3.2.1.0)
-    rubocop-capybara (2.17.0)
+    rubocop-capybara (2.17.1)
       rubocop (~> 1.41)
     rubocop-performance (1.16.0)
       rubocop (>= 1.7.0, < 2.0)
@@ -290,7 +293,7 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     thor (1.2.1)
-    timeout (0.3.1)
+    timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
@@ -307,6 +310,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk-sns
   aws-sdk-sqs
   brakeman
   debug

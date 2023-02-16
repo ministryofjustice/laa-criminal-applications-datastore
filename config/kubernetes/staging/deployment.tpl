@@ -77,3 +77,18 @@ spec:
               secretKeyRef:
                 name: api-auth-secrets
                 key: crime_review
+          - name: EVENTS_SNS_TOPIC_ARN
+            valueFrom:
+              secretKeyRef:
+                name: application-events-sns-topic
+                key: topic_arn
+          - name: EVENTS_SNS_TOPIC_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: application-events-sns-topic
+                key: access_key_id
+          - name: EVENTS_SNS_TOPIC_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: application-events-sns-topic
+                key: secret_access_key

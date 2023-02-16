@@ -12,12 +12,14 @@ module Operations
 
     def call
       CrimeApplication.transaction do
-        app = CrimeApplication.create!(application: payload)
-
+        @app = CrimeApplication.create!(application: payload)
         SupersedeApplication.new(application_id: parent_id).call if parent_id
-
-        { id: app.id }
       end
+
+      # Publish event notification to the SNS topic
+      Events::Submission.new(@app).publish
+
+      { id: @app.id }
     end
 
     private
