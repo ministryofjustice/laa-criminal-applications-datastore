@@ -5,10 +5,8 @@ module Operations
       @return_details = @application.build_return_details(return_details)
     end
 
-    # rubocop:disable Metrics/AbcSize
     def call
-      raise Errors::AlreadyReturned if application.returned?
-      raise Errors::AlreadyCompleted if application.assessment_completed?
+      validate_application!
 
       application.transaction do
         return_details.save!
@@ -21,12 +19,19 @@ module Operations
         )
       end
 
+      # Publish event notification to the SNS topic
+      Events::Returned.new(application).publish
+
       application
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 
     attr_reader :application, :return_details
+
+    def validate_application!
+      raise Errors::AlreadyReturned if application.returned?
+      raise Errors::AlreadyCompleted if application.assessment_completed?
+    end
   end
 end
