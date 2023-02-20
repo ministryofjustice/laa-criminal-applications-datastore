@@ -11,6 +11,10 @@ gem 'grape', '~> 1.7.0'
 gem 'grape-entity', '~> 0.10.2'
 gem 'kaminari-activerecord'
 
+# Exceptions notifications
+gem 'sentry-rails'
+gem 'sentry-ruby'
+
 # Datastore API authentication
 gem 'moj-simple-jwt-auth', '0.0.1'
 
