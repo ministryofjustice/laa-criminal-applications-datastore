@@ -44,14 +44,16 @@ describe Messaging::EventsPublisher do
       before do
         stub_request(:post, sns_endpoint)
           .with(
-            body: hash_including(
+            body: {
               'Action' => 'Publish',
+              'Subject' => 'test-event',
               'Message' => '{"foo":"bar"}',
               'MessageAttributes.entry.1.Name' => 'event_name',
               'MessageAttributes.entry.1.Value.DataType' => 'String',
               'MessageAttributes.entry.1.Value.StringValue' => 'test-event',
               'TopicArn' => 'topic_arn',
-            )
+              'Version' => '2010-03-31',
+            }
           ).to_return(status: 201, body: '')
       end
 
