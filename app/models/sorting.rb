@@ -11,7 +11,6 @@ class Sorting
 
   SORT_COLUMNS = {
     applicant_name: [:applicant_last_name, :applicant_first_name],
-    reference: [:reference],
     returned_at: [:returned_at],
     reviewed_at: [:reviewed_at],
     submitted_at: [:submitted_at]
