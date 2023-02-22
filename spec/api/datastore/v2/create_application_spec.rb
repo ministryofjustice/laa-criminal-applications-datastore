@@ -94,14 +94,17 @@ RSpec.describe 'create application' do
       it 'returns error information' do
         expect(response.body).to include('Record not unique')
       end
+
+      it 'does not publish a submission event' do
+        expect(
+          submission_event
+        ).not_to have_received(:publish)
+      end
     end
 
     context 'with a schema error' do
       before do
-        allow(CrimeApplication).to receive(:create!).with(
-          application: JSON.parse(payload)
-        ).and_return(record)
-
+        allow(CrimeApplication).to receive(:create!)
         api_request
       end
 
