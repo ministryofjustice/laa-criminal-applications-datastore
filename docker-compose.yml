@@ -6,6 +6,7 @@
 version: '3.4'
 
 x-common-variables: &common-variables
+  ENV_NAME: staging
   RACK_ENV: production
   RAILS_ENV: production
   SECRET_KEY_BASE: 90957b5f6dab71710443434b3541698a2017f7dd01d9a19acae5b0fc8a64b3a6
