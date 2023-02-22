@@ -18,6 +18,16 @@ describe Operations::ReturnApplication do
 
   let(:service) { described_class.new(application_id:, return_details:) }
 
+  describe '.new' do
+    context 'when application is not found' do
+      let(:application_id) { SecureRandom.uuid }
+
+      it 'raises RecordNotFound error' do
+        expect { service }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
+  end
+
   describe '#call' do
     subject(:call) { service.call }
 
@@ -25,7 +35,15 @@ describe Operations::ReturnApplication do
       CrimeApplication.find(application_id)
     end
 
+    let(:returned_event) { instance_double(Events::Returned, publish: true) }
+
     context 'with valid attributes' do
+      before do
+        allow(
+          Events::Returned
+        ).to receive(:new).with(application).and_return(returned_event)
+      end
+
       it "updates the application's status to 'returned'" do
         expect { call }.to change { application.reload.status }
           .from('submitted').to('returned')
@@ -45,19 +63,19 @@ describe Operations::ReturnApplication do
           .from(NilClass).to(ActiveSupport::TimeWithZone)
       end
 
+      it 'publishes a returned event' do
+        call
+
+        expect(
+          returned_event
+        ).to have_received(:publish)
+      end
+
       context 'when application has already been returned' do
         before { application.update(status: :returned, returned_at: 1.day.ago) }
 
         it 'raises AlreadyReturned error' do
           expect { call }.to raise_error Errors::AlreadyReturned
-        end
-      end
-
-      context 'when application is not found' do
-        let(:application_id) { SecureRandom.uuid }
-
-        it 'raises RecordNotFound error' do
-          expect { call }.to raise_error ActiveRecord::RecordNotFound
         end
       end
 

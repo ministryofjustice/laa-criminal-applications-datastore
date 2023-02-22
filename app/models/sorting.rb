@@ -13,8 +13,7 @@ class Sorting
     applicant_name: [:applicant_last_name, :applicant_first_name],
     returned_at: [:returned_at],
     reviewed_at: [:reviewed_at],
-    submitted_at: [:submitted_at],
-    time_passed: [:submitted_at]
+    submitted_at: [:submitted_at]
   }.freeze
 
   DEFAULT_SORT_BY = :submitted_at

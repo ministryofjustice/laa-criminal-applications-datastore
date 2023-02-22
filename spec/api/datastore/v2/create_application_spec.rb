@@ -18,6 +18,8 @@ RSpec.describe 'create application' do
     let(:record) { instance_double(CrimeApplication, id: application_id) }
     let(:payload) { LaaCrimeSchemas.fixture(1.0).read }
 
+    let(:submission_event) { instance_double(Events::Submission, publish: true) }
+
     context 'with a valid request' do
       before do
         allow(CrimeApplication).to receive(:create!).with(
@@ -27,6 +29,10 @@ RSpec.describe 'create application' do
         allow(
           Operations::SupersedeApplication
         ).to receive(:new).and_return(double.as_null_object)
+
+        allow(
+          Events::Submission
+        ).to receive(:new).with(record).and_return(submission_event)
 
         api_request
       end
@@ -49,6 +55,12 @@ RSpec.describe 'create application' do
         expect(Operations::SupersedeApplication).not_to have_received(:new)
       end
 
+      it 'publishes a submission event' do
+        expect(
+          submission_event
+        ).to have_received(:publish)
+      end
+
       context 'when is a resubmission' do
         let(:payload) { JSON.dump(JSON.parse(super()).merge('parent_id' => '12345')) }
 
@@ -56,6 +68,12 @@ RSpec.describe 'create application' do
           expect(
             Operations::SupersedeApplication
           ).to have_received(:new).with(application_id: '12345')
+        end
+
+        it 'publishes a submission event' do
+          expect(
+            submission_event
+          ).to have_received(:publish)
         end
       end
     end
@@ -73,17 +91,20 @@ RSpec.describe 'create application' do
         expect(response).to have_http_status(:bad_request)
       end
 
-      it 'returns error informatation' do
+      it 'returns error information' do
         expect(response.body).to include('Record not unique')
+      end
+
+      it 'does not publish a submission event' do
+        expect(
+          submission_event
+        ).not_to have_received(:publish)
       end
     end
 
     context 'with a schema error' do
       before do
-        allow(CrimeApplication).to receive(:create!).with(
-          application: JSON.parse(payload)
-        ).and_return(record)
-
+        allow(CrimeApplication).to receive(:create!)
         api_request
       end
 
@@ -99,7 +120,7 @@ RSpec.describe 'create application' do
         expect(response).to have_http_status(:bad_request)
       end
 
-      it 'returns error informatation' do
+      it 'returns error information' do
         expect(response.body).to include('failed_attribute')
       end
     end
