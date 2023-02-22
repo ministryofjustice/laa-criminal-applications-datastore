@@ -17,10 +17,10 @@ module Operations
           returned_at: return_details.created_at,
           reviewed_at: Time.zone.now
         )
-      end
 
-      # Publish event notification to the SNS topic
-      Events::Returned.new(application).publish
+        # Publish event notification to the SNS topic
+        Events::Returned.new(application).publish
+      end
 
       application
     end

@@ -14,7 +14,7 @@ module Events
 
     # Can be overridden in subclasses if required
     def message
-      crime_application.application
+      { id: crime_application.id }
     end
 
     # Convenience method as currently we only have

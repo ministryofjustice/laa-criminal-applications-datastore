@@ -11,11 +11,13 @@ module Messaging
 
       client.publish(
         topic_arn: topic_arn,
-        subject: event.name,
-        message: event.message.to_json,
         message_attributes: {
           event_name: { data_type: 'String', string_value: event.name },
-        }
+        },
+        message: {
+          event_name: event.name,
+          data: event.message,
+        }.to_json
       )
     end
 

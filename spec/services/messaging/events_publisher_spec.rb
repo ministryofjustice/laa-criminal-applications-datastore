@@ -46,8 +46,7 @@ describe Messaging::EventsPublisher do
           .with(
             body: {
               'Action' => 'Publish',
-              'Subject' => 'test-event',
-              'Message' => '{"foo":"bar"}',
+              'Message' => '{"event_name":"test-event","data":{"foo":"bar"}}',
               'MessageAttributes.entry.1.Name' => 'event_name',
               'MessageAttributes.entry.1.Value.DataType' => 'String',
               'MessageAttributes.entry.1.Value.StringValue' => 'test-event',
