@@ -52,6 +52,8 @@ services:
       PORT: 3003
       DISABLE_HTTPS: "1"
       RAILS_SERVE_STATIC_FILES: "1"
+      API_AUTH_SECRET_APPLY: foobar
+      API_AUTH_SECRET_REVIEW: foobar
     ports:
       - "3003:3003"
     depends_on:
