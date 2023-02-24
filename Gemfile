@@ -9,6 +9,7 @@ gem 'rails', '~> 7.0.4'
 
 gem 'grape', '~> 1.7.0'
 gem 'grape-entity', '~> 0.10.2'
+gem 'grape_logging'
 gem 'kaminari-activerecord'
 
 # Exceptions notifications

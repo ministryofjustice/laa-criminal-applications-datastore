@@ -2,6 +2,8 @@ require 'laa_crime_schemas'
 
 module Datastore
   class Base < Grape::API
+    include Datastore::Concerns::Logging
+
     helpers Helpers::SortingParams
     helpers Helpers::PaginationParams
 
