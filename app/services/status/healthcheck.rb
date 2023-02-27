@@ -9,7 +9,7 @@ module Status
 
     class << self
       def call
-        if databases_connected?
+        if database_connected?
           status = :ok
           error = nil
         else
@@ -20,9 +20,12 @@ module Status
         new(status:, error:)
       end
 
-      def databases_connected?
+      def database_connected?
         ActiveRecord::Base.connection.active?
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.error(e)
+        Sentry.capture_exception(e)
+
         false
       end
     end

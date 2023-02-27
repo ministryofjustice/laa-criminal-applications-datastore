@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   mount Datastore::Root => '/'
 
   get :ping, to: 'status#ping'
+  get :health, to: 'status#health'
 
   # catch-all route
   match '*path', to: 'errors#not_found', via: :all, constraints:
