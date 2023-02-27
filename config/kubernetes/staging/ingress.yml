@@ -16,8 +16,19 @@ spec:
   tls:
   - hosts:
     - criminal-applications-datastore-staging.apps.live.cloud-platform.service.justice.gov.uk
+    - criminal-applications-datastore-staging.apps.cloud-platform.service.justice.gov.uk
   rules:
   - host: criminal-applications-datastore-staging.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: service-staging
+            port:
+              number: 80
+  - host: criminal-applications-datastore-staging.apps.cloud-platform.service.justice.gov.uk
     http:
       paths:
       - path: /
