@@ -83,28 +83,12 @@ jobs:
           secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
           region: eu-west-2
           local-image: app
-          image: ${{ secrets.ECR_NAME }}:${{ github.sha }}, ${{ secrets.ECR_NAME }}:harness.latest, ${{ secrets.ECR_NAME }}:staging.latest
+          image: ${{ secrets.ECR_NAME }}:${{ github.sha }}, ${{ secrets.ECR_NAME }}:staging.latest
 
-  deploy-non-prod:
+  deploy-staging:
     runs-on: ubuntu-latest
     needs: build
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - namespace: harness
-            kube_manifests_path: config/kubernetes/harness
-            kube_cert: KUBE_HARNESS_CERT
-            kube_token: KUBE_HARNESS_TOKEN
-            kube_cluster: KUBE_HARNESS_CLUSTER
-            kube_namespace: KUBE_HARNESS_NAMESPACE
-          - namespace: staging
-            kube_manifests_path: config/kubernetes/staging
-            kube_cert: KUBE_STAGING_CERT
-            kube_token: KUBE_STAGING_TOKEN
-            kube_cluster: KUBE_STAGING_CLUSTER
-            kube_namespace: KUBE_STAGING_NAMESPACE
-    environment: ${{ matrix.namespace }}
+    environment: staging
 
     steps:
       - name: Checkout
@@ -117,10 +101,10 @@ jobs:
 
       - name: Authenticate to the cluster
         env:
-          KUBE_CERT: ${{ secrets[matrix.kube_cert] }}
-          KUBE_TOKEN: ${{ secrets[matrix.kube_token] }}
-          KUBE_CLUSTER: ${{ secrets[matrix.kube_cluster] }}
-          KUBE_NAMESPACE: ${{ secrets[matrix.kube_namespace] }}
+          KUBE_CERT: ${{ secrets.KUBE_STAGING_CERT }}
+          KUBE_TOKEN: ${{ secrets.KUBE_STAGING_TOKEN }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_STAGING_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_STAGING_NAMESPACE }}
         run: |
           echo "${KUBE_CERT}" > ca.crt
           kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://${KUBE_CLUSTER}
@@ -132,7 +116,7 @@ jobs:
         env:
           ECR_URL: ${{ secrets.ECR_URL }}
           IMAGE_TAG: ${{ github.sha }}
-        run: envsubst < ${{ matrix.kube_manifests_path }}/deployment.tpl > ${{ matrix.kube_manifests_path }}/deployment.yml
+        run: envsubst < config/kubernetes/staging/deployment.tpl > config/kubernetes/staging/deployment.yml
 
       - name: Apply manifest files
-        run: kubectl apply -f ${{ matrix.kube_manifests_path }}
+        run: kubectl apply -f config/kubernetes/staging
