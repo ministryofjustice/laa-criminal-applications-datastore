@@ -1,7 +1,7 @@
 class CrimeApplication < ApplicationRecord
   has_one :return_details, dependent: :destroy
 
-  attr_readonly :submitted_at, :id
+  attr_readonly :application, :submitted_at, :id
   enum status: Types::ApplicationStatus.mapping
   enum review_status: Types::ReviewApplicationStatus.mapping
 
