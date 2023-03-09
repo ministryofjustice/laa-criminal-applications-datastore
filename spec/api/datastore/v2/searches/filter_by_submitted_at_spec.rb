@@ -21,14 +21,14 @@ RSpec.describe 'searches filter by submitted_at' do
   end
 
   it 'defaults to showing all applications' do
-    expect(records.pluck('reference')).to match_array([101, 102, 103])
+    expect(records.pluck('reference')).to contain_exactly(101, 102, 103)
   end
 
   context 'when submitted_after is provided' do
     let(:search) { { submitted_after: 2.days.ago } }
 
     it 'only shows records submitted after' do
-      expect(records.pluck('reference')).to match_array([102, 103])
+      expect(records.pluck('reference')).to contain_exactly(102, 103)
     end
   end
 

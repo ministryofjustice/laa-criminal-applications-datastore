@@ -10,7 +10,7 @@ RSpec.describe StatusController do
     it 'returns the expected payload' do
       get :ping, format: :json
       expect(
-        JSON.parse(response.body).keys
+        response.parsed_body.keys
       ).to eq(%w[build_date build_tag commit_id])
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe StatusController do
         expect(response).to have_http_status :service_unavailable
 
         expect(
-          JSON.parse(response.body)
+          response.parsed_body
         ).to eq('status' => 'service_unavailable', 'error' => 'Database Connection Error')
       end
     end
