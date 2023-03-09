@@ -28,7 +28,7 @@ gem 'aws-sdk-sqs'
 gem 'shoryuken'
 
 gem 'laa-criminal-legal-aid-schemas',
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas'
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v0.1.1'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
