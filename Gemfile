@@ -19,13 +19,8 @@ gem 'sentry-ruby'
 # Datastore API authentication
 gem 'moj-simple-jwt-auth', '0.0.1'
 
-# SNS/SQS messaging
+# SNS messaging
 gem 'aws-sdk-sns'
-gem 'aws-sdk-sqs'
-
-# NOTE: we can probably remove this gem in favor of a simpler
-# approach to messaging. Can be done as a separate PR.
-gem 'shoryuken'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v0.1.1'

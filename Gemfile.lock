@@ -88,9 +88,6 @@ GEM
     aws-sdk-sns (1.60.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sqs (1.53.0)
-      aws-sdk-core (~> 3, >= 3.165.0)
-      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.2)
       aws-eventstream (~> 1, >= 1.0.2)
     brakeman (5.4.1)
@@ -291,10 +288,6 @@ GEM
       sentry-ruby (~> 5.8.0)
     sentry-ruby (5.8.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shoryuken (6.0.0)
-      aws-sdk-core (>= 2)
-      concurrent-ruby
-      thor
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -320,7 +313,6 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk-sns
-  aws-sdk-sqs
   brakeman
   debug
   dotenv-rails
@@ -341,7 +333,6 @@ DEPENDENCIES
   rubocop-rspec
   sentry-rails
   sentry-ruby
-  shoryuken
   simplecov
   webmock
 

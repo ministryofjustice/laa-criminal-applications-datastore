@@ -10,14 +10,8 @@ x-common-variables: &common-variables
   RACK_ENV: production
   RAILS_ENV: production
   SECRET_KEY_BASE: 90957b5f6dab71710443434b3541698a2017f7dd01d9a19acae5b0fc8a64b3a6
-  LOCAL_ELASTICMQ_URL: http://elasticmq:9324
-  SQS_MAAT_QUEUE_URL: http://elasticmq:9324/submitted_applications_for_maat
   DATABASE_URL: postgresql://postgres@db/laa-criminal-applications-datastore
   DATABASE_SSLMODE: disable
-  # Following AWS keys need to be present, but are just dummies!
-  AWS_REGION: 'eu-west-2'
-  AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
-  AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
 
 services:
   db:
@@ -34,17 +28,6 @@ services:
     volumes:
       - ./config/elasticmq.conf:/opt/elasticmq.conf
 
-  worker:
-    build: .
-    environment:
-      <<: *common-variables
-    entrypoint: ["./shoryuken.sh", "start"]
-    depends_on:
-      - db
-      - elasticmq
-    links:
-      - elasticmq
-
   web:
     build: .
     environment:
@@ -58,6 +41,3 @@ services:
       - "3003:3003"
     depends_on:
       - db
-      - elasticmq
-    links:
-      - elasticmq
