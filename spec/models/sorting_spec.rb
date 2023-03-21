@@ -29,14 +29,12 @@ describe Sorting do
       end
     end
 
-    # Sorting strings on BSD/MacOSX results in undesirable behaviour
-    # https://dba.stackexchange.com/questions/106964/why-is-my-postgresql-order-by-case-insensitive
-    context 'with compound sort of applicant name' do
+    context 'with a compound applicant name sort' do
       let(:params) { { sort_by: :applicant_name } }
 
-      it 'orders using postgres lower function' do
+      it 'orders by both columns' do
         expect(scope).to have_received(:order).with(
-          'lower(applicant_last_name) desc, lower(applicant_first_name) desc'
+          { applicant_last_name: :desc, applicant_first_name: :desc, }
         )
       end
     end

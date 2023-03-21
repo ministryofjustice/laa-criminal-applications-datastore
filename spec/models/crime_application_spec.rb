@@ -44,4 +44,31 @@ describe CrimeApplication do
       end
     end
   end
+
+  describe '#applicant_name' do
+    context 'when created' do
+      subject!(:application) do
+        record = described_class.create!(valid_attributes)
+        record.reload
+      end
+
+      it 'is stored with correct case' do
+        applicant_name = [
+          application.applicant_first_name,
+          application.applicant_last_name
+        ].join(' ')
+
+        expect(applicant_name).to eq 'Kit Pound'
+      end
+
+      it 'is searchable with insensitive case' do
+        db_record = described_class.where(
+          applicant_first_name: 'kIt',
+          applicant_last_name: 'pOunD'
+        )
+
+        expect(db_record.first).to eq(application)
+      end
+    end
+  end
 end

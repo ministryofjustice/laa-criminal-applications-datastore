@@ -23,11 +23,7 @@ class Sorting
   attribute :sort_direction, :string, default: DEFAULT_DIRECTION
 
   def apply_to_scope(scope)
-    if order_params[:applicant_first_name] || order_params[:applicant_last_name]
-      scope.order("lower(applicant_last_name) #{direction}, lower(applicant_first_name) #{direction}")
-    else
-      scope.order(**order_params)
-    end
+    scope.order(**order_params)
   end
 
   private
