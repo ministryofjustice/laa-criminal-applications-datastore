@@ -61,8 +61,8 @@ RSpec.describe 'Sorting applications' do
             applicant: { first_name: 'Stanley', last_name: 'hudSon' }
           }
         },
-        status: 'returned', submitted_at: 2.weeks.ago, returned_at: 5.days.ago,
-        reviewed_at: 5.days.ago
+        status: 'returned', submitted_at: 3.weeks.ago, returned_at: 13.days.ago,
+        reviewed_at: 16.days.ago
       },
     ]
   end
