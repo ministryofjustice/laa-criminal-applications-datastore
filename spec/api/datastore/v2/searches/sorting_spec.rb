@@ -24,12 +24,20 @@ RSpec.describe 'Sorting applications' do
   let(:applications) do
     [
       {
-        application: {},
+        application: {
+          client_details: {
+            applicant: { first_name: 'jim', last_name: 'Halpert' }
+          }
+        },
         status: 'submitted', submitted_at: 1.day.ago, returned_at: nil,
-        reviewed_at: nil
+        reviewed_at: nil,
       },
       {
-        application: {},
+        application: {
+          client_details: {
+            applicant: { first_name: 'Michael', last_name: 'Scott' }
+          }
+        },
         status: 'submitted', submitted_at: 2.days.ago, returned_at: nil,
         reviewed_at: nil
       },
@@ -39,9 +47,22 @@ RSpec.describe 'Sorting applications' do
         reviewed_at: 8.days.ago
       },
       {
-        application: {},
+        application: {
+          client_details: {
+            applicant: { first_name: '', last_name: 'schrute' }
+          }
+        },
         status: 'returned', submitted_at: 2.weeks.ago, returned_at: 5.days.ago,
         reviewed_at: 5.days.ago
+      },
+      {
+        application: {
+          client_details: {
+            applicant: { first_name: 'Stanley', last_name: 'hudSon' }
+          }
+        },
+        status: 'returned', submitted_at: 3.weeks.ago, returned_at: 13.days.ago,
+        reviewed_at: 16.days.ago
       },
     ]
   end
@@ -66,7 +87,7 @@ RSpec.describe 'Sorting applications' do
       end
     end
 
-    describe 'Setting sort params' do
+    describe 'setting sort params' do
       let(:sorting_params) do
         {
           'sort_direction' => 'ascending',
@@ -83,7 +104,7 @@ RSpec.describe 'Sorting applications' do
       end
     end
 
-    context 'when a search is performed' do
+    describe 'when a search is performed' do
       let(:search) do
         {
           status: %w[submitted returned]
@@ -100,7 +121,7 @@ RSpec.describe 'Sorting applications' do
           end
 
           it 'the records are returned in ascending order' do
-            expect(records_count).to be(4)
+            expect(records_count).to be(5)
 
             expect(records.first['submitted_at']).to be < records.second['submitted_at']
           end
@@ -115,7 +136,7 @@ RSpec.describe 'Sorting applications' do
           end
 
           it 'the records are returned in ascending order' do
-            expect(records.size).to be(4)
+            expect(records.size).to be(5)
 
             expect(records.first['submitted_at']).to be > records.second['submitted_at']
           end
@@ -132,7 +153,7 @@ RSpec.describe 'Sorting applications' do
           end
 
           it 'the records are returned in ascending order' do
-            expect(records_count).to be(4)
+            expect(records_count).to be(5)
 
             expect(records.first['reviewed_at']).to be < records.second['reviewed_at']
           end
@@ -149,6 +170,36 @@ RSpec.describe 'Sorting applications' do
           it 'the records are returned in ascending order' do
             expect(records.first['reviewed_at']).to be_nil
             expect(records.third['reviewed_at']).to be > records.fourth['reviewed_at']
+          end
+        end
+      end
+
+      context 'when sorting by `applicant_name`' do
+        context 'when direction is `ascending`' do
+          let(:sorting_params) do
+            {
+              'sort_direction' => 'ascending',
+              'sort_by' => 'applicant_name'
+            }
+          end
+
+          it 'the records are returned in ascending order' do
+            expected_resultset = ['jim Halpert', 'Stanley hudSon', ' schrute', 'Michael Scott', ' ']
+            expect(records.pluck('applicant_name')).to eq expected_resultset
+          end
+        end
+
+        context 'when direction is `descending`' do
+          let(:sorting_params) do
+            {
+              'sort_direction' => 'descending',
+              'sort_by' => 'applicant_name'
+            }
+          end
+
+          it 'the records are returned in descending order' do
+            expected_resultset = [' ', 'Michael Scott', ' schrute', 'Stanley hudSon', 'jim Halpert']
+            expect(records.pluck('applicant_name')).to eq expected_resultset
           end
         end
       end

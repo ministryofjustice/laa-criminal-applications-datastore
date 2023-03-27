@@ -34,7 +34,7 @@ RSpec.describe 'search with text' do
   end
 
   context 'when first name is searched' do
-    let(:search) { { search_text: 'Jenni' } }
+    let(:search) { { search_text: 'jENNi' } }
 
     it 'shows results that match the first name or alternative spelling' do
       expect(records.pluck('reference')).to match([1010, 1030])
@@ -42,7 +42,7 @@ RSpec.describe 'search with text' do
   end
 
   context 'when reference is included' do
-    let(:search) { { search_text: 'Jenni Deere 1030' } }
+    let(:search) { { search_text: 'Jenni dEEre 1030' } }
 
     it 'shows results that match the reference name' do
       expect(records.pluck('reference')).to match([1030])
@@ -50,7 +50,7 @@ RSpec.describe 'search with text' do
   end
 
   context 'when last_name is searched' do
-    let(:search) { { search_text: 'Deere' } }
+    let(:search) { { search_text: 'DEERE' } }
 
     it 'shows results that match the last name' do
       expect(records.pluck('reference')).to match([1010, 1030])
@@ -58,7 +58,7 @@ RSpec.describe 'search with text' do
   end
 
   context 'when first and last name are searched' do
-    let(:search) { { search_text: 'Jenni Deere' } }
+    let(:search) { { search_text: 'jEnNi DEEre' } }
 
     it 'shows results that match the full name' do
       expect(records.pluck('reference')).to match([1010, 1030])

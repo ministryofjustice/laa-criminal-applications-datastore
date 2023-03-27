@@ -29,7 +29,7 @@ describe Sorting do
       end
     end
 
-    context 'with a compound sort' do
+    context 'with a compound applicant name sort' do
       let(:params) { { sort_by: :applicant_name } }
 
       it 'orders by both columns' do
