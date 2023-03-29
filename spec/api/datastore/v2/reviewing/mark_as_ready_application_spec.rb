@@ -15,7 +15,7 @@ RSpec.describe 'ready for assessment application' do
     end
 
     context 'with a submitted application' do
-      it 'marks the application as ready for' do
+      it 'marks the application as ready for assessment' do
         expect { api_request }.to change { application.reload.review_status }
           .from('application_received').to('ready_for_assessment')
       end
@@ -26,7 +26,7 @@ RSpec.describe 'ready for assessment application' do
         application.update!(review_status: :ready_for_assessment)
       end
 
-      it_behaves_like 'raises a 409 error'
+      it_behaves_like 'an error that raises a 409 status code'
     end
 
     context 'with a completed application' do
@@ -34,7 +34,7 @@ RSpec.describe 'ready for assessment application' do
         application.update!(review_status: :assessment_completed, reviewed_at: 1.week.ago)
       end
 
-      it_behaves_like 'raises a 409 error'
+      it_behaves_like 'an error that raises a 409 status code'
     end
 
     context 'with a returned application' do
@@ -42,7 +42,7 @@ RSpec.describe 'ready for assessment application' do
         application.update!(status: :returned, reviewed_at: 1.week.ago)
       end
 
-      it_behaves_like 'raises a 409 error'
+      it_behaves_like 'an error that raises a 409 status code'
     end
 
     context 'with an unknown application' do
