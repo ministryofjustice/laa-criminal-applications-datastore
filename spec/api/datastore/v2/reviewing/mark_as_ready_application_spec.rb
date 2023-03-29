@@ -1,29 +1,32 @@
 require 'rails_helper'
 
-RSpec.describe 'complete application' do
+RSpec.describe 'ready for assessment application' do
   let(:application) do
     CrimeApplication.create!(
       application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 
-  describe 'PUT /api/applications/application_id/complete' do
+  describe 'PUT /api/applications/application_id/mark_as_ready' do
     subject(:api_request) do
       put(
-        "/api/v2/applications/#{application.id}/complete"
+        "/api/v2/applications/#{application.id}/mark_as_ready"
       )
     end
 
     context 'with a submitted application' do
-      it 'marks the application as complete' do
+      it 'marks the application as ready for' do
         expect { api_request }.to change { application.reload.review_status }
-          .from('application_received').to('assessment_completed')
+          .from('application_received').to('ready_for_assessment')
+      end
+    end
+
+    context 'with a ready for assessment application' do
+      before do
+        application.update!(review_status: :ready_for_assessment)
       end
 
-      it 'records reviewed_at' do
-        expect { api_request }.to change { application.reload.reviewed_at }
-          .from(nil)
-      end
+      it_behaves_like 'raises a 409 error'
     end
 
     context 'with a completed application' do
@@ -45,7 +48,7 @@ RSpec.describe 'complete application' do
     context 'with an unknown application' do
       subject(:api_request) do
         put(
-          "/api/v2/applications/#{SecureRandom.uuid}/complete"
+          "/api/v2/applications/#{SecureRandom.uuid}/mark_as_ready"
         )
       end
 

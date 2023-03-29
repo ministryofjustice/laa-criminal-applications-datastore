@@ -37,6 +37,21 @@ module Datastore
             end
           end
         end
+
+        desc 'Mark an application as ready for assessment.'
+        params do
+          requires :application_id, type: String, desc: 'Crime Application UUID'
+        end
+
+        route_param :application_id do
+          resource :mark_as_ready do
+            put do
+              mark_as_ready_params = declared(params).symbolize_keys
+              app = Operations::MarkAsReadyApplication.new(**mark_as_ready_params).call
+              present app, with: Datastore::Entities::CrimeApplication
+            end
+          end
+        end
       end
     end
   end
