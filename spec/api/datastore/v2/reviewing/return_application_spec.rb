@@ -83,10 +83,7 @@ RSpec.describe 'return application' do
         application.update!(review_status: :assessment_completed, reviewed_at: 1.week.ago)
       end
 
-      it 'raises a 409 error' do
-        api_request
-        expect(response).to have_http_status :conflict
-      end
+      it_behaves_like 'an error that raises a 409 status code'
     end
 
     context 'with an unknown application' do

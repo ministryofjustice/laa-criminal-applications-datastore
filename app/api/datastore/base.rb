@@ -26,5 +26,9 @@ module Datastore
     rescue_from Errors::AlreadyCompleted do
       error!({ status: 409, error: 'Already Completed' }, 409)
     end
+
+    rescue_from Errors::AlreadyMarkedAsReady do
+      error!({ status: 409, error: 'Already marked as ready' }, 409)
+    end
   end
 end

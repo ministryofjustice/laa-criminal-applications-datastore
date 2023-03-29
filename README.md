@@ -95,4 +95,5 @@ At the moment these endpoints are:
 * `GET /api/v2/applications/{id}` get an application by its ID
 * `PUT /api/v2/applications/{id}/return` returns an application by its ID
 * `PUT /api/v2/applications/{id}/complete` marks an application as complete
+* `PUT /api/v2/applications/{id}/mark_as_ready` marks an application as ready for assessment
 * `GET /api/v2/health` checks connection to the database

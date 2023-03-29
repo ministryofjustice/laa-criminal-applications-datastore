@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'webmock/rspec'
 
 Dir['./spec/support/**/*.rb'].each { |f| require f }
+Dir[File.expand_path('shared_examples/*.rb', __dir__)].each { |f| require f }
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
