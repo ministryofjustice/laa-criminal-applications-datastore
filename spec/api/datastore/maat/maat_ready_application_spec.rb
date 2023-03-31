@@ -16,7 +16,7 @@ RSpec.describe 'get maat ready application' do
     context 'with a ready for assessment application' do
       before do
         allow(CrimeApplication).to receive(:find_by)
-          .with({ reference: application_usn })
+          .with(reference: application_usn)
           .and_return(application)
 
         api_request
