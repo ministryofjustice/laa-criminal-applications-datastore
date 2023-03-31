@@ -28,16 +28,14 @@ RSpec.describe 'search with text' do
 
   it 'defaults to showing all applications' do
     expect(records.count).to be 3
-    expect(records.pluck('resource_id')).to match(
-      CrimeApplication.pluck(:id)
-    )
+    expect(records.pluck('resource_id')).to match_array(CrimeApplication.pluck(:id))
   end
 
   context 'when first name is searched' do
     let(:search) { { search_text: 'jENNi' } }
 
     it 'shows results that match the first name or alternative spelling' do
-      expect(records.pluck('reference')).to match([1010, 1030])
+      expect(records.pluck('reference')).to contain_exactly(1010, 1030)
     end
   end
 
@@ -53,7 +51,7 @@ RSpec.describe 'search with text' do
     let(:search) { { search_text: 'DEERE' } }
 
     it 'shows results that match the last name' do
-      expect(records.pluck('reference')).to match([1010, 1030])
+      expect(records.pluck('reference')).to contain_exactly(1010, 1030)
     end
   end
 
@@ -61,7 +59,7 @@ RSpec.describe 'search with text' do
     let(:search) { { search_text: 'jEnNi DEEre' } }
 
     it 'shows results that match the full name' do
-      expect(records.pluck('reference')).to match([1010, 1030])
+      expect(records.pluck('reference')).to contain_exactly(1010, 1030)
     end
   end
 
@@ -69,7 +67,7 @@ RSpec.describe 'search with text' do
     let(:search) { { search_text: 'Jenny', status: ['submitted'] } }
 
     it 'shows results that match the full name' do
-      expect(records.pluck('reference')).to match([1010, 1030])
+      expect(records.pluck('reference')).to contain_exactly(1010, 1030)
     end
   end
 end
