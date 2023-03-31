@@ -7,7 +7,4 @@ module Errors
 
   class AlreadyMarkedAsReady < StandardError
   end
-
-  class NotMarkedAsReady < StandardError
-  end
 end

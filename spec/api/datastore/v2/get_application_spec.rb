@@ -47,9 +47,7 @@ RSpec.describe 'get application' do
         api_request
       end
 
-      it 'returns http status Not Found' do
-        expect(response).to have_http_status(:not_found)
-      end
+      it_behaves_like 'an error that raises a 404 status code'
     end
   end
 end

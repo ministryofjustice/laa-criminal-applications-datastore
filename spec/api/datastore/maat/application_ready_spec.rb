@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'get maat ready application' do
+RSpec.describe 'get application ready for maat' do
   describe 'GET /api/maat/applications/:usn' do
     let(:api_request) { get "/api/maat/applications/#{application_usn}" }
 
@@ -16,7 +16,7 @@ RSpec.describe 'get maat ready application' do
     context 'with a ready for assessment application' do
       before do
         allow(CrimeApplication).to receive(:find_by)
-          .with(reference: application_usn)
+          .with(reference: application_usn, review_status: :ready_for_assessment)
           .and_return(application)
 
         api_request
@@ -37,7 +37,7 @@ RSpec.describe 'get maat ready application' do
         api_request
       end
 
-      it_behaves_like 'an error that raises a 409 status code'
+      it_behaves_like 'an error that raises a 404 status code'
     end
 
     context 'with a returned application' do
@@ -47,7 +47,7 @@ RSpec.describe 'get maat ready application' do
         api_request
       end
 
-      it_behaves_like 'an error that raises a 409 status code'
+      it_behaves_like 'an error that raises a 404 status code'
     end
 
     context 'with a received application' do
@@ -56,22 +56,20 @@ RSpec.describe 'get maat ready application' do
         api_request
       end
 
-      it_behaves_like 'an error that raises a 409 status code'
+      it_behaves_like 'an error that raises a 404 status code'
     end
 
     context 'when not found' do
       before do
         allow(CrimeApplication).to receive(:find_by)
-          .with(reference: application_usn) {
+          .with(reference: application_usn, review_status: :ready_for_assessment) {
             raise ActiveRecord::RecordNotFound
           }
 
         api_request
       end
 
-      it 'returns http status Not Found' do
-        expect(response).to have_http_status(:not_found)
-      end
+      it_behaves_like 'an error that raises a 404 status code'
     end
   end
 end

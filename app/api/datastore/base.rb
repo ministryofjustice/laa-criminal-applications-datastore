@@ -30,9 +30,5 @@ module Datastore
     rescue_from Errors::AlreadyMarkedAsReady do
       error!({ status: 409, error: 'Already marked as ready' }, 409)
     end
-
-    rescue_from Errors::NotMarkedAsReady do
-      error!({ status: 409, error: 'Not marked as ready' }, 409)
-    end
   end
 end

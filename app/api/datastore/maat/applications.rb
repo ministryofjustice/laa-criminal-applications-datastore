@@ -10,7 +10,7 @@ module Datastore
         end
         route_param :usn do
           get do
-            app = Operations::MaatReadyApplication.new(
+            app = Operations::Maat::ApplicationReady.new(
               **declared(params).symbolize_keys
             ).call
 
