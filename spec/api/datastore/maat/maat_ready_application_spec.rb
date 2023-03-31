@@ -4,14 +4,14 @@ RSpec.describe 'get maat ready application' do
   describe 'GET /api/maat/applications/:usn' do
     let(:api_request) { get "/api/maat/applications/#{application_usn}" }
 
-    let(:application_usn) { application.application['reference'] }
-
     let(:application) do
       CrimeApplication.new(
         application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
         review_status: :ready_for_assessment,
       )
     end
+
+    let(:application_usn) { application.application['reference'] }
 
     context 'with a ready for assessment application' do
       before do
@@ -62,7 +62,7 @@ RSpec.describe 'get maat ready application' do
     context 'when not found' do
       before do
         allow(CrimeApplication).to receive(:find_by)
-          .with({ reference: application_usn }) {
+          .with(reference: application_usn) {
             raise ActiveRecord::RecordNotFound
           }
 
