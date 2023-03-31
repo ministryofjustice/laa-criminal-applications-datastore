@@ -18,7 +18,7 @@ RSpec.describe 'searches filter by status' do
 
   it 'defaults to returning all statuses' do
     expect(records.count).to be 3
-    expect(records.pluck('status').uniq).to match_array(%w[submitted returned])
+    expect(records.pluck('status').uniq).to contain_exactly('submitted', 'returned')
   end
 
   describe 'filtering by "returned"' do
@@ -35,7 +35,7 @@ RSpec.describe 'searches filter by status' do
 
     it 'returns records with a status in statuses' do
       expect(records.count).to be 3
-      expect(records.pluck('status').uniq).to match_array(%w[submitted returned])
+      expect(records.pluck('status').uniq).to contain_exactly('submitted', 'returned')
     end
   end
 end

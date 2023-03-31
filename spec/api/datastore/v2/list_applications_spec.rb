@@ -107,7 +107,7 @@ RSpec.describe 'list applications' do
     describe 'status filter' do
       it 'defaults to show all statuses' do
         expect(records.size).to be(3)
-        expect(returned_statuses).to match_array %w[submitted returned superseded]
+        expect(returned_statuses).to match_array(%w[submitted returned superseded])
       end
 
       CrimeApplication.statuses.each_key do |status|

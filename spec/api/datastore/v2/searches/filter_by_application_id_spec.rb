@@ -18,9 +18,7 @@ RSpec.describe 'searches filter by id' do
 
   it 'defaults to showing all applications' do
     expect(records.count).to be 3
-    expect(records.pluck('resource_id')).to match(
-      CrimeApplication.pluck(:id)
-    )
+    expect(records.pluck('resource_id')).to match_array(CrimeApplication.pluck(:id))
   end
 
   describe 'filter by application_id_in' do
@@ -34,7 +32,7 @@ RSpec.describe 'searches filter by id' do
 
       it 'only shows results that match the application_id' do
         expect(records.count).to be 2
-        expect(records.pluck('resource_id')).to match(extant_ids)
+        expect(records.pluck('resource_id')).to match_array(extant_ids)
       end
     end
   end
@@ -51,9 +49,7 @@ RSpec.describe 'searches filter by id' do
       it 'only shows applications that are not in the excluded_ids' do
         expect(records.count).to be 1
 
-        expect(records.pluck('resource_id')).to match(
-          CrimeApplication.pluck(:id) - excluded_ids
-        )
+        expect(records.pluck('resource_id')).to match_array((CrimeApplication.pluck(:id) - excluded_ids))
       end
     end
   end
