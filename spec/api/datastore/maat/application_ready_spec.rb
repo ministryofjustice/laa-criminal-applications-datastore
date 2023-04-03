@@ -12,6 +12,7 @@ RSpec.describe 'get application ready for maat' do
     end
 
     let(:application_usn) { application.application['reference'] }
+    let(:records) { JSON.parse(response.body).fetch('records') }
 
     context 'with a ready for assessment application' do
       before do
@@ -26,8 +27,9 @@ RSpec.describe 'get application ready for maat' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns the application details' do
-        expect(JSON.parse(response.body)).to match(application.application)
+      it 'returns the reference details' do
+        expect(records['reference']).to match(application.application['reference'])
+        expect(records['applicant']).to match(application.application['client_details']['applicant'])
       end
     end
 

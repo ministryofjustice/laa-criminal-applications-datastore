@@ -14,7 +14,7 @@ module Datastore
               **declared(params).symbolize_keys
             ).call
 
-            present app, with: Datastore::Entities::CrimeApplication
+            present :records, app, with: Datastore::Entities::Maat::Application
           end
         end
       end
