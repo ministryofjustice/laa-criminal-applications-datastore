@@ -5,21 +5,19 @@ RSpec.describe 'get application ready for maat' do
     let(:api_request) { get "/api/maat/applications/#{application_usn}" }
 
     let(:application) do
-      CrimeApplication.new(
+      CrimeApplication.create(
         application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
         review_status: :ready_for_assessment,
+        id: SecureRandom.uuid,
+        submitted_at: 1.day.ago
       )
     end
 
     let(:application_usn) { application.application['reference'] }
-    let(:records) { JSON.parse(response.body).fetch('records') }
+    let(:maat_application) { JSON.parse(response.body) }
 
     context 'with a ready for assessment application' do
       before do
-        allow(CrimeApplication).to receive(:find_by)
-          .with(reference: application_usn, review_status: :ready_for_assessment)
-          .and_return(application)
-
         api_request
       end
 
@@ -27,9 +25,33 @@ RSpec.describe 'get application ready for maat' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns the reference details' do
-        expect(records['reference']).to match(application.application['reference'])
-        expect(records['applicant']).to match(application.application['client_details']['applicant'])
+      it 'returns valid maat application details' do
+        expect(
+          LaaCrimeSchemas::Validator.new(response.body, version: 1.0, schema_name: 'maat_application')
+        ).to be_valid
+      end
+
+      it 'returns the required application details for maat integration' do
+        expect(maat_application['reference']).to match(application.application['reference'])
+        expect(maat_application['client_details']).to match(application.application['client_details'])
+        expect(maat_application['provider_details']).to match(application.application['provider_details'])
+        expect(maat_application['submitted_at']).to match(application['submitted_at'].iso8601)
+        expect(maat_application['date_stamp']).to match(application.application['date_stamp'])
+        expect(maat_application['ioj_passport']).to match(application.application['ioj_passport'])
+        expect(maat_application['interests_of_justice']).to match(application.application['interests_of_justice'])
+      end
+
+      it 'returns the required case details for maat integration' do
+        expect(maat_application['case_details']).to match(
+          {
+            'appeal_maat_id' => application.application['case_details']['appeal_maat_id'],
+            'case_type' => application.application['case_details']['case_type'],
+            'hearing_court_name' => application.application['case_details']['hearing_court_name'],
+            'hearing_date' => application.application['case_details']['hearing_date'],
+            'offence_class' => application.application['case_details']['offence_class'],
+            'urn' => application.application['case_details']['urn'],
+          }
+        )
       end
     end
 
