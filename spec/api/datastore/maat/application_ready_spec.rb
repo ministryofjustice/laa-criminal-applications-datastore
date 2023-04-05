@@ -5,31 +5,60 @@ RSpec.describe 'get application ready for maat' do
     let(:api_request) { get "/api/maat/applications/#{application_usn}" }
 
     let(:application) do
-      CrimeApplication.new(
+      CrimeApplication.create(
         application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
         review_status: :ready_for_assessment,
+        id: SecureRandom.uuid,
+        submitted_at: 1.day.ago
       )
     end
 
     let(:application_usn) { application.application['reference'] }
-    let(:records) { JSON.parse(response.body).fetch('records') }
+    let(:maat_application) { JSON.parse(response.body) }
 
     context 'with a ready for assessment application' do
       before do
-        allow(CrimeApplication).to receive(:find_by)
-          .with(reference: application_usn, review_status: :ready_for_assessment)
-          .and_return(application)
-
         api_request
+      end
+
+      let(:expected_case_details) do
+        {
+          'appeal_maat_id' => application.application['case_details']['appeal_maat_id'],
+          'case_type' => application.application['case_details']['case_type'],
+          'hearing_court_name' => application.application['case_details']['hearing_court_name'],
+          'hearing_date' => application.application['case_details']['hearing_date'],
+          'offence_class' => application.application['case_details']['offence_class'],
+          'urn' => application.application['case_details']['urn'],
+        }
+      end
+
+      let(:expected_maat_application) do
+        {
+          'reference' => application.application['reference'],
+          'client_details' => application.application['client_details'],
+          'provider_details' => application.application['provider_details'],
+          'submitted_at' => application['submitted_at'].iso8601,
+          'date_stamp' => application.application['date_stamp'],
+          'ioj_passport' => application.application['ioj_passport'],
+          'interests_of_justice' => application.application['interests_of_justice'],
+          'case_details' => expected_case_details,
+          'schema_version' => 1.0,
+          'id' => application.id
+        }
       end
 
       it 'returns http status 200' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns the reference details' do
-        expect(records['reference']).to match(application.application['reference'])
-        expect(records['applicant']).to match(application.application['client_details']['applicant'])
+      it 'returns valid maat application details' do
+        expect(
+          LaaCrimeSchemas::Validator.new(response.body, version: 1.0, schema_name: 'maat_application')
+        ).to be_valid
+      end
+
+      it 'returns the required application details for maat integration' do
+        expect(maat_application).to match(expected_maat_application)
       end
     end
 

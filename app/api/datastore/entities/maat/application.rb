@@ -2,17 +2,56 @@ module Datastore
   module Entities
     module Maat
       class Application < Grape::Entity
+        expose :id
+        expose :schema_version
         expose :reference
-        expose :applicant
+        expose :submitted_at, format_with: :iso8601
+        expose :date_stamp
+        expose :client_details
+        expose :provider_details
+        expose :case_details
+        expose :interests_of_justice
+        expose :ioj_passport
 
         private
 
-        def applicant
-          object.application&.dig('client_details', 'applicant')
+        def client_details
+          application_value('client_details')
+        end
+
+        def schema_version
+          1.0
+        end
+
+        def date_stamp
+          application_value('date_stamp')
+        end
+
+        def provider_details
+          application_value('provider_details')
+        end
+
+        def case_details
+          case_details = application_value('case_details')
+          case_details['offence_class'] = nil
+          case_details.except!('offences', 'codefendants')
+          case_details
+        end
+
+        def interests_of_justice
+          application_value('interests_of_justice')
+        end
+
+        def ioj_passport
+          application_value('ioj_passport')
         end
 
         def reference
-          object.application&.dig('reference').to_i
+          application_value('reference').to_i
+        end
+
+        def application_value(name)
+          object.application&.dig(name)
         end
       end
     end
