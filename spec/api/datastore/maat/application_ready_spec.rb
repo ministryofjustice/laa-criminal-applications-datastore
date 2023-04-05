@@ -14,6 +14,7 @@ RSpec.describe 'get application ready for maat' do
     end
 
     let(:application_usn) { application.application['reference'] }
+    let(:maat_application) { JSON.parse(response.body) }
 
     context 'with a ready for assessment application' do
       before do
@@ -40,7 +41,9 @@ RSpec.describe 'get application ready for maat' do
           'date_stamp' => application.application['date_stamp'],
           'ioj_passport' => application.application['ioj_passport'],
           'interests_of_justice' => application.application['interests_of_justice'],
-          'case_details' => expected_case_details
+          'case_details' => expected_case_details,
+          'schema_version' => 1.0,
+          'id' => application.id
         }
       end
 
@@ -55,7 +58,7 @@ RSpec.describe 'get application ready for maat' do
       end
 
       it 'returns the required application details for maat integration' do
-        expect(JSON.parse(response.body)).to match(expected_maat_application)
+        expect(maat_application).to match(expected_maat_application)
       end
     end
 
