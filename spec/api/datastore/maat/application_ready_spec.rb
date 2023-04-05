@@ -14,11 +14,34 @@ RSpec.describe 'get application ready for maat' do
     end
 
     let(:application_usn) { application.application['reference'] }
-    let(:maat_application) { JSON.parse(response.body) }
 
     context 'with a ready for assessment application' do
       before do
         api_request
+      end
+
+      let(:expected_case_details) do
+        {
+          'appeal_maat_id' => application.application['case_details']['appeal_maat_id'],
+          'case_type' => application.application['case_details']['case_type'],
+          'hearing_court_name' => application.application['case_details']['hearing_court_name'],
+          'hearing_date' => application.application['case_details']['hearing_date'],
+          'offence_class' => application.application['case_details']['offence_class'],
+          'urn' => application.application['case_details']['urn'],
+        }
+      end
+
+      let(:expected_maat_application) do
+        {
+          'reference' => application.application['reference'],
+          'client_details' => application.application['client_details'],
+          'provider_details' => application.application['provider_details'],
+          'submitted_at' => application['submitted_at'].iso8601,
+          'date_stamp' => application.application['date_stamp'],
+          'ioj_passport' => application.application['ioj_passport'],
+          'interests_of_justice' => application.application['interests_of_justice'],
+          'case_details' => expected_case_details
+        }
       end
 
       it 'returns http status 200' do
@@ -32,26 +55,7 @@ RSpec.describe 'get application ready for maat' do
       end
 
       it 'returns the required application details for maat integration' do
-        expect(maat_application['reference']).to match(application.application['reference'])
-        expect(maat_application['client_details']).to match(application.application['client_details'])
-        expect(maat_application['provider_details']).to match(application.application['provider_details'])
-        expect(maat_application['submitted_at']).to match(application['submitted_at'].iso8601)
-        expect(maat_application['date_stamp']).to match(application.application['date_stamp'])
-        expect(maat_application['ioj_passport']).to match(application.application['ioj_passport'])
-        expect(maat_application['interests_of_justice']).to match(application.application['interests_of_justice'])
-      end
-
-      it 'returns the required case details for maat integration' do
-        expect(maat_application['case_details']).to match(
-          {
-            'appeal_maat_id' => application.application['case_details']['appeal_maat_id'],
-            'case_type' => application.application['case_details']['case_type'],
-            'hearing_court_name' => application.application['case_details']['hearing_court_name'],
-            'hearing_date' => application.application['case_details']['hearing_date'],
-            'offence_class' => application.application['case_details']['offence_class'],
-            'urn' => application.application['case_details']['urn'],
-          }
-        )
+        expect(JSON.parse(response.body)).to match(expected_maat_application)
       end
     end
 

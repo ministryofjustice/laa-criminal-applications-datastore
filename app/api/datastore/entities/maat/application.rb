@@ -16,7 +16,7 @@ module Datastore
         private
 
         def client_details
-          object.application&.dig('client_details')
+          application_value('client_details')
         end
 
         def schema_version
@@ -24,30 +24,34 @@ module Datastore
         end
 
         def date_stamp
-          object.application&.dig('date_stamp')
+          application_value('date_stamp')
         end
 
         def provider_details
-          object.application&.dig('provider_details')
+          application_value('provider_details')
         end
 
         def case_details
-          case_details = object.application&.dig('case_details')
+          case_details = application_value('case_details')
           case_details['offence_class'] = nil
           case_details.except!('offences', 'codefendants')
           case_details
         end
 
         def interests_of_justice
-          object.application&.dig('interests_of_justice')
+          application_value('interests_of_justice')
         end
 
         def ioj_passport
-          object.application&.dig('ioj_passport')
+          application_value('ioj_passport')
         end
 
         def reference
-          object.application&.dig('reference').to_i
+          application_value('reference').to_i
+        end
+
+        def application_value(name)
+          object.application&.dig(name)
         end
       end
     end
