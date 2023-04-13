@@ -33,7 +33,8 @@ module Datastore
 
         def case_details
           case_details = application_value('case_details')
-          case_details['offence_class'] = nil
+          case_details['offence_class'] =
+            Operations::Maat::OffenceClass.new(offences: case_details['offences']).offence_class
           case_details.except!('offences', 'codefendants')
           case_details
         end

@@ -21,13 +21,17 @@ RSpec.describe 'get application ready for maat' do
         api_request
       end
 
+      let(:expected_offence_class) do
+        Operations::Maat::OffenceClass.new(offences: application.application['case_details']['offences']).offence_class
+      end
+
       let(:expected_case_details) do
         {
           'appeal_maat_id' => application.application['case_details']['appeal_maat_id'],
           'case_type' => application.application['case_details']['case_type'],
           'hearing_court_name' => application.application['case_details']['hearing_court_name'],
           'hearing_date' => application.application['case_details']['hearing_date'],
-          'offence_class' => application.application['case_details']['offence_class'],
+          'offence_class' => expected_offence_class,
           'urn' => application.application['case_details']['urn'],
         }
       end
