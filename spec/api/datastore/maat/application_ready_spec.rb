@@ -22,7 +22,7 @@ RSpec.describe 'get application ready for maat' do
       end
 
       let(:expected_offence_class) do
-        Operations::Maat::OffenceClass.new(offences: application.application['case_details']['offences']).offence_class
+        Helpers::OffenceClassCalculator.new(offences: application.application['case_details']['offences']).offence_class
       end
 
       let(:expected_case_details) do
