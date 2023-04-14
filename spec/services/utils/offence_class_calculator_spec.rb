@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Helpers::OffenceClassCalculator do
+describe Utils::OffenceClassCalculator do
   subject { described_class.new(offences:) }
 
   let(:attempted_robbery_offence) do

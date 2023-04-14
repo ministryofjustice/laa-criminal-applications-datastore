@@ -34,7 +34,7 @@ module Datastore
         def case_details
           case_details = application_value('case_details')
           case_details['offence_class'] =
-            ::Helpers::OffenceClassCalculator.new(offences: case_details['offences']).offence_class
+            Utils::OffenceClassCalculator.new(offences: case_details['offences']).offence_class
           case_details.except!('offences', 'codefendants')
           case_details
         end

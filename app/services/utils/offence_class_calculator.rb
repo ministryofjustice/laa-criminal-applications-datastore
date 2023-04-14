@@ -1,4 +1,4 @@
-module Helpers
+module Utils
   class OffenceClassCalculator
     attr_reader :offences
 
