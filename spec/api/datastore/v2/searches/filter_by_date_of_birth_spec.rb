@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'filter seach by applicant date of birth' do
+RSpec.describe 'filter search by applicant date of birth' do
   subject(:api_request) do
     post '/api/v2/searches', params: { search: search, pagination: {} }
   end
@@ -29,7 +29,7 @@ RSpec.describe 'filter seach by applicant date of birth' do
 
   context 'when a known date of birth is given' do
     let(:search) do
-      { applicant_date_of_birth: '2011-06-09' }
+      { applicant_date_of_birth: '2001-06-09' }
     end
 
     it 'returns matching records' do
