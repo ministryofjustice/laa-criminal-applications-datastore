@@ -11,7 +11,6 @@ module Datastore
         expose :provider_details
         expose :case_details
         expose :interests_of_justice
-        expose :ioj_passport
 
         private
 
@@ -41,10 +40,6 @@ module Datastore
 
         def interests_of_justice
           application_value('interests_of_justice')
-        end
-
-        def ioj_passport
-          application_value('ioj_passport')
         end
 
         def reference
