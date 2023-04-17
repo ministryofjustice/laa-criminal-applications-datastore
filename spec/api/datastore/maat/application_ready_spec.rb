@@ -43,7 +43,6 @@ RSpec.describe 'get application ready for maat' do
           'provider_details' => application.application['provider_details'],
           'submitted_at' => application['submitted_at'].iso8601,
           'date_stamp' => application.application['date_stamp'],
-          'ioj_passport' => application.application['ioj_passport'],
           'interests_of_justice' => application.application['interests_of_justice'],
           'case_details' => expected_case_details,
           'schema_version' => 1.0,
