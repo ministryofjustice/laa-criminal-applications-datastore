@@ -8,3 +8,5 @@ data:
   RACK_ENV: production
   RAILS_ENV: production
   RAILS_SERVE_STATIC_FILES: enabled
+  # Datastore is accessed via local cluster networking (no SSL)
+  DISABLE_HTTPS: enabled
