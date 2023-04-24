@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-staging
-  namespace: laa-criminal-applications-datastore-staging
+  name: deployment-production
+  namespace: laa-criminal-applications-datastore-production
 spec:
-  replicas: 2
+  replicas: 4
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate
@@ -13,11 +13,11 @@ spec:
       maxSurge: 100%
   selector:
     matchLabels:
-      app: laa-criminal-applications-datastore-web-staging
+      app: laa-criminal-applications-datastore-web-production
   template:
     metadata:
       labels:
-        app: laa-criminal-applications-datastore-web-staging
+        app: laa-criminal-applications-datastore-web-production
         tier: frontend
     spec:
       containers:
@@ -57,9 +57,9 @@ spec:
           periodSeconds: 10
         envFrom:
           - configMapRef:
-              name: configmap-staging
+              name: configmap-production
           - secretRef:
-              name: secrets-staging
+              name: secrets-production
         env:
           # secrets created by terraform
           - name: DATABASE_URL
@@ -67,16 +67,16 @@ spec:
               secretKeyRef:
                 name: rds-instance
                 key: url
-          - name: API_AUTH_SECRET_APPLY
-            valueFrom:
-              secretKeyRef:
-                name: api-auth-secrets
-                key: crime_apply
-          - name: API_AUTH_SECRET_REVIEW
-            valueFrom:
-              secretKeyRef:
-                name: api-auth-secrets
-                key: crime_review
+#          - name: API_AUTH_SECRET_APPLY
+#            valueFrom:
+#              secretKeyRef:
+#                name: api-auth-secrets
+#                key: crime_apply
+#          - name: API_AUTH_SECRET_REVIEW
+#            valueFrom:
+#              secretKeyRef:
+#                name: api-auth-secrets
+#                key: crime_review
           - name: EVENTS_SNS_TOPIC_ARN
             valueFrom:
               secretKeyRef:

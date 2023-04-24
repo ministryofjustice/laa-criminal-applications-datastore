@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-production
+  namespace: laa-criminal-applications-datastore-production
+data:
+  ENV_NAME: production
+  RACK_ENV: production
+  RAILS_ENV: production
+  RAILS_SERVE_STATIC_FILES: enabled
+  # Datastore is accessed via local cluster networking (no SSL)
+  DISABLE_HTTPS: enabled
