@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   mount Datastore::Root => '/'
 
+  root to: proc { [200, {}, ['']] }
+
   get :ping, to: 'status#ping'
   get :health, to: 'status#health'
 
