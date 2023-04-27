@@ -17,7 +17,7 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 
 # Datastore API authentication
-gem 'moj-simple-jwt-auth', '0.0.1'
+gem 'moj-simple-jwt-auth', '0.1.0'
 
 # SNS messaging
 gem 'aws-sdk-sns'

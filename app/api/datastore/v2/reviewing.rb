@@ -3,6 +3,8 @@ module Datastore
     class Reviewing < Base
       version 'v2', using: :path
 
+      route_setting :authorised_consumers, %w[crime-review]
+
       resource :applications do
         desc 'Return an application to provider.'
         params do

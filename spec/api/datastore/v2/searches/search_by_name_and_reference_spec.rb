@@ -26,6 +26,8 @@ RSpec.describe 'search with text' do
     api_request
   end
 
+  it_behaves_like 'an authorisable endpoint', %w[crime-review]
+
   it 'defaults to showing all applications' do
     expect(records.count).to be 3
     expect(records.pluck('resource_id')).to match_array(CrimeApplication.pluck(:id))

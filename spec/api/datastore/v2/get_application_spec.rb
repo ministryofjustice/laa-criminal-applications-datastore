@@ -14,6 +14,10 @@ RSpec.describe 'get application' do
       get "/api/v2/applications/#{application_id}"
     end
 
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-review] do
+      before { api_request }
+    end
+
     context 'when found' do
       before do
         allow(CrimeApplication).to receive(:find)

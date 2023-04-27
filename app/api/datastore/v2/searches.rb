@@ -4,6 +4,8 @@ module Datastore
     class Searches < Base
       version 'v2', using: :path
 
+      route_setting :authorised_consumers, %w[crime-review]
+
       resource :searches do
         desc 'Search the Datastore.'
         params do
