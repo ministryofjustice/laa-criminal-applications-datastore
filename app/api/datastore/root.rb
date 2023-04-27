@@ -10,6 +10,7 @@ module Datastore
     mount V2::Applications
     mount V2::Searches
     mount V2::Reviewing
+    mount V2::Healthcheck
     mount Maat::Applications
 
     desc 'Catch-all route'
