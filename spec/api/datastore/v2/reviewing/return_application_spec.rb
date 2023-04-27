@@ -22,6 +22,10 @@ RSpec.describe 'return application' do
       )
     end
 
+    it_behaves_like 'an authorisable endpoint', %w[crime-review] do
+      before { api_request }
+    end
+
     context 'with a submitted application' do
       it 'marks the application as returned' do
         expect { api_request }.to change { application.reload.status }

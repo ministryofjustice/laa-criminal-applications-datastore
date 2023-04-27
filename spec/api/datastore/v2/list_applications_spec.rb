@@ -5,7 +5,12 @@ RSpec.describe 'list applications' do
     get "/api/v2/applications#{query}"
   end
 
+  let(:query) { nil }
   let(:records_count) { JSON.parse(response.body).fetch('records').count }
+
+  it_behaves_like 'an authorisable endpoint', %w[crime-apply] do
+    before { api_request }
+  end
 
   describe 'pagination' do
     subject(:pagination) do
@@ -21,8 +26,6 @@ RSpec.describe 'list applications' do
     end
 
     context 'without page param' do
-      let(:query) { nil }
-
       it 'returns the first page of results with pagination headers' do
         expect(pagination['current_page']).to eq 1
         expect(pagination['total_count']).to eq 21

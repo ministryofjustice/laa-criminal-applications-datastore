@@ -5,6 +5,7 @@ module Datastore
 
       resource :applications do
         desc 'Create an application.'
+        route_setting :authorised_consumers, %w[crime-apply]
         params do
           requires :application, type: JSON, desc: 'Application JSON payload.'
         end
@@ -15,6 +16,7 @@ module Datastore
         end
 
         desc 'Return an application by ID.'
+        route_setting :authorised_consumers, %w[crime-apply crime-review]
         params do
           requires :id, type: String, desc: 'Application UUID.'
         end
@@ -25,6 +27,7 @@ module Datastore
         end
 
         desc 'Return applications with pagination.'
+        route_setting :authorised_consumers, %w[crime-apply]
         params do
           use :sorting
           use :pagination

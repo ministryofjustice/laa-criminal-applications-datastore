@@ -14,6 +14,10 @@ RSpec.describe 'complete application' do
       )
     end
 
+    it_behaves_like 'an authorisable endpoint', %w[crime-review] do
+      before { api_request }
+    end
+
     context 'with a submitted application' do
       it 'marks the application as complete' do
         expect { api_request }.to change { application.reload.review_status }
