@@ -3,6 +3,8 @@ module Datastore
     class Applications < Base
       version 'maat', using: :path
 
+      route_setting :authorised_consumers, %w[maat-adapter]
+
       resource :applications do
         desc 'Return an application by USN.'
         params do

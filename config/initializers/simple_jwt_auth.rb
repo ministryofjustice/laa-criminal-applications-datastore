@@ -10,5 +10,6 @@ SimpleJwtAuth.configure do |config|
   config.secrets_config = {
     'crime-apply' => ENV.fetch('API_AUTH_SECRET_APPLY', nil),
     'crime-review' => ENV.fetch('API_AUTH_SECRET_REVIEW', nil),
+    'maat-adapter' => ENV.fetch('API_AUTH_SECRET_MAAT_ADAPTER', nil),
   }
 end
