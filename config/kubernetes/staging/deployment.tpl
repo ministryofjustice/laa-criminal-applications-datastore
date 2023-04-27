@@ -77,6 +77,11 @@ spec:
               secretKeyRef:
                 name: api-auth-secrets
                 key: crime_review
+          - name: API_AUTH_SECRET_MAAT_ADAPTER
+            valueFrom:
+              secretKeyRef:
+                name: api-auth-secrets
+                key: maat_adapter
           - name: EVENTS_SNS_TOPIC_ARN
             valueFrom:
               secretKeyRef:
