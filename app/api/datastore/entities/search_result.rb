@@ -2,12 +2,13 @@ module Datastore
   module Entities
     class SearchResult < Grape::Entity
       expose :id, as: :resource_id
-      expose :submitted_at
-      expose :reviewed_at
+      expose :submitted_at, format_with: :iso8601
+      expose :reviewed_at, format_with: :iso8601
       expose :applicant_name
       expose :reference
       expose :status
       expose :review_status
+      expose :parent_id
 
       private
 
@@ -17,6 +18,10 @@ module Datastore
 
       def applicant
         object.application&.dig('client_details', 'applicant')
+      end
+
+      def parent_id
+        object.application&.dig('parent_id')
       end
 
       def reference
