@@ -82,18 +82,24 @@ The application will be run in "production" mode, so will be as accurate as poss
 **NOTE:** never use `docker-compose` for a real production environment. This is only provided to test a local container. The
 actual docker images used in the cluster are built as part of the deploy pipeline.
 
-## API (work in progress)
+## Current API endpoints
 
-There is a basic RESTful API to store and retrieve documents from the database.  
-The `Datastore::V2::Applications` grape class is quite self explanatory and declares what are the endpoints and their parameters (optional or required).
+There is a basic RESTful API to store and retrieve JSON documents from the database.  
+
+All endpoints with its details can be listed (similar to rails routes) with the rake task `rake grape:routes`. This will
+also show which consumers are authorised to call each of the endpoints.
 
 At the moment these endpoints are:
 
-* `POST /api/v2/applications` to create an application, passing the payload in the body as `application`.
-* `POST /api/v2/searches` performs searches (refer to the class for params)
-* `GET /api/v2/applications` list all applications (refer to the class for params)
-* `GET /api/v2/applications/{id}` get an application by its ID
-* `PUT /api/v2/applications/{id}/return` returns an application by its ID
-* `PUT /api/v2/applications/{id}/complete` marks an application as complete
-* `PUT /api/v2/applications/{id}/mark_as_ready` marks an application as ready for assessment
-* `GET /api/v2/health` checks connection to the database
+* `POST /api/v1/applications` to create an application, passing the payload in the body as `application`.
+* `POST /api/v1/searches` performs searches (refer to the class for params)
+* `GET /api/v1/applications` list all applications (refer to the class for params)
+* `GET /api/v1/applications/{id}` get an application by its ID
+* `PUT /api/v1/applications/{id}/return` returns an application by its ID
+* `PUT /api/v1/applications/{id}/complete` marks an application as complete
+* `PUT /api/v1/applications/{id}/mark_as_ready` marks an application as ready for assessment
+* `GET /api/v1/health` checks connection to the database
+
+Endpoints used by MAAT adapter:
+
+* `GET /api/v1/maat/applications/{usn}` get an application by its USN

@@ -7,13 +7,16 @@ module Datastore
     auth :jwt
     use SimpleJwtAuth::Middleware::Grape::Authorisation
 
-    mount V2::Applications
-    mount V2::Searches
-    mount V2::Reviewing
-    mount V2::Healthcheck
-    mount Maat::Applications
+    namespace :maat do
+      mount V1::MAAT::Applications
+    end
 
-    desc 'Catch-all route'
+    mount V1::Applications
+    mount V1::Searching
+    mount V1::Reviewing
+    mount V1::Healthcheck
+
+    desc 'Catch-all route.'
     route_setting :authorised_consumers, %w[*]
     route :any, '*path' do
       error!({ status: 404, error: 'Not found' }, 404)
