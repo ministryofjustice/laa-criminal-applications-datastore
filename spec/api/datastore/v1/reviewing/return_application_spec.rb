@@ -22,7 +22,7 @@ RSpec.describe 'return application' do
       )
     end
 
-    it_behaves_like 'an authorisable endpoint', %w[crime-review] do
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-review] do
       before { api_request }
     end
 
