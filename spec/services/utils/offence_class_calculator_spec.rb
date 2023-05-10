@@ -76,7 +76,7 @@ describe Utils::OffenceClassCalculator do
 
     describe 'failsafe checks for required types' do
       it 'uses a valid offence class ranking' do
-        expect(described_class::OFFENCE_CLASS_RANKING).to eq(%w[a k g b i j d c h f e].freeze)
+        expect(Types::OffenceClass.values).to eq(%w[A K G B I J D C H F E].freeze)
       end
     end
   end

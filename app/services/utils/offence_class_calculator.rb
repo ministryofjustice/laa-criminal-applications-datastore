@@ -2,8 +2,6 @@ module Utils
   class OffenceClassCalculator
     attr_reader :offences
 
-    OFFENCE_CLASS_RANKING = %w[a k g b i j d c h f e].freeze
-
     def initialize(offences:)
       @offences = offences
     end
@@ -24,7 +22,7 @@ module Utils
 
     def rank_offences
       offences_classes = offences.pluck(:offence_class)
-      offences_classes.sort_by { |oc| OFFENCE_CLASS_RANKING.index oc.downcase }
+      offences_classes.sort_by { |oc| Types::OffenceClass.values.index oc }
     end
 
     def any_manually_entered_offences?

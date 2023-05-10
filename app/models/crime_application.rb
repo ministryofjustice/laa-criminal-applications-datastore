@@ -24,11 +24,10 @@ class CrimeApplication < ApplicationRecord
   end
 
   def set_overall_offence_class
-    return unless id.nil?
     return unless submitted_details
 
-    Rails.logger.debug submitted_details
-    offences = submitted_details['case_details']['offences']
-    self.offence_class = Utils::OffenceClassCalculator.new(offences:).offence_class
+    self.offence_class = Utils::OffenceClassCalculator.new(
+      offences: submitted_details['case_details']['offences']
+    ).offence_class
   end
 end
