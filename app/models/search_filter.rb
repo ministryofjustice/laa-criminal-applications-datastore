@@ -27,7 +27,7 @@ class SearchFilter
 
   def filter_applicant_date_of_birth(scope)
     scope.where(
-      "application->'client_details'->'applicant'->>'date_of_birth' = ?::text",
+      "submitted_details->'client_details'->'applicant'->>'date_of_birth' = ?::text",
       applicant_date_of_birth
     )
   end

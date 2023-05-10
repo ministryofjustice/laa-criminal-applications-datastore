@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'create application' do
-  let(:application_id) { application.application['id'] }
+  let(:application_id) { application.submitted_details['id'] }
 
   let(:application) do
     instance_double(
       CrimeApplication,
-      application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+      submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 
@@ -27,7 +27,7 @@ RSpec.describe 'create application' do
     context 'with a valid request' do
       before do
         allow(CrimeApplication).to receive(:create!).with(
-          application: JSON.parse(payload)
+          submitted_details: JSON.parse(payload)
         ).and_return(record)
 
         allow(
@@ -43,7 +43,7 @@ RSpec.describe 'create application' do
 
       it 'stores the application in the datastore' do
         expect(CrimeApplication).to have_received(:create!).with(
-          application: JSON.parse(payload)
+          submitted_details: JSON.parse(payload)
         )
       end
 
@@ -85,7 +85,7 @@ RSpec.describe 'create application' do
     context 'when the application already exists' do
       before do
         allow(CrimeApplication).to receive(:create!).with(
-          application: JSON.parse(payload)
+          submitted_details: JSON.parse(payload)
         ) { raise ActiveRecord::RecordNotUnique }
 
         api_request

@@ -6,7 +6,7 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   end
 
   let(:crime_application) do
-    instance_double(CrimeApplication, id:, review_status:, status:, submitted_at:, reviewed_at:, application:)
+    instance_double(CrimeApplication, id:, review_status:, status:, submitted_at:, reviewed_at:, submitted_details:)
   end
 
   let(:id) { SecureRandom.uuid }
@@ -16,7 +16,7 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:status) { 'submitted' }
   let(:review_status) { 'assessment_completed' }
 
-  let(:application) do
+  let(:submitted_details) do
     JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'application_invalid').read).merge('parent_id' => parent_id)
   end
 

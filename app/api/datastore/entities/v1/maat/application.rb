@@ -16,7 +16,7 @@ module Datastore
           private
 
           def client_details
-            application_value('client_details')
+            submitted_value('client_details')
           end
 
           def schema_version
@@ -24,31 +24,30 @@ module Datastore
           end
 
           def date_stamp
-            application_value('date_stamp')
+            submitted_value('date_stamp')
           end
 
           def provider_details
-            application_value('provider_details')
+            submitted_value('provider_details')
           end
 
           def case_details
-            case_details = application_value('case_details')
-            case_details['offence_class'] =
-              Utils::OffenceClassCalculator.new(offences: case_details['offences']).offence_class
+            case_details = submitted_value('case_details')
+            case_details['offence_class'] = object.offence_class
             case_details.except!('offences', 'codefendants')
             case_details
           end
 
           def interests_of_justice
-            application_value('interests_of_justice')
+            submitted_value('interests_of_justice')
           end
 
           def reference
-            application_value('reference').to_i
+            submitted_value('reference').to_i
           end
 
-          def application_value(name)
-            object.application&.dig(name)
+          def submitted_value(name)
+            object.submitted_details&.dig(name)
           end
         end
       end

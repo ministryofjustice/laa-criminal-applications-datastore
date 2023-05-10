@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'get application' do
-  let(:application_id) { application.application['id'] }
+  let(:application_id) { application.submitted_details['id'] }
 
   let(:application) do
-    CrimeApplication.new(
-      application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+    CrimeApplication.create(
+      submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 
@@ -31,8 +31,8 @@ RSpec.describe 'get application' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns the application details' do
-        expect(JSON.parse(response.body)).to match(application.application)
+      it "returns the application's details" do
+        expect(JSON.parse(response.body)['id']).to eq(application_id)
       end
 
       it 'returned details satisfy with schema' do

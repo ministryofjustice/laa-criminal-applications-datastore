@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe CrimeApplication do
   let(:valid_attributes) do
-    { application: application_attributes }
+    { submitted_details: application_attributes }
   end
 
   let(:application_attributes) do
@@ -41,6 +41,12 @@ describe CrimeApplication do
         expect(
           application.submitted_at
         ).to eq(application_attributes['submitted_at'])
+      end
+
+      it 'has an offence class' do
+        expect(
+          application.offence_class
+        ).to be_nil
       end
     end
   end
