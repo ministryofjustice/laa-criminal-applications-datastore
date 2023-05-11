@@ -5,11 +5,11 @@ describe Utils::OffenceClassCalculator do
 
   let(:attempted_robbery_offence) do
     {
-      name: 'Attempt robbery',
-        offence_class: 'C',
-        dates: [
-          { date_from: '2020-05-11', date_to: '2020-05-12' },
-          { date_from: '2020-08-11', date_to: nil }
+      'name' => 'Attempt robbery',
+        'offence_class' => 'C',
+        'dates' => [
+          { 'date_from' => '2020-05-11', 'date_to' => '2020-05-12' },
+          { 'date_from' => '2020-08-11', 'date_to' => nil }
         ]
     }
   end
@@ -20,11 +20,11 @@ describe Utils::OffenceClassCalculator do
         [
           attempted_robbery_offence,
           {
-            name: 'Fraud',
-            offence_class: 'F/B/C',
-            dates: [
-              { date_from: '2020-05-11', date_to: '2020-05-12' },
-              { date_from: '2020-08-11', date_to: nil }
+            'name' => 'Fraud',
+            'offence_class' => 'F/B/C',
+            'dates' => [
+              { 'date_from' => '2020-05-11', 'date_to' => '2020-05-12' },
+              { 'date_from' => '2020-08-11', 'date_to' => nil }
             ]
           }
         ]
@@ -40,11 +40,11 @@ describe Utils::OffenceClassCalculator do
         [
           attempted_robbery_offence,
           {
-            name: 'Homicide',
-            offence_class: 'A',
-            dates: [
-              { date_from: '2020-05-11', date_to: '2020-05-12' },
-              { date_from: '2020-08-11', date_to: nil }
+            'name' => 'Homicide',
+            'offence_class' => 'A',
+            'dates' => [
+              { 'date_from' => '2020-05-11', 'date_to' => '2020-05-12' },
+              { 'date_from' => '2020-08-11', 'date_to' => nil }
             ]
           }
         ]
@@ -60,10 +60,10 @@ describe Utils::OffenceClassCalculator do
         [
           attempted_robbery_offence,
           {
-            name: 'Non-listed offence, manually entered',
-            offence_class: nil,
-            dates: [
-              { date_from: '2020-09-15', date_to: nil }
+            'name' => 'Non-listed offence, manually entered',
+            'offence_class' => nil,
+            'dates' => [
+              { 'date_from' => '2020-09-15', 'date_to' => nil }
             ]
           }
         ]

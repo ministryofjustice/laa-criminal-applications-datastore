@@ -43,10 +43,26 @@ describe CrimeApplication do
         ).to eq(application_attributes['submitted_at'])
       end
 
-      it 'has an offence class' do
-        expect(
-          application.offence_class
-        ).to be_nil
+      describe 'Setting the offence class' do
+        context 'when offence class cannot be determined' do
+          it 'has an offence class' do
+            expect(
+              application.offence_class
+            ).to be_nil
+          end
+        end
+
+        context 'when offence class can be determined' do
+          let(:application_attributes) do
+            JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'application_completed').read)
+          end
+
+          it 'has an offence class' do
+            expect(
+              application.offence_class
+            ).to eq 'C'
+          end
+        end
       end
     end
   end
