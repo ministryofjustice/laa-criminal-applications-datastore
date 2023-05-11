@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'ready for assessment application' do
   let(:application) do
     CrimeApplication.create!(
-      submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+      submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 

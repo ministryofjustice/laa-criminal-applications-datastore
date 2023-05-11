@@ -70,7 +70,7 @@ module Datastore
         end
 
         def submitted_value(name)
-          object.submitted_details&.dig(name)
+          object.submitted_application&.dig(name)
         end
       end
     end

@@ -7,7 +7,7 @@ describe Events::Submission do
       id: 'f7b429cc',
       submitted_at: DateTime.parse('2023-02-27'),
       reference: 673_209,
-      submitted_details: { 'parent_id' => '9a123b' }
+      submitted_application: { 'parent_id' => '9a123b' }
     )
   end
 

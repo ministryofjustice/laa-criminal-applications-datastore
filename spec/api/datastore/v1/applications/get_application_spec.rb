@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'get application' do
-  let(:application_id) { application.submitted_details['id'] }
+  let(:application_id) { application.submitted_application['id'] }
 
   let(:application) do
     CrimeApplication.create(
-      submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+      submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 

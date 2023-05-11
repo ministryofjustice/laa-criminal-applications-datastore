@@ -10,9 +10,9 @@ RSpec.describe 'filter search by applicant date of birth' do
   before do
     CrimeApplication.insert_all(
       [
-        { status: 'submitted', submitted_details: {} },
-        { status: 'submitted', submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read) },
-        { status: 'returned', submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read) }
+        { status: 'submitted', submitted_application: {} },
+        { status: 'submitted', submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read) },
+        { status: 'returned', submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read) }
       ]
     )
 

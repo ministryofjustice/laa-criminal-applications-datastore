@@ -18,15 +18,15 @@ module Datastore
         end
 
         def applicant
-          object.submitted_details&.dig('client_details', 'applicant')
+          object.submitted_application&.dig('client_details', 'applicant')
         end
 
         def parent_id
-          object.submitted_details&.dig('parent_id')
+          object.submitted_application&.dig('parent_id')
         end
 
         def reference
-          object.submitted_details&.dig('reference').to_i
+          object.submitted_application&.dig('reference').to_i
         end
       end
     end

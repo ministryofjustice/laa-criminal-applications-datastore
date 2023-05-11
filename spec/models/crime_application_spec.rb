@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe CrimeApplication do
   let(:valid_attributes) do
-    { submitted_details: application_attributes }
+    { submitted_application: application_attributes }
   end
 
   let(:application_attributes) do

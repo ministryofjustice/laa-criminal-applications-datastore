@@ -15,7 +15,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       returned_at:,
       return_details:,
       offence_class:,
-      submitted_details:
+      submitted_application:
     )
   end
 
@@ -34,37 +34,37 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
     }
   end
 
-  let(:submitted_details) do
+  let(:submitted_application) do
     JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
   end
 
   context 'when retrieved from the submitted details' do
     it 'represents the provider details' do
-      expect(representation.fetch('provider_details')).to eq submitted_details.fetch('provider_details')
+      expect(representation.fetch('provider_details')).to eq submitted_application.fetch('provider_details')
     end
 
     it 'represents the client details' do
-      expect(representation.fetch('client_details')).to eq submitted_details.fetch('client_details')
+      expect(representation.fetch('client_details')).to eq submitted_application.fetch('client_details')
     end
 
     it 'represents the interests of justice details' do
-      expect(representation.fetch('interests_of_justice')).to eq submitted_details.fetch('interests_of_justice')
+      expect(representation.fetch('interests_of_justice')).to eq submitted_application.fetch('interests_of_justice')
     end
 
     it 'represents the interests of justice passport details' do
-      expect(representation.fetch('ioj_passport')).to eq submitted_details.fetch('ioj_passport')
+      expect(representation.fetch('ioj_passport')).to eq submitted_application.fetch('ioj_passport')
     end
 
     it 'represents the means passport details' do
-      expect(representation.fetch('means_passport')).to eq submitted_details.fetch('means_passport')
+      expect(representation.fetch('means_passport')).to eq submitted_application.fetch('means_passport')
     end
 
     it 'represents the reference' do
-      expect(representation.fetch('reference')).to eq submitted_details.fetch('reference')
+      expect(representation.fetch('reference')).to eq submitted_application.fetch('reference')
     end
 
     it 'represents the id' do
-      expect(representation.fetch('id')).to eq submitted_details.fetch('id')
+      expect(representation.fetch('id')).to eq submitted_application.fetch('id')
     end
   end
 

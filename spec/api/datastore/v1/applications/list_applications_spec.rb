@@ -83,15 +83,15 @@ RSpec.describe 'list applications' do
     let(:applications) do
       [
         {
-          submitted_details: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
+          submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
           status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
         },
         {
-          submitted_details: {},
+          submitted_application: {},
           status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now
         },
         {
-          submitted_details: {},
+          submitted_application: {},
           status: 'superseded', submitted_at: 1.month.ago, returned_at: 1.week.ago
         }
       ]
@@ -158,27 +158,27 @@ RSpec.describe 'list applications' do
       let(:applications) do
         [
           {
-            submitted_details: { submitted_at: 1.day.ago, returned_at: nil },
+            submitted_application: { submitted_at: 1.day.ago, returned_at: nil },
             status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
           },
           {
-            submitted_details: { submitted_at: 2.days.ago, returned_at: nil },
+            submitted_application: { submitted_at: 2.days.ago, returned_at: nil },
             status: 'submitted', submitted_at: 2.days.ago, returned_at: nil
           },
           {
-            submitted_details: { submitted_at: 1.week.ago, returned_at: 8.days.ago },
+            submitted_application: { submitted_at: 1.week.ago, returned_at: 8.days.ago },
             status: 'returned', submitted_at: 1.week.ago, returned_at: 8.days.ago
           },
           {
-            submitted_details: { submitted_at: 2.weeks.ago, returned_at: 5.days.ago },
+            submitted_application: { submitted_at: 2.weeks.ago, returned_at: 5.days.ago },
             status: 'returned', submitted_at: 2.weeks.ago, returned_at: 5.days.ago
           },
           {
-            submitted_details: { submitted_at: 1.month.ago, returned_at: 3.weeks.ago },
+            submitted_application: { submitted_at: 1.month.ago, returned_at: 3.weeks.ago },
             status: 'superseded', submitted_at: 1.month.ago, returned_at: 3.weeks.ago
           },
           {
-            submitted_details: { submitted_at: 2.months.ago, returned_at: 7.weeks.ago },
+            submitted_application: { submitted_at: 2.months.ago, returned_at: 7.weeks.ago },
             status: 'superseded', submitted_at: 2.months.ago, returned_at: 7.weeks.ago
           },
         ]
