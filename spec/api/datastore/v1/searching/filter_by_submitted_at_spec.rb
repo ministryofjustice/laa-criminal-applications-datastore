@@ -11,9 +11,9 @@ RSpec.describe 'searches filter by submitted_at' do
   before do
     CrimeApplication.insert_all(
       [
-        { submitted_at: 3.days.ago, application: { reference: 101 } },
-        { submitted_at: 2.days.ago, application: { reference: 102 } },
-        { submitted_at: 1.day.ago, application: { reference: 103 } }
+        { submitted_at: 3.days.ago, submitted_application: { reference: 101 } },
+        { submitted_at: 2.days.ago, submitted_application: { reference: 102 } },
+        { submitted_at: 1.day.ago, submitted_application: { reference: 103 } }
       ]
     )
 

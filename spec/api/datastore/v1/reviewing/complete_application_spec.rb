@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'complete application' do
   let(:application) do
     CrimeApplication.create!(
-      application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+      submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 

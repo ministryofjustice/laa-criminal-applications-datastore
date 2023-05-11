@@ -24,7 +24,7 @@ RSpec.describe 'Sorting applications' do
   let(:applications) do
     [
       {
-        application: {
+        submitted_application: {
           client_details: {
             applicant: { first_name: 'jim', last_name: 'Halpert' }
           }
@@ -33,7 +33,7 @@ RSpec.describe 'Sorting applications' do
         reviewed_at: nil,
       },
       {
-        application: {
+        submitted_application: {
           client_details: {
             applicant: { first_name: 'Michael', last_name: 'Scott' }
           }
@@ -42,12 +42,12 @@ RSpec.describe 'Sorting applications' do
         reviewed_at: nil
       },
       {
-        application: {},
+        submitted_application: {},
         status: 'returned', submitted_at: 1.week.ago, returned_at: 8.days.ago,
         reviewed_at: 8.days.ago
       },
       {
-        application: {
+        submitted_application: {
           client_details: {
             applicant: { first_name: '', last_name: 'schrute' }
           }
@@ -56,7 +56,7 @@ RSpec.describe 'Sorting applications' do
         reviewed_at: 5.days.ago
       },
       {
-        application: {
+        submitted_application: {
           client_details: {
             applicant: { first_name: 'Stanley', last_name: 'hudSon' }
           }

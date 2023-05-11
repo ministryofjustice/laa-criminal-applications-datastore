@@ -6,14 +6,14 @@ RSpec.describe 'get application ready for maat' do
 
     let(:application) do
       CrimeApplication.create(
-        application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
+        submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
         review_status: :ready_for_assessment,
         id: SecureRandom.uuid,
         submitted_at: 1.day.ago
       )
     end
 
-    let(:application_usn) { application.application['reference'] }
+    let(:application_usn) { application.submitted_application['reference'] }
     let(:maat_application) { JSON.parse(response.body) }
 
     it_behaves_like 'an authorisable endpoint', %w[maat-adapter] do
@@ -26,28 +26,30 @@ RSpec.describe 'get application ready for maat' do
       end
 
       let(:expected_offence_class) do
-        Utils::OffenceClassCalculator.new(offences: application.application['case_details']['offences']).offence_class
+        Utils::OffenceClassCalculator.new(
+          offences: application.submitted_application['case_details']['offences']
+        ).offence_class
       end
 
       let(:expected_case_details) do
         {
-          'appeal_maat_id' => application.application['case_details']['appeal_maat_id'],
-          'case_type' => application.application['case_details']['case_type'],
-          'hearing_court_name' => application.application['case_details']['hearing_court_name'],
-          'hearing_date' => application.application['case_details']['hearing_date'],
+          'appeal_maat_id' => application.submitted_application['case_details']['appeal_maat_id'],
+          'case_type' => application.submitted_application['case_details']['case_type'],
+          'hearing_court_name' => application.submitted_application['case_details']['hearing_court_name'],
+          'hearing_date' => application.submitted_application['case_details']['hearing_date'],
           'offence_class' => expected_offence_class,
-          'urn' => application.application['case_details']['urn'],
+          'urn' => application.submitted_application['case_details']['urn'],
         }
       end
 
       let(:expected_maat_application) do
         {
-          'reference' => application.application['reference'],
-          'client_details' => application.application['client_details'],
-          'provider_details' => application.application['provider_details'],
+          'reference' => application.submitted_application['reference'],
+          'client_details' => application.submitted_application['client_details'],
+          'provider_details' => application.submitted_application['provider_details'],
           'submitted_at' => application['submitted_at'].iso8601,
-          'date_stamp' => application.application['date_stamp'],
-          'interests_of_justice' => application.application['interests_of_justice'],
+          'date_stamp' => application.submitted_application['date_stamp'],
+          'interests_of_justice' => application.submitted_application['interests_of_justice'],
           'case_details' => expected_case_details,
           'schema_version' => 1.0,
           'id' => application.id

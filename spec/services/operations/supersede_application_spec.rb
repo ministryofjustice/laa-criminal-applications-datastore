@@ -8,7 +8,7 @@ describe Operations::SupersedeApplication do
   describe '#call' do
     before do
       CrimeApplication.create(
-        application: JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'application_returned').read),
+        submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'application_returned').read),
         status: :returned,
       )
     end

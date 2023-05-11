@@ -13,7 +13,7 @@ RSpec.describe 'search with text' do
     CrimeApplication.insert_all(
       details.map do |first_name, last_name, reference|
         {
-          application: {
+          submitted_application: {
             client_details: {
               applicant: { first_name:, last_name: }
             },

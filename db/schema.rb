@@ -10,24 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_21_154839) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_102128) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "crime_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.jsonb "application"
+    t.jsonb "submitted_application"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "submitted", null: false
     t.datetime "submitted_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "returned_at", precision: nil
-    t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (application ->> 'reference'::text)))", stored: true
+    t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (submitted_application ->> 'reference'::text)))", stored: true
     t.datetime "reviewed_at", precision: nil
     t.string "review_status", default: "application_received", null: false
-    t.virtual "reference", type: :integer, as: "((application ->> 'reference'::text))::integer", stored: true
-    t.virtual "applicant_first_name", type: :citext, as: "(application #>> '{client_details,applicant,first_name}'::text[])", stored: true
-    t.virtual "applicant_last_name", type: :citext, as: "(application #>> '{client_details,applicant,last_name}'::text[])", stored: true
+    t.virtual "reference", type: :integer, as: "((submitted_application ->> 'reference'::text))::integer", stored: true
+    t.virtual "applicant_first_name", type: :citext, as: "(submitted_application #>> '{client_details,applicant,first_name}'::text[])", stored: true
+    t.virtual "applicant_last_name", type: :citext, as: "(submitted_application #>> '{client_details,applicant,last_name}'::text[])", stored: true
+    t.string "offence_class"
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["reference"], name: "index_crime_applications_on_reference"
     t.index ["review_status", "reviewed_at"], name: "index_crime_applications_on_review_status_and_reviewed_at"

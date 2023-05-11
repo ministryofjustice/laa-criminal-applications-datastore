@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Operations::ReturnApplication do
   before do
     CrimeApplication.create(
-      application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+      submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
 
