@@ -3,6 +3,7 @@ module Datastore
     module V1
       class CrimeApplication < Grape::Entity
         expose :id
+        expose :parent_id
         expose :schema_version
         expose :reference
         expose :created_at
@@ -23,6 +24,10 @@ module Datastore
 
         def id
           submitted_value('id')
+        end
+
+        def parent_id
+          submitted_value('parent_id')
         end
 
         def schema_version

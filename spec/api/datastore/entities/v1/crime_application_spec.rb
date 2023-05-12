@@ -35,7 +35,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   end
 
   let(:submitted_application) do
-    JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
+    JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge('parent_id' => SecureRandom.uuid)
   end
 
   context 'when retrieved from the submitted details' do
@@ -45,6 +45,10 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
 
     it 'represents the client details' do
       expect(representation.fetch('client_details')).to eq submitted_application.fetch('client_details')
+    end
+
+    it 'represents the parent_id' do
+      expect(representation.fetch('parent_id')).to eq submitted_application.fetch('parent_id')
     end
 
     it 'represents the interests of justice details' do
