@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+  namespace: laa-criminal-applications-metabase
+data:
+  # https://www.metabase.com/docs/latest/configuring-metabase/environment-variables
+  MAX_SESSION_AGE: "1440" # 24 hours
+  MB_ANON_TRACKING_ENABLED: "false"
+  MB_CHECK_FOR_UPDATES: "false"
+  MB_PASSWORD_LENGTH: "12"
+  MB_START_OF_WEEK: monday

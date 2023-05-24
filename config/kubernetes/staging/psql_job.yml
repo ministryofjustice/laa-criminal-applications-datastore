@@ -1,0 +1,43 @@
+# The purpose of this one-off job is to create an unprivileged, readonly
+# set of database credentials, to be used by third party products for reports
+# or analytics purposes. Currently this is being used by Metabase.
+#
+# This job can be run multiple times. After the first time, it will complain
+# the user already exists, but will not fail to complete. In fact, if the
+# password is rotated, or if new tables are added to the database, then the
+# job must be run again in order for these changes to take effect.
+#
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: metabase-psql-job
+  namespace: laa-criminal-applications-datastore-staging
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: psql-job
+        image: bitnami/postgresql:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - export DATABASE_NAME=${DATABASE_URL##*/} READONLY_USER=metabase;
+            psql -d ${DATABASE_URL} -c "CREATE ROLE ${READONLY_USER} WITH LOGIN PASSWORD '${READONLY_PASSWORD}' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION";
+            psql -d ${DATABASE_URL} -c "ALTER ROLE ${READONLY_USER} WITH PASSWORD '${READONLY_PASSWORD}'";
+            psql -d ${DATABASE_URL} -e -c "GRANT CONNECT ON DATABASE ${DATABASE_NAME} TO ${READONLY_USER}";
+            psql -d ${DATABASE_URL} -e -c "GRANT USAGE ON SCHEMA public TO ${READONLY_USER}";
+            psql -d ${DATABASE_URL} -e -c "GRANT SELECT ON crime_applications TO ${READONLY_USER}";
+            psql -d ${DATABASE_URL} -e -c "GRANT SELECT ON return_details TO ${READONLY_USER}";
+        env:
+        # secrets created by terraform
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: rds-instance
+              key: url
+        - name: READONLY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-readonly-users
+              key: metabase
