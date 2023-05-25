@@ -7,6 +7,9 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: ingress-laa-criminal-applications-metabase-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/server-snippet: |
+      if ($host = 'criminal-applications-metabase.apps.live.cloud-platform.service.justice.gov.uk') {
+        return 301 https://metabase.apply-for-criminal-legal-aid.service.justice.gov.uk;
+      }
       location = /.well-known/security.txt {
         auth_basic off;
         return 301 https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt;
@@ -16,8 +19,21 @@ spec:
   tls:
   - hosts:
     - criminal-applications-metabase.apps.live.cloud-platform.service.justice.gov.uk
+  - hosts:
+    - metabase.apply-for-criminal-legal-aid.service.justice.gov.uk
+    secretName: domain-tls-certificate
   rules:
   - host: criminal-applications-metabase.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: service-metabase
+            port:
+              number: 80
+  - host: metabase.apply-for-criminal-legal-aid.service.justice.gov.uk
     http:
       paths:
       - path: /
