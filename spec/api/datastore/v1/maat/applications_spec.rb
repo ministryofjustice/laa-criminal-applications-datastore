@@ -7,9 +7,7 @@ RSpec.describe 'get application ready for maat' do
     let(:application) do
       CrimeApplication.create(
         submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
-        review_status: :ready_for_assessment,
-        id: SecureRandom.uuid,
-        submitted_at: 1.day.ago
+        review_status: :ready_for_assessment
       )
     end
 
@@ -47,7 +45,7 @@ RSpec.describe 'get application ready for maat' do
           'reference' => application.submitted_application['reference'],
           'client_details' => application.submitted_application['client_details'],
           'provider_details' => application.submitted_application['provider_details'],
-          'submitted_at' => application['submitted_at'].iso8601,
+          'submitted_at' => application.submitted_application['submitted_at'],
           'date_stamp' => application.submitted_application['date_stamp'],
           'interests_of_justice' => application.submitted_application['interests_of_justice'],
           'case_details' => expected_case_details,

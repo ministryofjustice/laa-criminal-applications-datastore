@@ -6,7 +6,6 @@ module Datastore
 
     helpers Helpers::SortingParams
     helpers Helpers::PaginationParams
-    helpers Helpers::Formatters
 
     rescue_from ActiveRecord::RecordNotFound do
       error!({ status: 404, error: 'Record not found' }, 404)

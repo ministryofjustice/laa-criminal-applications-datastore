@@ -7,7 +7,7 @@ module Datastore
         expose :schema_version
         expose :reference
         expose :created_at
-        expose :submitted_at, format_with: :iso8601
+        expose :submitted_at
         expose :returned_at, expose_nil: false
         expose :date_stamp
         expose :provider_details
