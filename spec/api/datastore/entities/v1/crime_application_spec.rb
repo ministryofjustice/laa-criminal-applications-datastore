@@ -20,12 +20,12 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   end
 
   let(:id) { SecureRandom.uuid }
-  let(:submitted_at) { 3.days.ago }
+  let(:submitted_at) { 3.days.ago.to_json }
   let(:reviewed_at) { nil }
   let(:status) { Types::ApplicationStatus['submitted'] }
   let(:offence_class) { Types::OffenceClass['C'] }
   let(:case_details) { { offence_class: } }
-  let(:returned_at) { 3.days.ago }
+  let(:returned_at) { 3.days.ago.to_json }
   let(:return_details) do
     {
       reason: nil,
@@ -73,12 +73,12 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   end
 
   context 'when retrieved from the database' do
-    it 'represents submitted_at in is8601' do
-      expect(representation.fetch('submitted_at')).to eq submitted_at.iso8601
+    it 'represents submitted_at' do
+      expect(representation.fetch('submitted_at')).to eq submitted_at
     end
 
-    it 'represents reviewed_at in is8601' do
-      expect(representation).not_to have_key(:reviewed_at)
+    it 'represents returned_at' do
+      expect(representation.fetch('returned_at')).to eq returned_at
     end
 
     it 'represents the status' do

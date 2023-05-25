@@ -3,8 +3,8 @@ module Datastore
     module V1
       class SearchResult < Grape::Entity
         expose :id, as: :resource_id
-        expose :submitted_at, format_with: :iso8601
-        expose :reviewed_at, format_with: :iso8601
+        expose :submitted_at
+        expose :reviewed_at
         expose :applicant_name
         expose :reference
         expose :status

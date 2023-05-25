@@ -6,7 +6,7 @@ module Datastore
           expose :id
           expose :schema_version
           expose :reference
-          expose :submitted_at, format_with: :iso8601
+          expose :submitted_at
           expose :date_stamp
           expose :client_details
           expose :provider_details

@@ -11,8 +11,8 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
 
   let(:id) { SecureRandom.uuid }
   let(:parent_id) { SecureRandom.uuid }
-  let(:submitted_at) { 3.days.ago }
-  let(:reviewed_at) { submitted_at + 1.hour }
+  let(:submitted_at) { submitted_application['submitted_at'] }
+  let(:reviewed_at) { '2023-05-22T12:42:10.907Z' }
   let(:status) { 'submitted' }
   let(:review_status) { 'assessment_completed' }
 
@@ -21,11 +21,11 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   end
 
   it 'represents submitted_at in is8601' do
-    expect(representation.fetch(:submitted_at)).to eq submitted_at.iso8601
+    expect(representation.fetch(:submitted_at)).to eq submitted_at
   end
 
   it 'represents reviewed_at in is8601' do
-    expect(representation.fetch(:reviewed_at)).to eq reviewed_at.iso8601
+    expect(representation.fetch(:reviewed_at)).to eq reviewed_at
   end
 
   it 'represents the status' do
