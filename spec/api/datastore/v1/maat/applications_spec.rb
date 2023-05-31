@@ -42,6 +42,7 @@ RSpec.describe 'get application ready for maat' do
 
       let(:expected_maat_application) do
         {
+          'application_type' => application.submitted_application['application_type'],
           'reference' => application.submitted_application['reference'],
           'client_details' => application.submitted_application['client_details'],
           'provider_details' => application.submitted_application['provider_details'],
@@ -49,7 +50,7 @@ RSpec.describe 'get application ready for maat' do
           'date_stamp' => application.submitted_application['date_stamp'],
           'interests_of_justice' => application.submitted_application['interests_of_justice'],
           'case_details' => expected_case_details,
-          'schema_version' => 1.0,
+          'schema_version' => application.submitted_application['schema_version'],
           'id' => application.id
         }
       end
