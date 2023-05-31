@@ -67,6 +67,10 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       expect(representation.fetch('reference')).to eq submitted_application.fetch('reference')
     end
 
+    it 'represents the application type' do
+      expect(representation.fetch('application_type')).to eq submitted_application.fetch('application_type')
+    end
+
     it 'represents the id' do
       expect(representation.fetch('id')).to eq submitted_application.fetch('id')
     end
