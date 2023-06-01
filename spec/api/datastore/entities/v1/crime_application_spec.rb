@@ -35,7 +35,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   end
 
   let(:submitted_application) do
-    JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge('parent_id' => SecureRandom.uuid)
+    LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => SecureRandom.uuid) }
   end
 
   context 'when retrieved from the submitted details' do
