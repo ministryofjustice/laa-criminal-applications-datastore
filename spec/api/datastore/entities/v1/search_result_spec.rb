@@ -17,7 +17,7 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:review_status) { 'assessment_completed' }
 
   let(:submitted_application) do
-    JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'application_invalid').read).merge('parent_id' => parent_id)
+    LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => parent_id) }
   end
 
   it 'represents submitted_at in is8601' do

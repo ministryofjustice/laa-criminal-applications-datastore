@@ -113,7 +113,7 @@ RSpec.describe 'create application' do
       end
 
       let(:payload) do
-        LaaCrimeSchemas.fixture(1.0, name: 'application_invalid').read
+        LaaCrimeSchemas.fixture(1.0) { |json| json.merge('reference' => nil) }.to_json
       end
 
       it 'does not store the application' do
@@ -125,7 +125,9 @@ RSpec.describe 'create application' do
       end
 
       it 'returns error information' do
-        expect(response.body).to include('failed_attribute')
+        expect(response.body).to include(
+          "The property '#/reference' of type null did not match the following type: number in schema"
+        )
       end
     end
   end

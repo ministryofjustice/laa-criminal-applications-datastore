@@ -54,7 +54,14 @@ describe CrimeApplication do
 
         context 'when offence class can be determined' do
           let(:application_attributes) do
-            JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'application_completed').read)
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.deep_merge(
+                'case_details' => {
+                  # For the sake of this test, only `offence_class` attrs are required
+                  'offences' => [{ 'offence_class' => 'C' }, { 'offence_class' => 'F' }]
+                }
+              )
+            end
           end
 
           it 'has an offence class' do
