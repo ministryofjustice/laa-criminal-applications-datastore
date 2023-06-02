@@ -28,7 +28,7 @@ module Datastore
           end
         end
 
-        desc 'Return applications with pagination.'
+        desc 'Return a pruned version of the applications with pagination.'
         route_setting :authorised_consumers, %w[crime-apply]
         params do
           use :sorting
@@ -55,7 +55,7 @@ module Datastore
             **declared(params).symbolize_keys
           ).call
 
-          present :records, collection, with: Datastore::Entities::V1::CrimeApplication
+          present :records, collection, with: Datastore::Entities::V1::PrunedApplication
           present :pagination, collection, with: Datastore::Entities::V1::Pagination
         end
       end

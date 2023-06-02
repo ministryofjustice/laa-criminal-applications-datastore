@@ -103,8 +103,22 @@ RSpec.describe 'list applications' do
 
     it 'is an array of valid crime application details' do
       expect(
-        LaaCrimeSchemas::Validator.new(records.first, version: 1.0)
+        LaaCrimeSchemas::Validator.new(records.first, version: 1.0, schema_name: 'pruned_application')
       ).to be_valid
+    end
+
+    describe 'pruned details' do
+      let(:record) { records.first }
+
+      context 'without unneeded attributes' do
+        %w[
+          provider_details case_details interests_of_justice return_details date_stamp ioj_passport means_passport
+        ].each do |name|
+          it "does not have `#{name}` attribute" do
+            expect(record.key?(name)).to be(false)
+          end
+        end
+      end
     end
 
     describe 'status filter' do
@@ -139,9 +153,6 @@ RSpec.describe 'list applications' do
 
         it 'returns only matching applications' do
           expect(records.size).to be(1)
-          expect(
-            records.first.dig('provider_details', 'office_code')
-          ).to eq('1A123B')
         end
       end
 
