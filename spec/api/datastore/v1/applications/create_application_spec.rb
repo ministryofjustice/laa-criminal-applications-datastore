@@ -126,7 +126,7 @@ RSpec.describe 'create application' do
 
       it 'returns error information' do
         expect(response.body).to include(
-          "The property '#/reference' of type null did not match the following type: number in schema"
+          "The property '#/reference' of type null did not match the following type: integer in schema"
         )
       end
     end
