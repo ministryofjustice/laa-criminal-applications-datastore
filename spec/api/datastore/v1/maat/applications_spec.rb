@@ -29,16 +29,20 @@ RSpec.describe 'get application ready for maat' do
         ).offence_class
       end
 
+      # rubocop:disable Layout/LineLength
       let(:expected_case_details) do
         {
-          'appeal_maat_id' => application.submitted_application['case_details']['appeal_maat_id'],
           'case_type' => application.submitted_application['case_details']['case_type'],
+          'appeal_maat_id' => application.submitted_application['case_details']['appeal_maat_id'],
+          'appeal_with_changes_maat_id' => application.submitted_application['case_details']['appeal_with_changes_maat_id'],
+          'appeal_with_changes_details' => application.submitted_application['case_details']['appeal_with_changes_details'],
           'hearing_court_name' => application.submitted_application['case_details']['hearing_court_name'],
           'hearing_date' => application.submitted_application['case_details']['hearing_date'],
           'offence_class' => expected_offence_class,
           'urn' => application.submitted_application['case_details']['urn'],
         }
       end
+      # rubocop:enable Layout/LineLength
 
       let(:expected_maat_application) do
         {
