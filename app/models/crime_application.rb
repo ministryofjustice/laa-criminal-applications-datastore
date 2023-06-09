@@ -1,4 +1,6 @@
 class CrimeApplication < ApplicationRecord
+  include Redactable
+
   has_one :return_details, dependent: :destroy
 
   attr_readonly :submitted_application, :submitted_at, :id
