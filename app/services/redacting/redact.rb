@@ -9,6 +9,11 @@ module Redacting
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def process!
+      process_metadata!
+
+      # The redacting of the payload is only needed once, on creation
+      return true if redacted_record.persisted?
+
       # First we create an exact copy of the original payload
       redacted_payload.merge!(
         original_payload.dup
@@ -39,6 +44,20 @@ module Redacting
       true
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+    def process_metadata!
+      redacted_record.metadata.merge!(
+        record.slice(
+          :status,
+          :returned_at,
+          :reviewed_at,
+          :review_status,
+          :offence_class,
+        )
+      )
+
+      true
+    end
 
     private
 
