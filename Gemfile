@@ -16,6 +16,8 @@ gem 'kaminari-activerecord'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 
+gem 'scenic'
+
 # Datastore API authentication
 gem 'moj-simple-jwt-auth', '0.1.0'
 

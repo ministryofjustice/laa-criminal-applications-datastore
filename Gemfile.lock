@@ -287,6 +287,9 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
+    scenic (1.7.0)
+      activerecord (>= 4.0.0)
+      railties (>= 4.0.0)
     sentry-rails (5.9.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.9.0)
@@ -335,6 +338,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  scenic
   sentry-rails
   sentry-ruby
   simplecov
