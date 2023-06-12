@@ -10,11 +10,6 @@ class CrimeApplication < ApplicationRecord
   before_validation :shift_payload_attributes, on: :create
   before_validation :set_overall_offence_class, on: :create
 
-  scope :by_status, ->(status) { where(status:) }
-  scope :by_office, lambda { |office_code|
-    where("submitted_application->'provider_details'->>'office_code' = ?", office_code)
-  }
-
   private
 
   def shift_payload_attributes
