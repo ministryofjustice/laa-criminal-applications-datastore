@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_11_102128) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_09_142410) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -39,6 +39,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_102128) do
     t.index ["status", "submitted_at"], name: "index_crime_applications_on_status_and_submitted_at", order: { submitted_at: :desc }
   end
 
+  create_table "redacted_crime_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "crime_application_id"
+    t.jsonb "submitted_application", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.virtual "status", type: :string, as: "(metadata ->> 'status'::text)", stored: true
+    t.index ["crime_application_id"], name: "index_redacted_crime_applications_on_crime_application_id", unique: true
+    t.index ["status"], name: "index_redacted_crime_applications_on_status"
+  end
+
   create_table "return_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "reason", null: false
     t.text "details"
@@ -48,5 +57,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_102128) do
     t.index ["crime_application_id"], name: "index_return_details_on_crime_application_id"
   end
 
+  add_foreign_key "redacted_crime_applications", "crime_applications"
   add_foreign_key "return_details", "crime_applications"
 end
