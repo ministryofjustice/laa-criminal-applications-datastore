@@ -112,7 +112,7 @@ RSpec.describe 'list applications' do
 
       context 'without unneeded attributes' do
         %w[
-          provider_details case_details interests_of_justice return_details date_stamp ioj_passport means_passport
+          provider_details case_details interests_of_justice return_details ioj_passport means_passport
         ].each do |name|
           it "does not have `#{name}` attribute" do
             expect(record.key?(name)).to be(false)

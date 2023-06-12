@@ -6,7 +6,6 @@ module Datastore
                  :case_details,
                  :interests_of_justice,
                  :return_details,
-                 :date_stamp,
                  :ioj_passport,
                  :means_passport
 
