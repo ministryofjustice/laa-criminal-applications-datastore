@@ -18,6 +18,10 @@ describe CrimeApplication do
       expect { create }.to change(described_class, :count).by 1
     end
 
+    it 'persists the redacted application' do
+      expect { create }.to change(RedactedCrimeApplication, :count).by 1
+    end
+
     context 'when a record with the id already exists' do
       before do
         described_class.create!(id: application_attributes['id'])
@@ -41,6 +45,14 @@ describe CrimeApplication do
         expect(
           application.submitted_at
         ).to eq(application_attributes['submitted_at'])
+      end
+
+      describe 'redacted application' do
+        let(:redacted_application) { application.redacted_crime_application }
+
+        it 'has a the same status attribute' do
+          expect(application.status).to eq(redacted_application.status)
+        end
       end
 
       describe 'Setting the offence class' do
@@ -70,6 +82,33 @@ describe CrimeApplication do
             ).to eq 'C'
           end
         end
+      end
+    end
+  end
+
+  describe '#update' do
+    subject(:application) { described_class.find(application_attributes['id']) }
+
+    before do
+      described_class.create!(valid_attributes)
+    end
+
+    let(:redacted_application) { application.redacted_crime_application }
+
+    context 'when updating the status of the application' do
+      it 'updates the status' do
+        expect do
+          application.update!(status: 'returned')
+        end.to change(application, :status).from('submitted').to('returned')
+      end
+
+      it 'updates the redacted application status' do
+        expect(redacted_application.status).to eq('submitted')
+
+        application.update!(status: 'returned')
+        redacted_application.reload
+
+        expect(redacted_application.status).to eq('returned')
       end
     end
   end

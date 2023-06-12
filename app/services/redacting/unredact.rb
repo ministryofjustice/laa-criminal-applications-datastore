@@ -8,7 +8,7 @@ module Redacting
     end
 
     def process!
-      Rules.all.each_key do |path|
+      Rules.pii_attributes.each_key do |path|
         path = path.split('.')
         details = original_payload.dig(*path)
 

@@ -20,7 +20,7 @@ module Redacting
       )
 
       # Then we redact from this copy anything according to the rules
-      Rules.all.each do |path, rules|
+      Rules.pii_attributes.each do |path, rules|
         path = path.split('.')
         details = redacted_payload.dig(*path)
 
@@ -48,11 +48,7 @@ module Redacting
     def process_metadata!
       redacted_record.metadata.merge!(
         record.slice(
-          :status,
-          :returned_at,
-          :reviewed_at,
-          :review_status,
-          :offence_class,
+          Rules.metadata_attributes
         )
       )
 

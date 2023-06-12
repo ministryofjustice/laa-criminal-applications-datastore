@@ -67,6 +67,24 @@ describe Redacting::Redact do
     end
   end
 
+  describe 'metadata attributes' do
+    let(:metadata) { crime_application.redacted_crime_application.metadata }
+
+    before do
+      subject.process!
+    end
+
+    it 'contains the expected metadata json' do
+      expect(metadata).to eq({
+        'status' => 'submitted',
+        'reviewed_at' => nil,
+        'returned_at' => nil,
+        'review_status' => 'application_received',
+        'offence_class' => nil,
+      })
+    end
+  end
+
   describe 'for blank or null attributes' do
     let(:submitted_application) do
       LaaCrimeSchemas.fixture(1.0) do |json|
@@ -92,7 +110,7 @@ describe Redacting::Redact do
 
   describe 'invalid rules' do
     before do
-      allow(Redacting::Rules).to receive(:all).and_return(rules)
+      allow(Redacting::Rules).to receive(:pii_attributes).and_return(rules)
     end
 
     context 'when `redact` information is not found' do

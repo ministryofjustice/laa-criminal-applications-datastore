@@ -1,5 +1,7 @@
 module Redacting
   module Rules
+    REDACTED_KEYWORD = '__redacted__'.freeze
+
     PII_ATTRIBUTES = {
       'provider_details' => {
         redact: %w[legal_rep_first_name legal_rep_last_name legal_rep_telephone]
@@ -19,10 +21,22 @@ module Redacting
       },
     }.freeze
 
-    REDACTED_KEYWORD = '__redacted__'.freeze
+    # Additional top level attributes to propagate from the
+    # unredacted table to the redacted one
+    METADATA_ATTRIBUTES = [
+      :status,
+      :returned_at,
+      :reviewed_at,
+      :review_status,
+      :offence_class,
+    ].freeze
 
-    def self.all
+    def self.pii_attributes
       PII_ATTRIBUTES
+    end
+
+    def self.metadata_attributes
+      METADATA_ATTRIBUTES
     end
   end
 end
