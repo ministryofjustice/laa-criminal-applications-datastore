@@ -1,4 +1,8 @@
 module Redacting
+  # NOTE: we are not using this class in the code, however it is kept
+  # to facilitate some test scenarios, as it performs the inverse
+  # operation of the `Redact` class. Refer to `unredact_spec.rb`
+  #
   class Unredact < BaseRedacting
     def initialize(record)
       raise ArgumentError, "expected `RedactedCrimeApplication` instance, got `#{record.class}`" unless

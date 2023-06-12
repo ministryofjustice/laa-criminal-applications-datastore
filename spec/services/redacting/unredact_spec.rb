@@ -32,11 +32,11 @@ describe Redacting::Unredact do
         a_hash_including({ 'nino' => 'AJ123456C' })
       )
 
-      # sanity check these are indeed the original details
+      # sanity check the payloads are identical after the unredact
       expect(
-        crime_application.submitted_application.dig('client_details', 'applicant')
+        crime_application.submitted_application
       ).to eq(
-        redacted_application.submitted_application.dig('client_details', 'applicant')
+        redacted_application.submitted_application
       )
     end
   end
