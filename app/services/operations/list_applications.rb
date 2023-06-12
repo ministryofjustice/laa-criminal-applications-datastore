@@ -23,8 +23,8 @@ module Operations
     def query
       scope = @scope
 
-      scope = scope.by_status(status) if status.present?
-      scope = scope.by_office(office_code) if office_code.present?
+      scope = scope.where(status:) if status.present?
+      scope = scope.where(office_code:) if office_code.present?
 
       scope
     end
