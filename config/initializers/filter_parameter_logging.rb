@@ -12,6 +12,5 @@ Rails.application.config.filter_parameters += [
   :details,
   :first_name,
   :last_name,
-  :reason,
   :searchable_text,
 ]
