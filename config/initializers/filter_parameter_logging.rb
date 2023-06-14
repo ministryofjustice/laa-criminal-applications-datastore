@@ -5,11 +5,13 @@
 # notations and behaviors.
 Rails.application.config.filter_parameters += [
   :token, :_key, :crypt, :salt,
+
   # Attributes relating to an application
   # It does partial matching (i.e. `case_details` is covered by `details`)
   :application,
   :details,
   :first_name,
   :last_name,
+  :reason,
   :searchable_text,
 ]
