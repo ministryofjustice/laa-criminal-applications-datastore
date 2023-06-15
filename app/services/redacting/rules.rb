@@ -19,6 +19,10 @@ module Redacting
         redact: %w[first_name last_name],
         type: :array # [{}, {}, ...]
       },
+      'interests_of_justice' => {
+        redact: %w[reason],
+        type: :array # [{}, {}, ...]
+      },
     }.freeze
 
     # Additional top level attributes to propagate from the

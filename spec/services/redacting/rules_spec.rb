@@ -13,6 +13,7 @@ describe Redacting::Rules do
           client_details.applicant.correspondence_address
           client_details.applicant.home_address
           case_details.codefendants
+          interests_of_justice
         ]
       )
     end
