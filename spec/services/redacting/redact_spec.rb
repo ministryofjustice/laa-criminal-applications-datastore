@@ -65,6 +65,19 @@ describe Redacting::Redact do
         )
       end
     end
+
+    context 'with interests of justice' do
+      let(:interests_of_justice) { redacted_application['interests_of_justice'] }
+
+      it 'redacts the expected attributes' do
+        expect(interests_of_justice).to eq(
+          [{
+            'type' => 'loss_of_liberty',
+            'reason' => '__redacted__',
+          }]
+        )
+      end
+    end
   end
 
   describe 'metadata attributes' do
