@@ -71,6 +71,30 @@ describe Operations::ReturnApplication do
         ).to have_received(:publish)
       end
 
+      context 'with redacted application metadata' do
+        before do
+          call
+        end
+
+        let(:return_details) { { reason: Types::ReturnReason['clarification_required'], details: 'Some details' } }
+        let(:redacted_metadata) { application.reload.redacted_crime_application.metadata }
+
+        it 'updates the metadata' do
+          expect(
+            redacted_metadata
+          ).to eq(
+            {
+              'offence_class' => nil,
+              'return_reason' => 'clarification_required',
+              'returned_at' => application.returned_at.to_time.utc.iso8601(3),
+              'reviewed_at' => application.reviewed_at.to_time.utc.iso8601(3),
+              'review_status' => 'returned_to_provider',
+              'status' => 'returned',
+            }
+          )
+        end
+      end
+
       context 'when application has already been returned' do
         before { application.update(status: :returned, returned_at: 1.day.ago) }
 

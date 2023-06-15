@@ -10,6 +10,9 @@ class CrimeApplication < ApplicationRecord
   before_validation :shift_payload_attributes, on: :create
   before_validation :set_overall_offence_class, on: :create
 
+  # Exposes a `return_reason` method, used in the redacted metadata
+  delegate :reason, to: :return_details, prefix: :return, allow_nil: true
+
   private
 
   def shift_payload_attributes

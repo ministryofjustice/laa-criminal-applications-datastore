@@ -94,6 +94,7 @@ describe Redacting::Redact do
         'returned_at' => nil,
         'review_status' => 'application_received',
         'offence_class' => nil,
+        'return_reason' => nil,
       })
     end
   end

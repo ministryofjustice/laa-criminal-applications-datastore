@@ -33,6 +33,8 @@ module Redacting
       :reviewed_at,
       :review_status,
       :offence_class,
+      # delegated attributes below
+      :return_reason,
     ].freeze
 
     def self.pii_attributes
