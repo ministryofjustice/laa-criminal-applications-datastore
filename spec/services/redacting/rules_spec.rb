@@ -29,6 +29,7 @@ describe Redacting::Rules do
         :reviewed_at,
         :review_status,
         :offence_class,
+        :return_reason,
       )
     end
   end
