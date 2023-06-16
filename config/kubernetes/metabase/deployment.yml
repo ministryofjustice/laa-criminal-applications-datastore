@@ -4,7 +4,7 @@ metadata:
   name: deployment
   namespace: laa-criminal-applications-metabase
 spec:
-  replicas: 2
+  replicas: 1 # NOTE: should remain 1
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate
