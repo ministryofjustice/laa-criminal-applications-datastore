@@ -20,7 +20,7 @@ metadata:
       SecRuleEngine On
       SecRequestBodyLimit 1048576
       SecRequestBodyNoFilesLimit 1048576
-      SecDefaultAction "phase:2,pass,log,tag:github_team=laa-crime-apply"
+      SecDefaultAction "phase:2,pass,log,tag:github_team=laa-crime-apply,setvar:tx.allowed_methods=GET HEAD POST OPTIONS PUT PATCH DELETE"
 spec:
   ingressClassName: modsec
   tls:
