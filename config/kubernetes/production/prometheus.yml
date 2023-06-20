@@ -22,24 +22,15 @@ spec:
   groups:
   - name: application-rules
     rules:
-    - alert: CrimeApplyDatastore-NamespaceMissing
-      expr: >-
-        absent(kube_namespace_created{namespace=~"^laa-criminal-applications-datastore.*"})
-      for: 1m
-      labels:
-        severity: laa-crime-apply-alerts
-      annotations:
-        message: Namespace `{{ $labels.namespace }}` is missing.
-
     - alert: CrimeApplyDatastore-DeploymentReplicasMismatch
       expr: >-
         kube_deployment_spec_replicas{job="kube-state-metrics", namespace=~"^laa-criminal-applications-datastore.*"}
         != kube_deployment_status_replicas_available{job="kube-state-metrics"}
-      for: 15m
+      for: 30m
       labels:
         severity: laa-crime-apply-alerts
       annotations:
-        message: Deployment `{{ $labels.deployment }}` has not matched the expected number of replicas for more than 15m.
+        message: Deployment `{{ $labels.deployment }}` has not matched the expected number of replicas for more than 30m.
 
     - alert: CrimeApplyDatastore-KubePodCrashLooping
       expr: >-
@@ -83,7 +74,7 @@ spec:
 
     - alert: CrimeApplyDatastore-Ingress4XX
       expr: >-
-        avg(rate(nginx_ingress_controller_request_duration_seconds_count{exported_namespace=~"^laa-criminal-applications-datastore.*", status=~"4.."}[1m]) * 60 > 0) 
+        sum(rate(nginx_ingress_controller_requests{exported_namespace=~"^laa-criminal-applications-datastore.*", status=~"4.."}[5m]) * 60 > 3)
         by (exported_namespace)
       for: 1m
       labels:
@@ -94,7 +85,7 @@ spec:
 
     - alert: CrimeApplyDatastore-Ingress5XX
       expr: >-
-        avg(rate(nginx_ingress_controller_request_duration_seconds_count{exported_namespace=~"^laa-criminal-applications-datastore.*", status=~"5.."}[1m]) * 60 > 0) 
+        sum(rate(nginx_ingress_controller_requests{exported_namespace=~"^laa-criminal-applications-datastore.*", status=~"5.."}[5m]) * 60 > 3)
         by (exported_namespace)
       for: 1m
       labels:
@@ -105,7 +96,7 @@ spec:
 
     - alert: CrimeApplyDatastore-TrivyVulns
       expr: >-
-        sum(trivy_image_vulnerabilities{namespace=~"^laa-criminal-applications-datastore.*", severity=~"Critical|High|Medium"} > 0) 
+        sum(trivy_image_vulnerabilities{namespace=~"^laa-criminal-applications-datastore.*", severity=~"Critical|High"} > 0) 
         by (namespace, image_tag, severity)
       for: 1h
       labels:
