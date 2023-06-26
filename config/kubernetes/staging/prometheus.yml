@@ -6,15 +6,15 @@
 # in both, staging and production environments.
 #
 # To see the current alerts in this namespace:
-#   kubectl describe prometheusrule -n laa-criminal-applications-datastore-production
+#   kubectl describe prometheusrule -n laa-criminal-applications-datastore-staging
 #
 # Alerts will be sent to the slack channel: #laa-crime-apply-alerts
 #
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: prometheus-production
-  namespace: laa-criminal-applications-datastore-production
+  name: prometheus-rules
+  namespace: laa-criminal-applications-datastore-staging
   labels:
     role: alert-rules
     prometheus: cloud-platform
@@ -59,40 +59,6 @@ spec:
         severity: laa-crime-apply-alerts
       annotations:
         message: Pod `{{ $labels.pod }}` in `{{ $labels.namespace }}` has been in a non-ready state for longer than 1h.
-
-    - alert: CrimeApplyDatastore-SlowResponses
-      expr: >-
-        avg(rate(nginx_ingress_controller_request_duration_seconds_sum{exported_namespace=~"^laa-criminal-applications-datastore.*"}[5m])
-        / rate(nginx_ingress_controller_request_duration_seconds_count{exported_namespace=~"^laa-criminal-applications-datastore.*"}[5m]) > 0) 
-        by (exported_namespace) > 3
-      for: 1m
-      labels:
-        severity: laa-crime-apply-alerts
-      annotations:
-        message: Namespace `{{ $labels.exported_namespace }}` is serving slow responses.
-        dashboard_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1&from=now-24h&to=now&var-namespace={{ $labels.exported_namespace }}&var-ingress={{ $labels.ingress }}
-
-    - alert: CrimeApplyDatastore-Ingress4XX
-      expr: >-
-        sum(rate(nginx_ingress_controller_requests{exported_namespace=~"^laa-criminal-applications-datastore.*", status=~"4.."}[5m]) * 60 > 3)
-        by (exported_namespace)
-      for: 1m
-      labels:
-        severity: laa-crime-apply-alerts
-      annotations:
-        message: Namespace `{{ $labels.exported_namespace }}` is serving 4XX responses.
-        dashboard_url: https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(time:(from:now-24h,to:now))&_a=(columns:!(log_processed.status,log_processed.request_path),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'8a728bc0-00eb-11ec-9062-27aa363b66a2',key:log_processed.kubernetes_namespace,negate:!f,params:(query:{{ $labels.exported_namespace }}),type:phrase),query:(match_phrase:(log_processed.kubernetes_namespace:{{ $labels.exported_namespace }}))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'8a728bc0-00eb-11ec-9062-27aa363b66a2',key:log_processed.status,negate:!f,params:(gte:400,lt:500),type:range),range:(log_processed.status:(gte:400,lt:500)))),index:'8a728bc0-00eb-11ec-9062-27aa363b66a2')
-
-    - alert: CrimeApplyDatastore-Ingress5XX
-      expr: >-
-        sum(rate(nginx_ingress_controller_requests{exported_namespace=~"^laa-criminal-applications-datastore.*", status=~"5.."}[5m]) * 60 > 3)
-        by (exported_namespace)
-      for: 1m
-      labels:
-        severity: laa-crime-apply-alerts
-      annotations:
-        message: Namespace `{{ $labels.exported_namespace }}` is serving 5XX responses.
-        dashboard_url: https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(time:(from:now-24h,to:now))&_a=(columns:!(log_processed.status,log_processed.request_path),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'8a728bc0-00eb-11ec-9062-27aa363b66a2',key:log_processed.kubernetes_namespace,negate:!f,params:(query:{{ $labels.exported_namespace }}),type:phrase),query:(match_phrase:(log_processed.kubernetes_namespace:{{ $labels.exported_namespace }}))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'8a728bc0-00eb-11ec-9062-27aa363b66a2',key:log_processed.status,negate:!f,params:(gte:500,lt:600),type:range),range:(log_processed.status:(gte:500,lt:600)))),index:'8a728bc0-00eb-11ec-9062-27aa363b66a2')
 
     - alert: CrimeApplyDatastore-TrivyVulns
       expr: >-
