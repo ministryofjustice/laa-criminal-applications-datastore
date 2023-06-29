@@ -81,3 +81,12 @@ spec:
       annotations:
         message: Dead letter queue `{{ $labels.queue_name }}` has {{ $value }} message(s).
         dashboard_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/AWSSQS000/aws-sqs?orgId=1&from=now-24h&to=now&var-datasource=Cloudwatch&var-region=default&var-queue={{ $labels.queue_name }}
+
+    - alert: CrimeApplyDatastore-PrometheusExporterFailure
+      expr: >-
+        ruby_collector_working{namespace=~"^laa-criminal-applications-datastore.*"} != 1
+      for: 30m
+      labels:
+        severity: laa-crime-apply-alerts
+      annotations:
+        message: Prometheus exporter not working in pod `{{ $labels.pod }}` for more than 30m.
