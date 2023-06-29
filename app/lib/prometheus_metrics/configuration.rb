@@ -48,7 +48,7 @@ module PrometheusMetrics
       return unless start_server
 
       require 'prometheus_exporter/instrumentation'
-      require 'prometheus_exporter/middleware'
+      require_relative 'grape_middleware'
 
       Rails.logger.info '[PrometheusExporter] Initialising instrumentation middleware...'
 
@@ -56,7 +56,9 @@ module PrometheusMetrics
       PrometheusExporter::Metric::Base.default_prefix = DEFAULT_PREFIX
 
       # This reports stats per request like HTTP status and timings
-      Rails.application.middleware.unshift PrometheusExporter::Middleware
+      # NOTE: as this is a Grape application, some custom labels are required
+      # so we implemented a custom middleware just for that
+      Rails.application.middleware.unshift PrometheusMetrics::GrapeMiddleware
 
       # This reports basic process stats like RSS and GC info, type master
       # means it is instrumenting the master process
