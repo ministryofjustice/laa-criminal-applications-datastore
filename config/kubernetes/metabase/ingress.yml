@@ -21,6 +21,7 @@ metadata:
       SecRequestBodyLimit 1048576
       SecRequestBodyNoFilesLimit 1048576
       SecDefaultAction "phase:2,pass,log,tag:github_team=laa-crime-apply,setvar:tx.allowed_methods=GET HEAD POST OPTIONS PUT PATCH DELETE"
+      SecAction "id:949110,phase:1,nolog,pass,t:none,setvar:tx.inbound_anomaly_score_threshold=12"
 spec:
   ingressClassName: modsec
   tls:
