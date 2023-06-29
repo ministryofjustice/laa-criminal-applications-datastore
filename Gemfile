@@ -12,6 +12,9 @@ gem 'grape-entity', '~> 0.10.2'
 gem 'grape_logging'
 gem 'kaminari-activerecord'
 
+# Monitoring
+gem 'prometheus_exporter'
+
 # Exceptions notifications
 gem 'sentry-rails'
 gem 'sentry-ruby'
