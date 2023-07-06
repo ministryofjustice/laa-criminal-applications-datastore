@@ -3,7 +3,7 @@ module Datastore
     module V1
       module MAAT
         class Application < BaseApplicationEntity
-          expose :signed_at
+          expose :declaration_signed_at
 
           private
 
@@ -11,7 +11,7 @@ module Datastore
             super.except('offences', 'codefendants')
           end
 
-          def signed_at
+          def declaration_signed_at
             submitted_value('submitted_at')
           end
         end

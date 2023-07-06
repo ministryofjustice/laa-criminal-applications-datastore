@@ -51,7 +51,7 @@ RSpec.describe 'get application ready for maat' do
           'client_details' => application.submitted_application['client_details'],
           'provider_details' => application.submitted_application['provider_details'],
           'submitted_at' => application.submitted_application['submitted_at'],
-          'signed_at' => application.submitted_application['submitted_at'],
+          'declaration_signed_at' => application.submitted_application['submitted_at'],
           'date_stamp' => application.submitted_application['date_stamp'],
           'interests_of_justice' => application.submitted_application['interests_of_justice'],
           'case_details' => expected_case_details,
