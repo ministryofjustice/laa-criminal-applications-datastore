@@ -16,13 +16,13 @@ module Datastore
 
             optional(
               :status,
-              type: Array[String],
+              type: [String],
               values: Types::APPLICATION_STATUSES
             )
 
             optional(
               :review_status,
-              type: Array[String],
+              type: [String],
               values: Types::REVIEW_APPLICATION_STATUSES
             )
 

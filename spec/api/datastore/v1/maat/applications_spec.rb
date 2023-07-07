@@ -34,7 +34,7 @@ RSpec.describe 'get application ready for maat' do
         {
           'case_type' => application.submitted_application['case_details']['case_type'],
           'appeal_maat_id' => application.submitted_application['case_details']['appeal_maat_id'],
-          'appeal_with_changes_maat_id' => application.submitted_application['case_details']['appeal_with_changes_maat_id'],
+          'appeal_lodged_date' => application.submitted_application['case_details']['appeal_lodged_date'],
           'appeal_with_changes_details' => application.submitted_application['case_details']['appeal_with_changes_details'],
           'hearing_court_name' => application.submitted_application['case_details']['hearing_court_name'],
           'hearing_date' => application.submitted_application['case_details']['hearing_date'],
@@ -51,6 +51,7 @@ RSpec.describe 'get application ready for maat' do
           'client_details' => application.submitted_application['client_details'],
           'provider_details' => application.submitted_application['provider_details'],
           'submitted_at' => application.submitted_application['submitted_at'],
+          'declaration_signed_at' => application.submitted_application['submitted_at'],
           'date_stamp' => application.submitted_application['date_stamp'],
           'case_details' => expected_case_details,
           'schema_version' => application.submitted_application['schema_version'],

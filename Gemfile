@@ -12,6 +12,9 @@ gem 'grape-entity', '~> 0.10.2'
 gem 'grape_logging'
 gem 'kaminari-activerecord'
 
+# Monitoring
+gem 'prometheus_exporter'
+
 # Exceptions notifications
 gem 'sentry-rails'
 gem 'sentry-ruby'
@@ -23,7 +26,7 @@ gem 'moj-simple-jwt-auth', '0.1.0'
 gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v0.4.0'
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v0.6.1'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

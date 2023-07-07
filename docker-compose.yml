@@ -6,7 +6,7 @@
 version: '3.4'
 
 x-common-variables: &common-variables
-  ENV_NAME: staging
+  ENV_NAME: production
   RACK_ENV: production
   RAILS_ENV: production
   SECRET_KEY_BASE: 90957b5f6dab71710443434b3541698a2017f7dd01d9a19acae5b0fc8a64b3a6
@@ -35,9 +35,11 @@ services:
       PORT: 3003
       DISABLE_HTTPS: "1"
       RAILS_SERVE_STATIC_FILES: "1"
+      ENABLE_PROMETHEUS_EXPORTER: "true"
       API_AUTH_SECRET_APPLY: foobar
       API_AUTH_SECRET_REVIEW: foobar
     ports:
-      - "3003:3003"
+      - "3003:3003" # puma server (rails app)
+      - "9394:9394" # prometheus exporter `/metrics` endpoint
     depends_on:
       - db

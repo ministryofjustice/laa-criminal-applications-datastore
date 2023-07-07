@@ -8,8 +8,10 @@ Rails.application.config.filter_parameters += [
   # Attributes relating to an application
   # It does partial matching (i.e. `case_details` is covered by `details`)
   :application,
+  :date_of_birth,
   :details,
   :first_name,
   :last_name,
+  :search_text,
   :searchable_text,
 ]
