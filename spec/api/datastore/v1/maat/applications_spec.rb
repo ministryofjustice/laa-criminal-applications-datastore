@@ -52,7 +52,6 @@ RSpec.describe 'get application ready for maat' do
           'provider_details' => application.submitted_application['provider_details'],
           'submitted_at' => application.submitted_application['submitted_at'],
           'date_stamp' => application.submitted_application['date_stamp'],
-          'interests_of_justice' => application.submitted_application['interests_of_justice'],
           'case_details' => expected_case_details,
           'schema_version' => application.submitted_application['schema_version'],
           'id' => application.id
