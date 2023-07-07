@@ -11,7 +11,6 @@ module Datastore
         expose :provider_details
         expose :client_details
         expose :case_details
-        expose :interests_of_justice
 
         private
 
@@ -48,10 +47,6 @@ module Datastore
           case_details = submitted_value('case_details') || {}
           case_details['offence_class'] = object.offence_class
           case_details
-        end
-
-        def interests_of_justice
-          submitted_value('interests_of_justice')
         end
 
         def submitted_value(name)

@@ -8,6 +8,7 @@ module Datastore
         expose :returned_at, expose_nil: false
         expose :ioj_passport
         expose :means_passport
+        expose :interests_of_justice
 
         expose :return_details, using: V1::ReturnDetails, expose_nil: false
 
@@ -29,6 +30,10 @@ module Datastore
 
         def means_passport
           submitted_value('means_passport')
+        end
+
+        def interests_of_justice
+          submitted_value('interests_of_justice')
         end
       end
     end
