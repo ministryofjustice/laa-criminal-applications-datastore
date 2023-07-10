@@ -15,7 +15,12 @@ module Datastore
 
         route_param :application_id do
           resource :return do
-            route_setting :authorised_consumers, %w[crime-apply crime-review]
+            route_setting :authorised_consumers, (
+              %w[crime-review].tap do |consumers|
+                # In non-prod envs, we also let `crime-apply` issue returns (developer tools)
+                consumers.append('crime-apply') unless HostEnv.production?
+              end
+            )
             put do
               return_params = declared(params).symbolize_keys
               app = Operations::ReturnApplication.new(**return_params).call
