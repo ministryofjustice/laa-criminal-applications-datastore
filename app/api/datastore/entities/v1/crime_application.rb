@@ -5,11 +5,11 @@ module Datastore
         expose :status
         expose :parent_id
         expose :created_at
-        expose :returned_at, expose_nil: false
         expose :ioj_passport
         expose :means_passport
 
-        expose :return_details, using: V1::ReturnDetails, expose_nil: false
+        expose :returned_at, expose_nil: false
+        expose :return_details, expose_nil: false
 
         private
 

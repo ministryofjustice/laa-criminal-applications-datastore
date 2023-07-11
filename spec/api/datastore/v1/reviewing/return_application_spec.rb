@@ -33,7 +33,7 @@ RSpec.describe 'return application' do
       end
 
       it 'records the return details' do
-        expect { api_request }.to change(ReturnDetails, :count).from(0).to(1)
+        expect { api_request }.to change { application.reload.return_details }.from(nil)
       end
 
       it 'records returned_at' do
@@ -62,11 +62,6 @@ RSpec.describe 'return application' do
           it 'include the details' do
             expect(details['details']).to eq return_details.fetch(:details)
           end
-
-          it 'include the returned_at' do
-            expect(details['returned_at'].to_time)
-              .to be_within(0.001).of(ReturnDetails.last.created_at)
-          end
         end
       end
     end
@@ -77,7 +72,7 @@ RSpec.describe 'return application' do
       end
 
       it 'does not record the return details' do
-        expect { api_request }.not_to change(ReturnDetails, :count)
+        expect { api_request }.not_to change { application.reload.return_details }.from(nil)
         expect(response).to have_http_status :conflict
       end
     end
@@ -99,7 +94,7 @@ RSpec.describe 'return application' do
       end
 
       it 'does not record the return details' do
-        expect { api_request }.not_to change(ReturnDetails, :count)
+        expect { api_request }.not_to change { application.reload.return_details }.from(nil)
         expect(response).to have_http_status :not_found
       end
     end

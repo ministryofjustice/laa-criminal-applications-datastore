@@ -26,7 +26,7 @@ gem 'moj-simple-jwt-auth', '0.1.0'
 gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v0.6.1'
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v0.7.0'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

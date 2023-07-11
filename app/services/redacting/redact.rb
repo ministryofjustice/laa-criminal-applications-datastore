@@ -47,9 +47,7 @@ module Redacting
 
     def process_metadata!
       redacted_record.metadata.merge!(
-        record.slice(
-          Rules.metadata_attributes
-        )
+        MetadataWrapper.new(record).metadata
       )
 
       true
