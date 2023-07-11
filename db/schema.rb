@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_12_133036) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_10_160748) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_12_133036) do
     t.virtual "applicant_last_name", type: :citext, as: "(submitted_application #>> '{client_details,applicant,last_name}'::text[])", stored: true
     t.string "offence_class"
     t.virtual "office_code", type: :string, as: "((submitted_application -> 'provider_details'::text) ->> 'office_code'::text)", stored: true
+    t.jsonb "return_details"
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["reference"], name: "index_crime_applications_on_reference"
     t.index ["review_status", "reviewed_at"], name: "index_crime_applications_on_review_status_and_reviewed_at"
@@ -49,15 +50,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_12_133036) do
     t.index ["status"], name: "index_redacted_crime_applications_on_status"
   end
 
-  create_table "return_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "reason", null: false
-    t.text "details"
-    t.uuid "crime_application_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["crime_application_id"], name: "index_return_details_on_crime_application_id"
-  end
-
   add_foreign_key "redacted_crime_applications", "crime_applications"
-  add_foreign_key "return_details", "crime_applications"
 end

@@ -25,24 +25,8 @@ module Redacting
       },
     }.freeze
 
-    # Additional top level attributes to propagate from the
-    # unredacted table to the redacted one
-    METADATA_ATTRIBUTES = [
-      :status,
-      :returned_at,
-      :reviewed_at,
-      :review_status,
-      :offence_class,
-      # delegated attributes below
-      :return_reason,
-    ].freeze
-
     def self.pii_attributes
       PII_ATTRIBUTES
-    end
-
-    def self.metadata_attributes
-      METADATA_ATTRIBUTES
     end
   end
 end

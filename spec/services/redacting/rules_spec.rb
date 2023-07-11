@@ -18,19 +18,4 @@ describe Redacting::Rules do
       )
     end
   end
-
-  describe '.metadata_attributes' do
-    it 'has the expected attributes' do
-      expect(
-        described_class.metadata_attributes
-      ).to contain_exactly(
-        :status,
-        :returned_at,
-        :reviewed_at,
-        :review_status,
-        :offence_class,
-        :return_reason,
-      )
-    end
-  end
 end

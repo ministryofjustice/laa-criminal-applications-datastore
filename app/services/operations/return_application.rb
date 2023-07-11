@@ -2,20 +2,22 @@ module Operations
   class ReturnApplication
     def initialize(application_id:, return_details:)
       @application = CrimeApplication.find(application_id)
-      @return_details = @application.build_return_details(return_details)
+      @return_details = return_details
     end
 
+    # rubocop:disable Metrics/MethodLength
     def call
       validate_application!
 
       application.transaction do
-        return_details.save!
+        now = Time.zone.now
 
         application.update!(
           status: Types::ApplicationStatus['returned'],
           review_status: Types::ReviewApplicationStatus['returned_to_provider'],
-          returned_at: return_details.created_at,
-          reviewed_at: Time.zone.now
+          reviewed_at: now,
+          returned_at: now,
+          return_details: return_details,
         )
 
         # Publish event notification to the SNS topic
@@ -24,6 +26,7 @@ module Operations
 
       application
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 

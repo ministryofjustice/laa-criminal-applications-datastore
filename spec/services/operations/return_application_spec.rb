@@ -102,48 +102,6 @@ describe Operations::ReturnApplication do
           expect { call }.to raise_error Errors::AlreadyReturned
         end
       end
-
-      describe 'ReturnDetails' do
-        subject(:detail) { application.reload.return_details }
-
-        before { call }
-
-        describe '#reason' do
-          subject(:reason) { detail.reason }
-
-          it { is_expected.not_to be_nil }
-        end
-
-        describe '#detail' do
-          subject(:reason) { detail.details }
-
-          it { is_expected.to eq 'Detailed reason why the application is being returned' }
-        end
-
-        describe '#crime_application' do
-          subject(:reason) { detail.crime_application }
-
-          it { is_expected.to be application }
-        end
-      end
-    end
-
-    context 'with invalid reason type' do
-      let(:return_details) do
-        {
-          reason: 'not_a_valid_type',
-          details: 'Detailed reason why the application is being returned'
-        }
-      end
-
-      it 'raises ActiveRecord::RecordInvalid error and does not update the application' do
-        expect { call }.to raise_error(
-          ActiveRecord::RecordInvalid,
-          'Validation failed: Reason is not included in the list'
-        )
-
-        expect(application.reload.status).to eq('submitted')
-      end
     end
   end
 end
