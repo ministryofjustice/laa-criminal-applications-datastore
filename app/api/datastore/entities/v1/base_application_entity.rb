@@ -31,9 +31,8 @@ module Datastore
           submitted_value('reference')
         end
 
-        # TODO: keep fallback until all applications in DB have this attribute
         def application_type
-          submitted_value('application_type') || Types::ApplicationType['initial']
+          submitted_value('application_type')
         end
 
         def date_stamp
