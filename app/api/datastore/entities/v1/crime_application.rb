@@ -5,8 +5,6 @@ module Datastore
         expose :status
         expose :parent_id
         expose :created_at
-        expose :ioj_passport
-        expose :means_passport
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
@@ -21,14 +19,6 @@ module Datastore
         # and therefore we take the value from the application json rather than the table
         def created_at
           submitted_value('created_at')
-        end
-
-        def ioj_passport
-          submitted_value('ioj_passport')
-        end
-
-        def means_passport
-          submitted_value('means_passport')
         end
       end
     end

@@ -3,7 +3,8 @@ module Datastore
     module V1
       module MAAT
         class Application < BaseApplicationEntity
-          unexpose :interests_of_justice
+          unexpose :ioj_passport,
+                   :interests_of_justice
 
           expose :submitted_at, as: :declaration_signed_at
           expose :ioj_bypass, proc: ->(_) { interests_of_justice.empty? }
