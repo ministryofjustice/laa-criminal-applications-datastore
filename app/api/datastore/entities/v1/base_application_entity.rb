@@ -8,6 +8,10 @@ module Datastore
         expose :application_type
         expose :submitted_at
         expose :date_stamp
+
+        expose :ioj_passport
+        expose :means_passport
+
         expose :provider_details
         expose :client_details
         expose :case_details
@@ -34,6 +38,14 @@ module Datastore
 
         def date_stamp
           submitted_value('date_stamp')
+        end
+
+        def ioj_passport
+          submitted_value('ioj_passport')
+        end
+
+        def means_passport
+          submitted_value('means_passport')
         end
 
         def provider_details
