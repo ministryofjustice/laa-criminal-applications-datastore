@@ -35,6 +35,7 @@ describe Redacting::Redact do
         expect(client_details['applicant']).to eq({
           'first_name' => '__redacted__',
           'last_name' => '__redacted__',
+          'other_names' => '',
           'nino' => '__redacted__',
           'date_of_birth' => '2001-06-09',
           'telephone_number' => '__redacted__',
