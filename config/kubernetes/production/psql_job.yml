@@ -28,6 +28,11 @@ spec:
             psql -d ${DATABASE_URL} -e -c "GRANT CONNECT ON DATABASE ${DATABASE_NAME} TO ${READONLY_USER}";
             psql -d ${DATABASE_URL} -e -c "GRANT USAGE ON SCHEMA public TO ${READONLY_USER}";
             psql -d ${DATABASE_URL} -e -c "GRANT SELECT ON redacted_crime_applications TO ${READONLY_USER}";
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsUser: 10000
+          runAsGroup: 10000
         env:
         # secrets created by terraform
         - name: DATABASE_URL
