@@ -18,7 +18,7 @@ module Datastore
             route_setting :authorised_consumers, (
               %w[crime-review].tap do |consumers|
                 # In non-prod envs, we also let `crime-apply` issue returns (developer tools)
-                consumers.append('crime-apply') unless HostEnv.production?
+                consumers.append('crime-apply') unless Rails.env.production?
               end
             )
             put do
