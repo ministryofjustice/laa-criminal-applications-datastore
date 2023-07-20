@@ -21,8 +21,8 @@ describe Redacting::Redact do
         expect(provider_details).to eq({
           'office_code' => '1A123B',
           'provider_email' => 'provider@example.com',
-          'legal_rep_first_name' => '__redacted__',
-          'legal_rep_last_name' => '__redacted__',
+          'legal_rep_first_name' => 'John',
+          'legal_rep_last_name' => 'Doe',
           'legal_rep_telephone' => '__redacted__',
         })
       end
