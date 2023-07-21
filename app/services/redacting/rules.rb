@@ -4,7 +4,7 @@ module Redacting
 
     PII_ATTRIBUTES = {
       'provider_details' => {
-        redact: %w[legal_rep_first_name legal_rep_last_name legal_rep_telephone]
+        redact: %w[legal_rep_telephone]
       },
       'client_details.applicant' => {
         redact: %w[first_name last_name other_names nino telephone_number]
