@@ -8,7 +8,7 @@ module Datastore
         route_setting :authorised_consumers, %w[crime-apply]
         params do
           requires :object_key, type: String, desc: 'S3 object key.'
-          optional :s3_opts, type: Hash, default: {}, desc: 'Additional signing configuration, like `expires_in`.'
+          optional :s3_opts, type: Hash, default: {}, desc: 'Additional S3 options, like `expires_in`.'
         end
         put 'presign_upload' do
           Operations::Documents::PresignUrl.new(
@@ -20,7 +20,7 @@ module Datastore
         route_setting :authorised_consumers, %w[crime-apply crime-review]
         params do
           requires :object_key, type: String, desc: 'S3 object key.'
-          optional :s3_opts, type: Hash, default: {}, desc: 'Additional signing configuration, like `expires_in`'
+          optional :s3_opts, type: Hash, default: {}, desc: 'Additional S3 options, like `expires_in`'
         end
         put 'presign_download' do
           Operations::Documents::PresignUrl.new(
