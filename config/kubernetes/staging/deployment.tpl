@@ -98,3 +98,18 @@ spec:
               secretKeyRef:
                 name: application-events-sns-topic
                 key: secret_access_key
+          - name: S3_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: s3-bucket
+                key: access_key_id
+          - name: S3_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: s3-bucket
+                key: secret_access_key
+          - name: S3_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: s3-bucket
+                key: bucket_name

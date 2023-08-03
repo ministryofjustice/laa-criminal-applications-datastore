@@ -85,6 +85,13 @@ GEM
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
+    aws-sdk-kms (1.71.0)
+      aws-sdk-core (~> 3, >= 3.177.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.131.0)
+      aws-sdk-core (~> 3, >= 3.177.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.6)
     aws-sdk-sns (1.65.0)
       aws-sdk-core (~> 3, >= 3.177.0)
       aws-sigv4 (~> 1.1)
@@ -323,6 +330,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk-s3
   aws-sdk-sns
   brakeman
   debug

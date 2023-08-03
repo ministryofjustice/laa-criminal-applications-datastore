@@ -7,4 +7,7 @@ module Errors
 
   class AlreadyMarkedAsReady < StandardError
   end
+
+  class DocumentUploadError < StandardError
+  end
 end

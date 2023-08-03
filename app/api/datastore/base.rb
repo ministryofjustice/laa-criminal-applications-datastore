@@ -30,5 +30,9 @@ module Datastore
     rescue_from Errors::AlreadyMarkedAsReady do
       error!({ status: 409, error: 'Already marked as ready' }, 409)
     end
+
+    rescue_from Errors::DocumentUploadError do |ex|
+      error!({ status: 400, error: ex.message }, 400)
+    end
   end
 end
