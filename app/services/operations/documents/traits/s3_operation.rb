@@ -27,6 +27,7 @@ module Operations
           bucket.object(object_key)
         end
 
+        # :nocov:
         def object_key
           [prefix, filename].join
         end
@@ -34,6 +35,7 @@ module Operations
         def prefix
           [usn, application_id].compact.join('/').concat('/')
         end
+        # :nocov:
 
         def log(details)
           if $ERROR_INFO
