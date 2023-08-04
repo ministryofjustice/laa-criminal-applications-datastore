@@ -22,7 +22,8 @@ gem 'sentry-ruby'
 # Datastore API authentication
 gem 'moj-simple-jwt-auth', '0.1.0'
 
-# SNS messaging
+# AWS services
+gem 'aws-sdk-s3'
 gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
