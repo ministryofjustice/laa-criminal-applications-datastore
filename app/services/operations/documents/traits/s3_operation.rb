@@ -33,7 +33,7 @@ module Operations
         end
 
         def prefix
-          [usn, application_id].compact.join('/').concat('/')
+          "#{usn}/"
         end
         # :nocov:
 

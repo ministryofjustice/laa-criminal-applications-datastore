@@ -4,7 +4,7 @@ RSpec.describe 'presign a document download' do
   let(:operation_class) { Operations::Documents::PresignUrl }
   let(:stubbed_operation) { instance_double(operation_class, call: {}) }
 
-  let(:object_key) { '123/xyz/foobar' }
+  let(:object_key) { '123/filename' }
   let(:s3_opts) { {} }
 
   before do

@@ -4,7 +4,7 @@ describe Operations::Documents::PresignUrl do
   subject { described_class.new(verb, object_key:, s3_opts:) }
 
   let(:verb) { :get }
-  let(:object_key) { '123/xyz/foobar' }
+  let(:object_key) { '123/filename' }
   let(:s3_opts) { {} }
 
   describe '#call' do
@@ -19,7 +19,7 @@ describe Operations::Documents::PresignUrl do
 
           expect(result[:object_key]).to eq(object_key)
           expect(result[:url]).to start_with(
-            'https://s3.eu-west-2.amazonaws.com/s3_bucket_name/123/xyz/foobar?X-Amz-Algorithm=AWS4-HMAC-SHA256'
+            'https://s3.eu-west-2.amazonaws.com/s3_bucket_name/123/filename?X-Amz-Algorithm=AWS4-HMAC-SHA256'
           )
 
           expect(logger).to have_received(:info).with(
@@ -39,7 +39,7 @@ describe Operations::Documents::PresignUrl do
 
           expect(result[:object_key]).to eq(object_key)
           expect(result[:url]).to start_with(
-            'https://s3.eu-west-2.amazonaws.com/s3_bucket_name/123/xyz/foobar?X-Amz-Algorithm=AWS4-HMAC-SHA256'
+            'https://s3.eu-west-2.amazonaws.com/s3_bucket_name/123/filename?X-Amz-Algorithm=AWS4-HMAC-SHA256'
           )
 
           expect(logger).to have_received(:info).with(
