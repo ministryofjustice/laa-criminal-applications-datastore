@@ -27,6 +27,19 @@ module Datastore
             :get, **declared(params).symbolize_keys
           ).call
         end
+
+        desc 'Delete a document.'
+        route_setting :authorised_consumers, %w[crime-apply]
+        params do
+          requires :object_key, type: String, desc: 'S3 object key to delete, Base64 encoded.'
+        end
+        route_param :object_key do
+          delete do
+            Operations::Documents::Delete.new(
+              object_key: params[:object_key]
+            ).call
+          end
+        end
       end
     end
   end
