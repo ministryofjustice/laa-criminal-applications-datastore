@@ -28,6 +28,19 @@ module Datastore
           ).call
         end
 
+        desc 'List all documents for an application USN.'
+        route_setting :authorised_consumers, %w[crime-apply crime-review]
+        params do
+          requires :usn, type: Integer, desc: 'Application USN.'
+        end
+        route_param :usn do
+          get do
+            Operations::Documents::List.new(
+              **declared(params).symbolize_keys
+            ).call
+          end
+        end
+
         desc 'Delete a document.'
         route_setting :authorised_consumers, %w[crime-apply]
         params do
