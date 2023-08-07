@@ -53,6 +53,23 @@ module Datastore
             ).call
           end
         end
+
+        desc 'Upload a document.'
+        route_setting :authorised_consumers, %w[crime-apply]
+        params do
+          requires :usn, type: Integer, desc: 'Application USN.'
+          requires :file, type: File, desc: 'The document file.'
+          requires :payload, type: JSON, desc: 'JSON payload with any additional options.' do
+            requires :filename, type: String
+          end
+        end
+        route_param :usn do
+          post do
+            Operations::Documents::Upload.new(
+              **declared(params).symbolize_keys
+            ).call
+          end
+        end
       end
     end
   end
