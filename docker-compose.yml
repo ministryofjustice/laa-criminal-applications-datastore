@@ -28,6 +28,24 @@ services:
     volumes:
       - ./config/elasticmq.conf:/opt/elasticmq.conf
 
+  # Used to emulate S3 for local development
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "127.0.0.1:4566:4566"           # localstack gateway
+      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1 # always use this region with localstack
+      DOCKER_HOST: unix:///var/run/docker.sock
+      SERVICES: s3
+    volumes:
+      - ./config/localstack/ready.sh:/etc/localstack/init/ready.d/ready.sh
+      - ./config/localstack/shutdown.sh:/etc/localstack/init/shutdown.d/shutdown.sh
+      - ./docker/localstack-volume:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
   web:
     build: .
     environment:
