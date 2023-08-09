@@ -11,7 +11,7 @@ module Operations
               access_key_id:,
               secret_access_key:,
               region:
-            }.compact_blank
+            }.merge(default_client_cfg).compact_blank
           )
         end
 
@@ -45,6 +45,10 @@ module Operations
           end
         end
 
+        def default_client_cfg
+          { force_path_style: true }
+        end
+
         def access_key_id
           ENV.fetch('S3_ACCESS_KEY_ID', nil)
         end
@@ -63,7 +67,7 @@ module Operations
 
         # Endpoint is only used to fake a local S3 service
         def endpoint
-          ENV.fetch('LOCAL_S3_FAKER_URL', nil)
+          ENV.fetch('S3_LOCAL_ENDPOINT', nil)
         end
       end
     end
