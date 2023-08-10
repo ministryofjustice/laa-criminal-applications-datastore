@@ -23,29 +23,29 @@ After you've defined your DB configuration in the `.env.{development,test}.local
 * `bin/rails db:prepare` (for the development database)
 * `RAILS_ENV=test bin/rails db:prepare` (for the test database)
 
-**ElasticMQ and SNS notifications**
+**SNS notifications and S3 buckets**
 
 Technically not required to setup or have this running, but might be neccessary for some functionality.  
 If interested, go ahead and expand this section.  
 
 <details>
-<summary>Run ElasticMQ and SNS faker</summary>
+<summary>Run LocalStack</summary>
 
 The datastore, upon certain actions (like an application being submitted) will publish a notification event to an Amazon SNS topic.  
 Subscribers can subscribe to this topic to receive these notifications. Subscribers can be SQS queues, or HTTP callback endpoints, etc.  
 This SNS topic, along with any SQS queues, exist on cloud-deployed environments (i.e. kubernetes) but it is not practical and certainly 
 difficult to setup all this in your local machine.
 
-[ElasticMQ](https://github.com/softwaremill/elasticmq) is used instead, as an in-memory message queue with an 
-Amazon SQS-compatible interface, to ease (fake) some of this.
+There is also an S3 bucket for document uploads.
 
-NOTE: the easiest way to get this up and running locally is to run an ElasticMQ instance in a docker container.  
-A docker-compose file is provided that allows that, and exposes the instance by default in port 9324 (and port 9325 for 
-the queues inspector).  
+[LocalStack](https://localstack.cloud) is used instead, with Amazon AWS-compatible interface, to ease (fake) some of this.
 
-Some additional configuration is needed and also some kind of SNS faker or forwarder running locally, 
-for example [this one here](https://github.com/janza/sns-sqs-forwarder).  
-For more details, is best you ask a team colleague to help you set all this up and explain more in detail.
+NOTE: the easiest way to get this up and running locally is to run a LocalStack instance in a docker container.  
+A docker-compose file is provided that allows that, and exposes the instance by default in port 4566.  
+
+To run the container and obtain more details: `docker-compose up localstack`
+
+In order to disable the SNS events, do not declare or comment out the `EVENTS_SNS_TOPIC_ARN` variable.
 </details>
 
 **3. Run the app locally**

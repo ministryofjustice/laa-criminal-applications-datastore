@@ -67,7 +67,7 @@ module Operations
 
         # Endpoint is only used to fake a local S3 service
         def endpoint
-          ENV.fetch('S3_LOCAL_ENDPOINT', nil)
+          ENV.fetch('AWS_LOCAL_ENDPOINT', nil)
         end
       end
     end

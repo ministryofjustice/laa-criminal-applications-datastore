@@ -56,7 +56,7 @@ module Messaging
 
     # Endpoint is only used to fake a local SNS service
     def endpoint
-      ENV.fetch('LOCAL_SNS_FAKER_URL', nil)
+      ENV.fetch('AWS_LOCAL_ENDPOINT', nil)
     end
   end
 end

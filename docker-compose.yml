@@ -19,27 +19,19 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
 
-  # Used to emulate SQS for local development
-  elasticmq:
-    image: "softwaremill/elasticmq-native:latest"
-    ports:
-      - "9324:9324"
-      - "9325:9325"
-    volumes:
-      - ./config/elasticmq.conf:/opt/elasticmq.conf
-
-  # Used to emulate S3 for local development
+  # Used to emulate AWS for local development
   localstack:
     image: localstack/localstack:latest
     ports:
-      - "127.0.0.1:4566:4566"           # localstack gateway
-      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+      - "4566:4566"           # localstack gateway
+      - "4510-4559:4510-4559" # external services port range
     environment:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
       AWS_DEFAULT_REGION: us-east-1 # always use this region with localstack
+      S3_SKIP_SIGNATURE_VALIDATION: 0
       DOCKER_HOST: unix:///var/run/docker.sock
-      SERVICES: s3
+      SERVICES: s3,sns
     volumes:
       - ./config/localstack/ready.sh:/etc/localstack/init/ready.d/ready.sh
       - ./config/localstack/shutdown.sh:/etc/localstack/init/shutdown.d/shutdown.sh
