@@ -49,6 +49,10 @@ module Operations
           { force_path_style: true }
         end
 
+        def bucket_name
+          ENV.fetch('S3_BUCKET_NAME', nil)
+        end
+
         def access_key_id
           ENV.fetch('S3_ACCESS_KEY_ID', nil)
         end
@@ -58,16 +62,12 @@ module Operations
         end
 
         def region
-          ENV.fetch('S3_REGION', 'eu-west-2')
-        end
-
-        def bucket_name
-          ENV.fetch('S3_BUCKET_NAME', nil)
+          ENV.fetch('AWS_REGION', 'eu-west-2')
         end
 
         # Endpoint is only used to fake a local S3 service
         def endpoint
-          ENV.fetch('S3_LOCAL_ENDPOINT', nil)
+          ENV.fetch('AWS_ENDPOINT_URL', nil)
         end
       end
     end

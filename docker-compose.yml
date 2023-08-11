@@ -5,13 +5,13 @@
 #
 version: '3.4'
 
-x-common-variables: &common-variables
-  ENV_NAME: production
-  RACK_ENV: production
-  RAILS_ENV: production
-  SECRET_KEY_BASE: 90957b5f6dab71710443434b3541698a2017f7dd01d9a19acae5b0fc8a64b3a6
-  DATABASE_URL: postgresql://postgres@db/laa-criminal-applications-datastore
-  DATABASE_SSLMODE: disable
+x-aws-variables: &aws-variables
+  AWS_ENDPOINT_URL: http://localstack:4566
+  AWS_ACCESS_KEY_ID: test
+  AWS_SECRET_ACCESS_KEY: test
+  AWS_REGION: us-east-1
+  EVENTS_SNS_TOPIC_ARN: arn:aws:sns:us-east-1:000000000000:events-sns-topic-dev
+  S3_BUCKET_NAME: crime-apply-documents-dev
 
 services:
   db:
@@ -19,27 +19,19 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
 
-  # Used to emulate SQS for local development
-  elasticmq:
-    image: "softwaremill/elasticmq-native:latest"
-    ports:
-      - "9324:9324"
-      - "9325:9325"
-    volumes:
-      - ./config/elasticmq.conf:/opt/elasticmq.conf
-
-  # Used to emulate S3 for local development
+  # Used to emulate AWS for local development
   localstack:
     image: localstack/localstack:latest
     ports:
-      - "127.0.0.1:4566:4566"           # localstack gateway
-      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+      - "4566:4566"           # localstack gateway
+      - "4510-4559:4510-4559" # external services port range
     environment:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
-      AWS_DEFAULT_REGION: us-east-1 # always use this region with localstack
+      AWS_DEFAULT_REGION: us-east-1 # only this region works for SNS in localstack
+      S3_SKIP_SIGNATURE_VALIDATION: 0
       DOCKER_HOST: unix:///var/run/docker.sock
-      SERVICES: s3
+      SERVICES: s3,sns
     volumes:
       - ./config/localstack/ready.sh:/etc/localstack/init/ready.d/ready.sh
       - ./config/localstack/shutdown.sh:/etc/localstack/init/shutdown.d/shutdown.sh
@@ -49,15 +41,22 @@ services:
   web:
     build: .
     environment:
-      <<: *common-variables
+      <<: *aws-variables
+      ENV_NAME: production
+      RACK_ENV: production
+      RAILS_ENV: production
       PORT: 3003
+      SECRET_KEY_BASE: 90957b5f6dab71710443434b3541698a2017f7dd01d9a19acae5b0fc8a64b3a6
+      DATABASE_URL: postgresql://postgres@db/laa-criminal-applications-datastore
+      DATABASE_SSLMODE: disable
       DISABLE_HTTPS: "1"
       RAILS_SERVE_STATIC_FILES: "1"
-      ENABLE_PROMETHEUS_EXPORTER: "true"
+      ENABLE_PROMETHEUS_EXPORTER: "false" # can be enabled for quick tests
+      PROMETHEUS_EXPORTER_PORT: 9397
       API_AUTH_SECRET_APPLY: foobar
       API_AUTH_SECRET_REVIEW: foobar
     ports:
       - "3003:3003" # puma server (rails app)
-      - "9394:9394" # prometheus exporter `/metrics` endpoint
+      - "9397:9397" # prometheus exporter `/metrics` endpoint
     depends_on:
       - db
