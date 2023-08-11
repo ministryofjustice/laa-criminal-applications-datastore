@@ -8,6 +8,7 @@ data:
   RACK_ENV: production
   RAILS_ENV: production
   RAILS_SERVE_STATIC_FILES: enabled
+  RAILS_LOG_TO_STDOUT: enabled
   ENABLE_PROMETHEUS_EXPORTER: "true"
   # Datastore is accessed via local cluster networking (no SSL)
   DISABLE_HTTPS: enabled
