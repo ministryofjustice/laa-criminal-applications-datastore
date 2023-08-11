@@ -36,8 +36,8 @@ echo "  Secret Access Key: test"
 echo "  Region: $AWS_REGION"
 echo
 echo "In addition, depending which services you want, declare the following"
-echo "variables in your '.env.development.local' file. Do not declare the"
-echo "SNS topic to disable the publishing of SNS events."
+echo "variables in your '.env.development.local' file. Undeclare the SNS topic"
+echo "to disable the publishing of SNS events."
 echo
 echo "  EVENTS_SNS_TOPIC_ARN=$SNS_TOPIC_ARN"
 echo "  S3_BUCKET_NAME=$BUCKET_NAME"

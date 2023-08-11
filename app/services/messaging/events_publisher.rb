@@ -51,12 +51,12 @@ module Messaging
     end
 
     def region
-      ENV.fetch('EVENTS_SNS_TOPIC_REGION', 'eu-west-2')
+      ENV.fetch('AWS_REGION', 'eu-west-2')
     end
 
     # Endpoint is only used to fake a local SNS service
     def endpoint
-      ENV.fetch('AWS_LOCAL_ENDPOINT', nil)
+      ENV.fetch('AWS_ENDPOINT_URL', nil)
     end
   end
 end
