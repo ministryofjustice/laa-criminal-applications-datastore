@@ -83,6 +83,16 @@ spec:
               secretKeyRef:
                 name: api-auth-secrets
                 key: maat_adapter
+          - name: API_AUTH_SECRET_MAAT_ADAPTER_DEV
+            valueFrom:
+              secretKeyRef:
+                name: api-auth-secrets
+                key: maat_adapter_dev
+          - name: API_AUTH_SECRET_MAAT_ADAPTER_UAT
+            valueFrom:
+              secretKeyRef:
+                name: api-auth-secrets
+                key: maat_adapter_uat
           - name: EVENTS_SNS_TOPIC_ARN
             valueFrom:
               secretKeyRef:

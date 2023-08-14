@@ -15,6 +15,10 @@ Rails.application.config.to_prepare do
       'crime-apply' => ENV.fetch('API_AUTH_SECRET_APPLY', nil),
       'crime-review' => ENV.fetch('API_AUTH_SECRET_REVIEW', nil),
       'maat-adapter' => ENV.fetch('API_AUTH_SECRET_MAAT_ADAPTER', nil),
+      # MAAT has more non-prod environments than we have, but
+      # they are pointing these non-prod to our staging datastore
+      'maat-adapter-dev' => ENV.fetch('API_AUTH_SECRET_MAAT_ADAPTER_DEV', nil),
+      'maat-adapter-uat' => ENV.fetch('API_AUTH_SECRET_MAAT_ADAPTER_UAT', nil),
     }
   end
 end

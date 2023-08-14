@@ -14,7 +14,7 @@ RSpec.describe 'get application ready for maat' do
     let(:application_usn) { application.submitted_application['reference'] }
     let(:maat_application) { JSON.parse(response.body) }
 
-    it_behaves_like 'an authorisable endpoint', %w[maat-adapter] do
+    it_behaves_like 'an authorisable endpoint', %w[maat-adapter maat-adapter-dev maat-adapter-uat] do
       before { api_request }
     end
 
