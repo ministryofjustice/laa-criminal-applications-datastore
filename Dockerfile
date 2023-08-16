@@ -1,8 +1,8 @@
 FROM ruby:3.2.2-alpine3.18
 MAINTAINER LAA Crime Apply Team
 
-RUN apk --no-cache add --virtual build-deps build-base postgresql-dev git bash curl \
- && apk --no-cache add postgresql-client tzdata gcompat
+RUN apk --no-cache add --virtual build-deps build-base postgresql15-dev git bash curl \
+ && apk --no-cache add postgresql15-client tzdata gcompat
 
 # add non-root user and group with alpine first available uid, 1000
 RUN addgroup -g 1000 -S appgroup && \
