@@ -10,12 +10,10 @@ describe Messaging::EventsPublisher do
   end
 
   before do
-    stub_request(:put, 'http://169.254.169.254/latest/api/token')
+    stub_request(:put, %r{http://([0-9.]*)/latest/api/token})
       .with(
         headers: {
           'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'User-Agent' => 'aws-sdk-ruby3/3.178.0',
           'X-Aws-Ec2-Metadata-Token-Ttl-Seconds' => '21600'
         }
       )
