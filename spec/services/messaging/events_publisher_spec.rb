@@ -20,6 +20,16 @@ describe Messaging::EventsPublisher do
         }
       )
       .to_return(status: 200, body: '', headers: {})
+
+    stub_request(:get, %r{http://([0-9.]*)/latest/meta-data/iam/security-credentials})
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'User-Agent' => 'aws-sdk-ruby3/3.178.0',
+        }
+      )
+      .to_return(status: 200, body: '', headers: {})
   end
 
   describe '.publish' do
