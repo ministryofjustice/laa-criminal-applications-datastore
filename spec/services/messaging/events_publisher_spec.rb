@@ -34,6 +34,8 @@ describe Messaging::EventsPublisher do
           'EVENTS_SNS_TOPIC_ARN' => topic_arn,
           'EVENTS_SNS_TOPIC_KEY_ID' => 'topic_key_id',
           'EVENTS_SNS_TOPIC_SECRET' => 'topic_secret',
+          'AWS_WEB_IDENTITY_TOKEN_FILE' => File.expand_path('../../fixtures/aws/web_identity_token',
+                                                            File.dirname(__FILE__))
         )
       )
     end

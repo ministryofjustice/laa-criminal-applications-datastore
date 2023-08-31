@@ -31,8 +31,7 @@ module Messaging
       @client ||= Aws::SNS::Client.new(
         **{
           endpoint:,
-          access_key_id:,
-          secret_access_key:,
+          session_token:,
           region:
         }.compact_blank
       )
@@ -42,12 +41,8 @@ module Messaging
       ENV.fetch('EVENTS_SNS_TOPIC_ARN', nil)
     end
 
-    def access_key_id
-      ENV.fetch('EVENTS_SNS_TOPIC_KEY_ID', nil)
-    end
-
-    def secret_access_key
-      ENV.fetch('EVENTS_SNS_TOPIC_SECRET', nil)
+    def session_token
+      File.read(ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE', ''))
     end
 
     def region
