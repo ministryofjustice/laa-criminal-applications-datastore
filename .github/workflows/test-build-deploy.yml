@@ -96,7 +96,9 @@ jobs:
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}-staging.latest
         run: |
+          docker tag app $REGISTRY/$REPOSITORY:${{ github.sha }}
           docker tag app $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY:${{ github.sha }}
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
   deploy-staging:
