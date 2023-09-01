@@ -20,6 +20,7 @@ spec:
         app: laa-criminal-applications-datastore-web-production
         tier: frontend
     spec:
+      serviceAccountName: laa-criminal-applications-datastore-production-service
       containers:
       - name: webapp
         image: ${ECR_URL}:${IMAGE_TAG}
