@@ -43,8 +43,8 @@ module Messaging
 
     def credentials
       Aws::AssumeRoleWebIdentityCredentials.new(
-        role_arn: ENV.fetch('AWS_ROLE_ARN', ''),
-        web_identity_token_file: ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE', ''),
+        role_arn: ENV.fetch('AWS_ROLE_ARN'),
+        web_identity_token_file: ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE'),
         region: region
       )
     end
