@@ -9,40 +9,6 @@ describe Messaging::EventsPublisher do
     )
   end
 
-  before do
-    stub_request(:put, %r{http://([0-9.]*)/latest/api/token})
-      .with(
-        headers: {
-          'User-Agent' => 'aws-sdk-ruby3/3.178.0',
-          'X-Aws-Ec2-Metadata-Token-Ttl-Seconds' => '21600'
-        }
-      )
-      .to_return(status: 200, body: '', headers: {})
-
-    stub_request(:get, %r{http://([0-9.]*)/latest/meta-data/iam/security-credentials})
-      .with(
-        headers: {
-          'User-Agent' => 'aws-sdk-ruby3/3.178.0',
-        }
-      )
-      .to_return(status: 200, body: '', headers: {})
-
-    stub_request(:post, 'https://sts.eu-west-2.amazonaws.com/')
-      .with(
-        body: { 'Action' => 'AssumeRoleWithWebIdentity', 'RoleArn' => 'role_arn',
-'RoleSessionName' => /.*/, 'Version' => '2011-06-15', 'WebIdentityToken' => 'dfdsfhdifiugfyuvedhf' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => '',
-          'Content-Length' => '171',
-          'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
-          'User-Agent' =>
-'aws-sdk-ruby3/3.178.0 ua/2.0 api/sts#3.178.0 os/macos#22 md/x86_64 lang/ruby#3.2.2 md/3.2.2 cfg/retry-mode#legacy'
-        }
-      )
-      .to_return(status: 200, body: '', headers: {})
-  end
-
   describe '.publish' do
     let(:instance) { instance_double(described_class, publish: true) }
 
@@ -71,6 +37,26 @@ describe Messaging::EventsPublisher do
           'AWS_ROLE_ARN' => 'role_arn'
         )
       )
+      stub_responses = {
+        assume_role_with_web_identity: {
+          credentials: {
+            access_key_id: 'fake_access_key',
+            secret_access_key: 'fake_secret_key',
+            session_token: 'fake_session_token',
+            expiration: Time.zone.now + 3600
+          },
+          subject_from_web_identity_token: 'sub123',
+          assumed_role_user: {
+            arn: 'arn:aws:sts::123456789012:assumed-role/FakeRole/fake',
+            assumed_role_id: 'ARO123EXAMPLE:fake'
+          }
+        }
+      }
+      Aws.config[:sts] = { stub_responses: }
+    end
+
+    after do
+      Aws.config[:sts] = nil
     end
 
     context 'when the publishing is enabled' do
