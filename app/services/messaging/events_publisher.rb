@@ -31,7 +31,7 @@ module Messaging
       @client ||= Aws::SNS::Client.new(
         **{
           endpoint:,
-          session_token:,
+          credentials:,
           region:
         }.compact_blank
       )
@@ -41,8 +41,12 @@ module Messaging
       ENV.fetch('EVENTS_SNS_TOPIC_ARN', nil)
     end
 
-    def session_token
-      File.read(ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE', ''))
+    def credentials
+      Aws::AssumeRoleWebIdentityCredentials.new(
+        role_arn: ENV.fetch('AWS_ROLE_ARN', ''),
+        web_identity_token_file: ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE', ''),
+        region: region
+      )
     end
 
     def region
