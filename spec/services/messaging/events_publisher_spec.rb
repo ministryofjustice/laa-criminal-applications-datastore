@@ -9,6 +9,17 @@ describe Messaging::EventsPublisher do
     )
   end
 
+  before do
+    stub_request(:put, %r{http://([0-9.]*)/latest/api/token})
+      .with(
+        headers: {
+          'User-Agent' => 'aws-sdk-ruby3/3.178.0',
+          'X-Aws-Ec2-Metadata-Token-Ttl-Seconds' => '21600'
+        }
+      )
+      .to_return(status: 200, body: '', headers: {})
+  end
+
   describe '.publish' do
     let(:instance) { instance_double(described_class, publish: true) }
 
