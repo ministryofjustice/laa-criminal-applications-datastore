@@ -26,6 +26,21 @@ describe Messaging::EventsPublisher do
         }
       )
       .to_return(status: 200, body: '', headers: {})
+
+    stub_request(:post, 'https://sts.eu-west-2.amazonaws.com/')
+      .with(
+        body: { 'Action' => 'AssumeRoleWithWebIdentity', 'RoleArn' => 'role_arn',
+'RoleSessionName' => /.*/, 'Version' => '2011-06-15', 'WebIdentityToken' => 'dfdsfhdifiugfyuvedhf' },
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => '',
+          'Content-Length' => '171',
+          'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
+          'User-Agent' =>
+'aws-sdk-ruby3/3.178.0 ua/2.0 api/sts#3.178.0 os/macos#22 md/x86_64 lang/ruby#3.2.2 md/3.2.2 cfg/retry-mode#legacy'
+        }
+      )
+      .to_return(status: 200, body: '', headers: {})
   end
 
   describe '.publish' do
@@ -50,7 +65,10 @@ describe Messaging::EventsPublisher do
       stub_const(
         'ENV',
         ENV.to_h.merge(
-          'EVENTS_SNS_TOPIC_ARN' => topic_arn
+          'EVENTS_SNS_TOPIC_ARN' => topic_arn,
+          'AWS_WEB_IDENTITY_TOKEN_FILE' => File.expand_path('../../fixtures/aws/web_identity_token',
+                                                            File.dirname(__FILE__)),
+          'AWS_ROLE_ARN' => 'role_arn'
         )
       )
     end
