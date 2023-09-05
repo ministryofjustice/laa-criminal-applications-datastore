@@ -8,8 +8,7 @@ module Operations
           @client ||= Aws::S3::Client.new(
             **{
               endpoint:,
-              access_key_id:,
-              secret_access_key:,
+              credentials:,
               region:
             }.merge(default_client_cfg).compact_blank
           )
@@ -53,12 +52,12 @@ module Operations
           ENV.fetch('S3_BUCKET_NAME', nil)
         end
 
-        def access_key_id
-          ENV.fetch('S3_ACCESS_KEY_ID', nil)
-        end
-
-        def secret_access_key
-          ENV.fetch('S3_SECRET_ACCESS_KEY', nil)
+        def credentials
+          Aws::AssumeRoleWebIdentityCredentials.new(
+            role_arn: ENV.fetch('AWS_ROLE_ARN'),
+            web_identity_token_file: ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE'),
+            region: region
+          )
         end
 
         def region
