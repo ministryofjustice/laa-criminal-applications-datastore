@@ -9,6 +9,9 @@ RSpec.shared_context 'with an S3 client' do
       'ENV',
       ENV.to_h.merge(
         'S3_BUCKET_NAME' => 's3_bucket_name',
+        'AWS_WEB_IDENTITY_TOKEN_FILE' => File.expand_path('../../fixtures/aws/web_identity_token',
+                                                          File.dirname(__FILE__)),
+        'AWS_ROLE_ARN' => 'role_arn'
       )
     )
   end

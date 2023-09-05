@@ -14,6 +14,7 @@ describe Operations::Documents::Delete do
 
   describe '#call' do
     include_context 'with an S3 client'
+    include_context 'with a stubbed AWS credentials request'
 
     let(:endpoint) { 'https://s3.eu-west-2.amazonaws.com/s3_bucket_name/123/filename' }
 
