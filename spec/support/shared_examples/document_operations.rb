@@ -8,8 +8,6 @@ RSpec.shared_context 'with an S3 client' do
     stub_const(
       'ENV',
       ENV.to_h.merge(
-        'S3_ACCESS_KEY_ID' => 's3_access_key_id',
-        'S3_SECRET_ACCESS_KEY' => 's3_secret_access_key',
         'S3_BUCKET_NAME' => 's3_bucket_name',
       )
     )
