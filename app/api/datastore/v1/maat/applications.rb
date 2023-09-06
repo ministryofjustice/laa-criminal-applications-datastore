@@ -16,7 +16,10 @@ module Datastore
               Datastore::Entities::V1::MAAT::Application.represent(
                 CrimeApplication.find_by!(
                   reference: params[:usn],
-                  review_status: Types::ReviewApplicationStatus['ready_for_assessment']
+                  review_status: [
+                    Types::ReviewApplicationStatus['ready_for_assessment'],
+                    Types::ReviewApplicationStatus['assessment_completed']
+                  ]
                 )
               )
             end
