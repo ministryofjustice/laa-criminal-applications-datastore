@@ -82,7 +82,13 @@ RSpec.describe 'get application ready for maat' do
         api_request
       end
 
-      it_behaves_like 'an error that raises a 404 status code'
+      it 'returns http status 200' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns the completed application' do
+        expect(maat_application['reference']).to match(application.submitted_application['reference'])
+      end
     end
 
     context 'with a returned application' do
