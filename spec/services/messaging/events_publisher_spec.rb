@@ -32,7 +32,9 @@ describe Messaging::EventsPublisher do
         'ENV',
         ENV.to_h.merge(
           'EVENTS_SNS_TOPIC_ARN' => topic_arn,
-          'AWS_REGION' => 'eu-west-2'
+          'AWS_REGION' => 'eu-west-2',
+          'AWS_ACCESS_KEY_ID' => 'test',
+          'AWS_SECRET_ACCESS_KEY' => 'test'
         )
       )
     end

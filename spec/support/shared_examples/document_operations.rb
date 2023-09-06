@@ -9,7 +9,9 @@ RSpec.shared_context 'with an S3 client' do
       'ENV',
       ENV.to_h.merge(
         'S3_BUCKET_NAME' => 's3_bucket_name',
-        'AWS_REGION' => 'eu-west-2'
+        'AWS_REGION' => 'eu-west-2',
+        'AWS_ACCESS_KEY_ID' => 'test',
+        'AWS_SECRET_ACCESS_KEY' => 'test'
       )
     )
   end
