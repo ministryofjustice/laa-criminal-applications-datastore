@@ -23,8 +23,6 @@ describe Messaging::EventsPublisher do
   end
 
   describe '#publish' do
-    include_context 'with a stubbed AWS credentials request'
-
     let(:sns_endpoint) { 'https://sns.eu-west-2.amazonaws.com' }
 
     before do
@@ -34,9 +32,9 @@ describe Messaging::EventsPublisher do
         'ENV',
         ENV.to_h.merge(
           'EVENTS_SNS_TOPIC_ARN' => topic_arn,
-          'AWS_WEB_IDENTITY_TOKEN_FILE' => File.expand_path('../../fixtures/aws/web_identity_token',
-                                                            File.dirname(__FILE__)),
-          'AWS_ROLE_ARN' => 'role_arn'
+          'AWS_REGION' => 'eu-west-2',
+          'AWS_ACCESS_KEY_ID' => 'test',
+          'AWS_SECRET_ACCESS_KEY' => 'test'
         )
       )
     end

@@ -7,7 +7,6 @@ describe Operations::Documents::List do
 
   describe '#call' do
     include_context 'with an S3 client'
-    include_context 'with a stubbed AWS credentials request'
 
     context 'when there is no error' do
       let(:stubbed_s3_client) do

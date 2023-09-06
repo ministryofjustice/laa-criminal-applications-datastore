@@ -9,7 +9,6 @@ describe Operations::Documents::PresignUrl do
 
   describe '#call' do
     include_context 'with an S3 client'
-    include_context 'with a stubbed AWS credentials request'
 
     context 'when there is no error' do
       context 'when downloading files' do
