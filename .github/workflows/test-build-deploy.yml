@@ -55,11 +55,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read  # This is required for actions/checkout
+
+    outputs:
+      ecr_url: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}
 
     steps:
       - name: Checkout
@@ -92,14 +95,12 @@ jobs:
       - name: Push to ECR
         id: ecr
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}-staging.latest
+          ECR_URL: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}
         run: |
-          docker tag app $REGISTRY/$REPOSITORY:${{ github.sha }}
-          docker tag app $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY:${{ github.sha }}
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker tag app $ECR_URL:${{ github.sha }}
+          docker tag app $ECR_URL:staging.latest
+          docker push $ECR_URL:${{ github.sha }}
+          docker push $ECR_URL:staging.latest
 
   deploy-staging:
     runs-on: ubuntu-latest
@@ -115,7 +116,7 @@ jobs:
         with:
           environment-name: staging
           git-crypt-key: ${{ secrets.GIT_CRYPT_KEY }}
-          ecr-url: ${{ secrets.ECR_URL }}
+          ecr-url: ${{ needs.build.outputs.ecr_url }}
           kube-cert: ${{ secrets.KUBE_STAGING_CERT }}
           kube-token: ${{ secrets.KUBE_STAGING_TOKEN }}
           kube-cluster: ${{ secrets.KUBE_STAGING_CLUSTER }}
@@ -123,7 +124,7 @@ jobs:
 
   deploy-production:
     runs-on: ubuntu-latest
-    needs: deploy-staging
+    needs: [build, deploy-staging]
     environment: production
 
     steps:
@@ -135,7 +136,7 @@ jobs:
         with:
           environment-name: production
           git-crypt-key: ${{ secrets.GIT_CRYPT_KEY }}
-          ecr-url: ${{ secrets.ECR_URL }}
+          ecr-url: ${{ needs.build.outputs.ecr_url }}
           kube-cert: ${{ secrets.KUBE_PRODUCTION_CERT }}
           kube-token: ${{ secrets.KUBE_PRODUCTION_TOKEN }}
           kube-cluster: ${{ secrets.KUBE_PRODUCTION_CLUSTER }}
