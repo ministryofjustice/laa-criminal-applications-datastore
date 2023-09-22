@@ -56,6 +56,7 @@ RSpec.describe 'get application ready for maat' do
           'means_passport' => application.submitted_application['means_passport'],
           'ioj_bypass' => application.submitted_application['interests_of_justice'].empty?,
           'case_details' => expected_case_details,
+          'supporting_evidence' => application.submitted_application['supporting_evidence'],
           'schema_version' => application.submitted_application['schema_version'],
           'id' => application.id
         }

@@ -7,7 +7,8 @@ module Datastore
                  :interests_of_justice,
                  :return_details,
                  :ioj_passport,
-                 :means_passport
+                 :means_passport,
+                 :supporting_evidence
 
         expose :client_details do
           expose :applicant do

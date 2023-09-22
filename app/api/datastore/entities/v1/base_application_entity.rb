@@ -16,6 +16,7 @@ module Datastore
         expose :client_details
         expose :case_details
         expose :interests_of_justice
+        expose :supporting_evidence
 
         private
 
@@ -63,6 +64,10 @@ module Datastore
 
         def interests_of_justice
           submitted_value('interests_of_justice')
+        end
+
+        def supporting_evidence
+          submitted_value('supporting_evidence')
         end
 
         def submitted_value(name)
