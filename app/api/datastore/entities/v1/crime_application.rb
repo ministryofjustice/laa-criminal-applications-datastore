@@ -8,6 +8,7 @@ module Datastore
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
+        expose :supporting_evidence
 
         private
 
@@ -19,6 +20,10 @@ module Datastore
         # and therefore we take the value from the application json rather than the table
         def created_at
           submitted_value('created_at')
+        end
+
+        def supporting_evidence
+          submitted_value('supporting_evidence')
         end
       end
     end

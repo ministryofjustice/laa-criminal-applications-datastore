@@ -74,6 +74,14 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
     it 'represents the id' do
       expect(representation.fetch('id')).to eq submitted_application.fetch('id')
     end
+
+    it 'represents created_at' do
+      expect(representation.fetch('created_at')).to eq submitted_application.fetch('created_at')
+    end
+
+    it 'represents the supporting evidence' do
+      expect(representation.fetch('supporting_evidence')).to eq submitted_application.fetch('supporting_evidence')
+    end
   end
 
   context 'when retrieved from the database' do
