@@ -79,6 +79,21 @@ describe Redacting::Redact do
         )
       end
     end
+
+    context 'with supporting evidence' do
+      let(:supporting_evidence) { redacted_application['supporting_evidence'] }
+
+      it 'redacts the expected attributes' do
+        expect(supporting_evidence).to eq(
+          [{
+            's3_object_key' => '__redacted__',
+            'filename' => '__redacted__',
+            'file_size' => 12,
+            'content_type' => 'application/pdf',
+          }]
+        )
+      end
+    end
   end
 
   describe 'metadata attributes' do
