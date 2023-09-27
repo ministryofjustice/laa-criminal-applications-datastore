@@ -23,6 +23,10 @@ module Redacting
         redact: %w[reason],
         type: :array # [{}, {}, ...]
       },
+      'supporting_evidence' => {
+        redact: %w[s3_object_key filename],
+        type: :array # [{}, {}, ...]
+      },
     }.freeze
 
     def self.pii_attributes
