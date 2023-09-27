@@ -8,7 +8,7 @@ module Datastore
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
-        expose :supporting_evidence, expose_nil: false
+        expose :supporting_evidence
 
         private
 
@@ -23,7 +23,7 @@ module Datastore
         end
 
         def supporting_evidence
-          submitted_value('supporting_evidence')
+          submitted_value('supporting_evidence') || []
         end
       end
     end
