@@ -8,7 +8,7 @@ module Datastore
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
-        expose :supporting_evidence
+        expose :supporting_evidence, expose_nil: false
 
         private
 
