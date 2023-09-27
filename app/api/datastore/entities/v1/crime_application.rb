@@ -23,7 +23,7 @@ module Datastore
         end
 
         def supporting_evidence
-          submitted_value('supporting_evidence')
+          submitted_value('supporting_evidence') || []
         end
       end
     end
