@@ -12,7 +12,7 @@ module Datastore
     end
 
     rescue_from ActiveRecord::RecordNotUnique do
-      error!({ status: 400, error: 'Record not unique' }, 400)
+      error!({ status: 409, error: 'Record not unique' }, 409)
     end
 
     rescue_from LaaCrimeSchemas::Errors::ValidationError do |ex|

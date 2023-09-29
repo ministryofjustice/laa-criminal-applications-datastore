@@ -91,8 +91,8 @@ RSpec.describe 'create application' do
         api_request
       end
 
-      it 'returns 400' do
-        expect(response).to have_http_status(:bad_request)
+      it 'returns 409' do
+        expect(response).to have_http_status(:conflict)
       end
 
       it 'returns error information' do
