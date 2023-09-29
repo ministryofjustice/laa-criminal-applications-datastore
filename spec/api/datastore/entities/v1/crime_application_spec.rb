@@ -84,6 +84,16 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
     end
   end
 
+  context 'when the "supporting_evidence" key is not in the submitted application' do
+    let(:submitted_application) do
+      super().delete('submitted_application')
+    end
+
+    it 'represents the supporting evidence as an empty array' do
+      expect(representation.fetch('supporting_evidence')).to eq []
+    end
+  end
+
   context 'when retrieved from the database' do
     it 'represents submitted_at' do
       expect(representation.fetch('submitted_at')).to eq submitted_at.iso8601(3)
