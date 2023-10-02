@@ -91,12 +91,12 @@ RSpec.describe 'create application' do
         api_request
       end
 
-      it 'returns 400' do
-        expect(response).to have_http_status(:bad_request)
+      it 'returns 409' do
+        expect(response).to have_http_status(:conflict)
       end
 
       it 'returns error information' do
-        expect(response.body).to include('Record not unique')
+        expect(response.body).to include('Application already submitted')
       end
 
       it 'does not publish a submission event' do

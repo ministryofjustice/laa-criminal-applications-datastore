@@ -48,6 +48,7 @@ describe Redacting::Redact do
             'country' => 'United Kingdom',
             'postcode' => 'SW1A 2AA',
           },
+          'benefit_type' => 'universal_credit',
           'correspondence_address' => nil
         })
       end
