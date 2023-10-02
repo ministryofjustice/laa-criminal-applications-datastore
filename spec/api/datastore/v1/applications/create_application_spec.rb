@@ -96,7 +96,7 @@ RSpec.describe 'create application' do
       end
 
       it 'returns error information' do
-        expect(response.body).to include('Record not unique')
+        expect(response.body).to include('Application already submitted')
       end
 
       it 'does not publish a submission event' do

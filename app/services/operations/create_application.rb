@@ -20,6 +20,8 @@ module Operations
       end
 
       { id: @app.id }
+    rescue ActiveRecord::RecordNotUnique
+      raise Errors::AlreadySubmitted
     end
 
     private

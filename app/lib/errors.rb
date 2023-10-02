@@ -1,4 +1,7 @@
 module Errors
+  class AlreadySubmitted < StandardError
+  end
+
   class AlreadyReturned < StandardError
   end
 
