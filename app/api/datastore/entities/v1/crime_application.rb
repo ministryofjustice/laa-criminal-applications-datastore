@@ -6,9 +6,10 @@ module Datastore
         expose :parent_id
         expose :created_at
 
+        expose :supporting_evidence
+
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
-        expose :supporting_evidence
 
         private
 
