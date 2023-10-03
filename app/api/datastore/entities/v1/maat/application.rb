@@ -12,7 +12,13 @@ module Datastore
           private
 
           def case_details
-            super.except('offences', 'codefendants')
+            super.except(
+              'offences',
+              'codefendants',
+              # TODO: clarify with MAAT if they need the first court hearing details
+              'is_first_court_hearing',
+              'first_court_hearing_name',
+            )
           end
         end
       end
