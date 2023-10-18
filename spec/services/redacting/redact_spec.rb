@@ -91,6 +91,8 @@ describe Redacting::Redact do
             'filename' => '__redacted__',
             'file_size' => 12,
             'content_type' => 'application/pdf',
+            'scan_at' => '2023-10-01 12:34:56',
+            'scan_status' => 'pass',
           }]
         )
       end
