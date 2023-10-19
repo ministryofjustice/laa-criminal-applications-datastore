@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/ministryofjustice/laa-criminal-legal-aid-schemas.git
-  revision: 41045dd32b5f821ff4919a88fd31c9c7a91a7177
-  tag: v1.0.4
+  revision: 1e08dfd8e71f956b06c1f8684af3fa465271f624
+  tag: v1.0.5
   specs:
-    laa-criminal-legal-aid-schemas (1.0.4)
+    laa-criminal-legal-aid-schemas (1.0.5)
       dry-struct (~> 1.6.0)
       json-schema (~> 4.0.0)
 
@@ -79,7 +79,7 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.836.0)
+    aws-partitions (1.838.0)
     aws-sdk-core (3.185.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -320,7 +320,7 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     stringio (3.0.8)
-    thor (1.2.2)
+    thor (1.3.0)
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
