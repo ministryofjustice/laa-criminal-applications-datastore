@@ -139,4 +139,85 @@ describe CrimeApplication do
       end
     end
   end
+
+  describe 'court hearing name' do
+    let(:is_first_court_hearing_test_cases) do
+      {
+        yes: {
+          submitted: {
+            'hearing_court_name' => 'Westminster',
+            'first_court_hearing_name' => nil,
+          },
+          persisted: {
+            'hearing_court_name' => 'Westminster',
+            'first_court_hearing_name' => 'Westminster',
+          },
+        },
+        no: {
+          submitted: {
+            'hearing_court_name' => 'Leicester',
+            'first_court_hearing_name' => 'Nottingham',
+          },
+          persisted: {
+            'hearing_court_name' => 'Leicester',
+            'first_court_hearing_name' => 'Nottingham',
+          },
+        },
+        no_hearing_yet: {
+          submitted: {
+            'hearing_court_name' => 'Cardiff',
+            'first_court_hearing_name' => nil,
+          },
+          persisted: {
+            'hearing_court_name' => 'Cardiff',
+            'first_court_hearing_name' => 'Cardiff',
+          },
+        }
+      }
+    end
+
+    context 'with #create!' do
+      it 'auto-fills first_court_name as expected', :aggregate_failure do
+        is_first_court_hearing_test_cases.each do |is_first_court_hearing, test|
+          application_attributes.deep_merge!(
+            'id' => SecureRandom.uuid,
+            'case_details' => {
+              'is_first_court_hearing' => is_first_court_hearing.to_s,
+              'hearing_court_name' => test[:submitted]['hearing_court_name'],
+              'first_court_hearing_name' => test[:submitted]['first_court_hearing_name'],
+            }
+          )
+
+          crime_application = described_class.create!({ submitted_application: application_attributes })
+
+          expect(crime_application.reload.submitted_application['case_details']).to include(
+            'is_first_court_hearing' => is_first_court_hearing.to_s,
+            'hearing_court_name' => test[:persisted]['hearing_court_name'],
+            'first_court_hearing_name' => test[:persisted]['first_court_hearing_name']
+          )
+        end
+      end
+    end
+
+    context 'with #update!' do
+      subject!(:application) do
+        described_class.create!({ submitted_application: application_attributes })
+      end
+
+      it 'does not change first_court_hearing_name when already set' do
+        expect { application.update!(status: 'returned') }.not_to change(application, :submitted_application)
+      end
+
+      it 'does not change first_court_hearing_name when is_first_court_hearing = no_hearing_yet' do
+        application.submitted_application['case_details']['is_first_court_hearing'] = 'no_hearing_yet'
+        application.submitted_application['case_details']['first_court_hearing_name'] = nil
+        application.update!(status: 'returned')
+
+        expect(application.submitted_application['case_details']).to include(
+          'is_first_court_hearing' => 'no_hearing_yet',
+          'first_court_hearing_name' => 'Cardiff Magistrates\' Court'
+        )
+      end
+    end
+  end
 end
