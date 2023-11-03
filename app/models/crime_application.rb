@@ -1,5 +1,3 @@
-require 'laa_crime_schemas'
-
 class CrimeApplication < ApplicationRecord
   include Redactable
 
@@ -9,7 +7,7 @@ class CrimeApplication < ApplicationRecord
 
   before_validation :shift_payload_attributes, on: :create
   before_validation :set_overall_offence_class, on: :create
-  before_validation :copy_first_court_name, on: :save
+  before_save :copy_first_court_hearing_name
 
   private
 
@@ -29,12 +27,14 @@ class CrimeApplication < ApplicationRecord
     ).offence_class
   end
 
-  # Replicate the 'hearing_court_name' into 'first_court_hearing_name' even though they
-  # are assumed to be the same when `is_first_court_hearing = yes`
-  def copy_first_court_name
-    return if first_court_name.present?
-    return if is_first_court_hearing != LaaCrimeSchemas::Types::FirstHearingAnswerValues['yes']
+  # Replicate the 'hearing_court_name' into 'first_court_hearing_name' to maintain
+  # data consistency for reporting and consuming services
+  def copy_first_court_hearing_name
+    return if submitted_application.blank?
+    return if submitted_application.dig('case_details', 'first_court_hearing_name').present?
+    return if submitted_application.dig('case_details', 'is_first_court_hearing') == 'no'
 
-    self.first_court_name = hearing_court_name
+    hearing_court_name = submitted_application.dig('case_details', 'hearing_court_name')
+    submitted_application['case_details']['first_court_hearing_name'] = hearing_court_name
   end
 end
