@@ -31,10 +31,11 @@ class CrimeApplication < ApplicationRecord
   # data consistency for reporting and consuming services
   def copy_first_court_hearing_name
     return if submitted_application.blank?
-    return if submitted_application.dig('case_details', 'first_court_hearing_name').present?
-    return if submitted_application.dig('case_details', 'is_first_court_hearing') == 'no'
 
-    hearing_court_name = submitted_application.dig('case_details', 'hearing_court_name')
-    submitted_application['case_details']['first_court_hearing_name'] = hearing_court_name
+    case_details = submitted_application.fetch('case_details')
+    return if case_details['first_court_hearing_name'].present?
+    return if case_details['is_first_court_hearing'] == Types::FirstHearingAnswerValues['no']
+
+    case_details['first_court_hearing_name'] = case_details['hearing_court_name']
   end
 end
