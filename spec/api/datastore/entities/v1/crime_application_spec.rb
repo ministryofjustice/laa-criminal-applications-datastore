@@ -115,4 +115,9 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   it 'represents the overall offence class within the case details' do
     expect(representation.fetch('case_details').fetch('offence_class')).to eq offence_class
   end
+
+  it 'represents the work stream within the case details' do
+    expect(representation.fetch('case_details')
+                         .fetch('work_stream')).to eq Types::WorkStreamType['criminal_applications_team']
+  end
 end

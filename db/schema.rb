@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_10_160748) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_06_141454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_10_160748) do
     t.string "offence_class"
     t.virtual "office_code", type: :string, as: "((submitted_application -> 'provider_details'::text) ->> 'office_code'::text)", stored: true
     t.jsonb "return_details"
+    t.string "work_stream"
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["reference"], name: "index_crime_applications_on_reference"
     t.index ["review_status", "reviewed_at"], name: "index_crime_applications_on_review_status_and_reviewed_at"
