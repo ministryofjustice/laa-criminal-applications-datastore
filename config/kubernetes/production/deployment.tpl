@@ -89,3 +89,8 @@ spec:
               secretKeyRef:
                 name: application-events-sns-topic
                 key: topic_arn
+          - name: S3_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: s3-bucket
+                key: bucket_name
