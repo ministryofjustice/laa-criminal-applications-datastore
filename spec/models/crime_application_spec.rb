@@ -83,6 +83,14 @@ describe CrimeApplication do
           end
         end
       end
+
+      describe 'Setting the work stream' do
+        it 'has a set work stream' do
+          expect(
+            application.work_stream
+          ).to eq 'criminal_applications_team'
+        end
+      end
     end
   end
 

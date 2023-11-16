@@ -42,11 +42,9 @@ class CrimeApplication < ApplicationRecord
   def set_work_stream
     return unless submitted_application
 
-    first_court_hearing_name = (submitted_application['case_details']['first_court_hearing_name'].presence ||
-                                submitted_application['case_details']['hearing_court_name'])
-
     self.work_stream = Utils::WorkStreamCalculator.new(
-      first_court_name: first_court_hearing_name
+      first_court_name: submitted_application['case_details']['first_court_hearing_name'],
+      hearing_court_name: submitted_application['case_details']['hearing_court_name']
     ).work_stream
   end
 end

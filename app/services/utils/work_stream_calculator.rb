@@ -2,10 +2,11 @@ require 'laa_crime_schemas'
 
 module Utils
   class WorkStreamCalculator
-    attr_reader :first_court_name
+    attr_reader :first_court_name, :hearing_court_name
 
-    def initialize(first_court_name:)
+    def initialize(first_court_name:, hearing_court_name:)
       @first_court_name = first_court_name
+      @hearing_court_name = hearing_court_name
     end
 
     def work_stream
@@ -19,7 +20,8 @@ module Utils
     private
 
     def extradition_case?
-      @first_court_name == "Westminster Magistrates' Court"
+      first_court_hearing_name = @first_court_name.presence || @hearing_court_name
+      first_court_hearing_name == "Westminster Magistrates' Court"
     end
   end
 end
