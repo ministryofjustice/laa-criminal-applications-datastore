@@ -16,7 +16,6 @@ module Datastore
         expose :client_details
         expose :case_details
         expose :interests_of_justice
-        expose :work_stream
 
         private
 

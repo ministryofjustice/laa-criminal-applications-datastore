@@ -54,7 +54,6 @@ class SearchFilter
   end
 
   def filter_work_stream(scope)
-    # throw work_stream
     scope.where(work_stream:)
   end
 

@@ -45,12 +45,8 @@ class CrimeApplication < ApplicationRecord
     first_court_hearing_name = (submitted_application['case_details']['first_court_hearing_name'].presence ||
                                 submitted_application['case_details']['hearing_court_name'])
 
-    Rails.logger.debug first_court_hearing_name
-
     self.work_stream = Utils::WorkStreamCalculator.new(
       first_court_name: first_court_hearing_name
     ).work_stream
-
-    Rails.logger.debug work_stream
   end
 end
