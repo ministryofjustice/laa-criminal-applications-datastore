@@ -10,6 +10,7 @@ module Datastore
         expose :status
         expose :review_status
         expose :parent_id
+        expose :work_stream
 
         private
 

@@ -4,6 +4,7 @@ module Operations
 
     def initialize(search:, pagination:, sorting:, scope: CrimeApplication)
       @search_filter = SearchFilter.new(search)
+      # throw @search_filter.attributes
       @pagination = Pagination.new(pagination)
       @sorting = Sorting.new(sorting)
       @scope = scope

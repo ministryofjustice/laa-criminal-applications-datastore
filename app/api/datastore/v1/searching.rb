@@ -14,17 +14,9 @@ module Datastore
             optional :search_text, type: String
             optional :applicant_date_of_birth, type: Date
 
-            optional(
-              :status,
-              type: [String],
-              values: Types::APPLICATION_STATUSES
-            )
-
-            optional(
-              :review_status,
-              type: [String],
-              values: Types::REVIEW_APPLICATION_STATUSES
-            )
+            optional(:status, type: [String], values: Types::APPLICATION_STATUSES)
+            optional(:review_status, type: [String], values: Types::REVIEW_APPLICATION_STATUSES)
+            optional(:work_stream, type: [String], values: Types::WORK_STREAM_TYPES)
 
             optional :submitted_after, type: DateTime
             optional :submitted_before, type: DateTime

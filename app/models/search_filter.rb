@@ -10,6 +10,7 @@ class SearchFilter
   attribute :search_text, :string
   attribute :submitted_after, :datetime
   attribute :submitted_before, :datetime
+  attribute :work_stream, array: true, default: -> { [] }
 
   def active_filters
     attributes.compact_blank.keys
@@ -50,6 +51,11 @@ class SearchFilter
 
   def filter_status(scope)
     scope.where(status:)
+  end
+
+  def filter_work_stream(scope)
+    # throw work_stream
+    scope.where(work_stream:)
   end
 
   def filter_review_status(scope)

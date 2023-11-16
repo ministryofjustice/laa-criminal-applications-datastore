@@ -15,6 +15,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       returned_at:,
       return_details:,
       offence_class:,
+      work_stream:,
       submitted_application:
     )
   end
@@ -24,16 +25,9 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   let(:reviewed_at) { nil }
   let(:status) { Types::ApplicationStatus['submitted'] }
   let(:offence_class) { Types::OffenceClass['C'] }
-  let(:case_details) { { offence_class: } }
   let(:returned_at) { 3.days.ago - 1.hour }
-  let(:return_details) do
-    {
-      reason: nil,
-      details: nil,
-      returned_at: nil
-    }
-  end
-
+  let(:return_details) { { reason: nil, details: nil, returned_at: nil } }
+  let(:work_stream) { Types::WorkStreamType['criminal_applications_team'] }
   let(:submitted_application) do
     LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => SecureRandom.uuid) }
   end
@@ -116,8 +110,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
     expect(representation.fetch('case_details').fetch('offence_class')).to eq offence_class
   end
 
-  it 'represents the work stream within the case details' do
-    expect(representation.fetch('case_details')
-                         .fetch('work_stream')).to eq Types::WorkStreamType['criminal_applications_team']
+  it 'represents the work stream' do
+    expect(representation.fetch('work_stream')).to eq Types::WorkStreamType['criminal_applications_team']
   end
 end

@@ -50,7 +50,7 @@ describe CrimeApplication do
       describe 'redacted application' do
         let(:redacted_application) { application.redacted_crime_application }
 
-        it 'has a the same status attribute' do
+        it 'has the same status attribute' do
           expect(application.status).to eq(redacted_application.status)
         end
       end

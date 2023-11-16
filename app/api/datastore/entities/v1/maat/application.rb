@@ -4,7 +4,8 @@ module Datastore
       module MAAT
         class Application < BaseApplicationEntity
           unexpose :ioj_passport,
-                   :interests_of_justice
+                   :interests_of_justice,
+                   :work_stream
 
           expose :submitted_at, as: :declaration_signed_at
           expose :ioj_bypass, proc: ->(_) { interests_of_justice.empty? }
@@ -17,8 +18,7 @@ module Datastore
               'codefendants',
               # TODO: clarify with MAAT if they need the first court hearing details
               'is_first_court_hearing',
-              'first_court_hearing_name',
-              'work_stream'
+              'first_court_hearing_name'
             )
           end
         end
