@@ -7,6 +7,7 @@ module Datastore
         expose :created_at
 
         expose :supporting_evidence
+        expose :work_stream
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false

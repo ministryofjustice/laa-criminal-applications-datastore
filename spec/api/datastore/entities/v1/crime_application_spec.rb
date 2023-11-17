@@ -8,30 +8,16 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   let(:crime_application) do
     instance_double(
       CrimeApplication,
-      id:,
-      status:,
-      submitted_at:,
-      reviewed_at:,
-      returned_at:,
-      return_details:,
-      offence_class:,
-      submitted_application:
+      id: SecureRandom.uuid,
+      status: Types::ApplicationStatus['submitted'],
+      submitted_at: 3.days.ago,
+      reviewed_at: nil,
+      returned_at: 3.days.ago - 1.hour,
+      return_details: { reason: nil, details: nil, returned_at: nil },
+      offence_class: Types::OffenceClass['C'],
+      work_stream: Types::WorkStreamType['criminal_applications_team'],
+      submitted_application: submitted_application
     )
-  end
-
-  let(:id) { SecureRandom.uuid }
-  let(:submitted_at) { 3.days.ago }
-  let(:reviewed_at) { nil }
-  let(:status) { Types::ApplicationStatus['submitted'] }
-  let(:offence_class) { Types::OffenceClass['C'] }
-  let(:case_details) { { offence_class: } }
-  let(:returned_at) { 3.days.ago - 1.hour }
-  let(:return_details) do
-    {
-      reason: nil,
-      details: nil,
-      returned_at: nil
-    }
   end
 
   let(:submitted_application) do
@@ -96,28 +82,27 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
 
   context 'when retrieved from the database' do
     it 'represents submitted_at' do
-      expect(representation.fetch('submitted_at')).to eq submitted_at.iso8601(3)
+      expect(representation.fetch('submitted_at')).to eq crime_application.submitted_at.iso8601(3)
     end
 
     it 'represents returned_at' do
-      expect(representation.fetch('returned_at')).to eq returned_at.iso8601(3)
+      expect(representation.fetch('returned_at')).to eq crime_application.returned_at.iso8601(3)
     end
 
     it 'represents the status' do
-      expect(representation.fetch('status')).to eq status
+      expect(representation.fetch('status')).to eq crime_application.status
     end
 
     it 'represents the return_details' do
-      expect(representation.fetch('return_details').symbolize_keys).to eq return_details
+      expect(representation.fetch('return_details').symbolize_keys).to eq crime_application.return_details
     end
   end
 
   it 'represents the overall offence class within the case details' do
-    expect(representation.fetch('case_details').fetch('offence_class')).to eq offence_class
+    expect(representation.fetch('case_details').fetch('offence_class')).to eq crime_application.offence_class
   end
 
-  it 'represents the work stream within the case details' do
-    expect(representation.fetch('case_details')
-                         .fetch('work_stream')).to eq Types::WorkStreamType['criminal_applications_team']
+  it 'represents the work stream' do
+    expect(representation.fetch('work_stream')).to eq crime_application.work_stream
   end
 end

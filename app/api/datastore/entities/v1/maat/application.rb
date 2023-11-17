@@ -17,8 +17,7 @@ module Datastore
               'codefendants',
               # TODO: clarify with MAAT if they need the first court hearing details
               'is_first_court_hearing',
-              'first_court_hearing_name',
-              'work_stream'
+              'first_court_hearing_name'
             )
           end
         end

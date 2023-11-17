@@ -6,7 +6,8 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   end
 
   let(:crime_application) do
-    instance_double(CrimeApplication, id:, review_status:, status:, submitted_at:, reviewed_at:, submitted_application:)
+    instance_double(CrimeApplication, id:, review_status:, status:, submitted_at:, reviewed_at:,
+                                              submitted_application:, work_stream:)
   end
 
   let(:id) { SecureRandom.uuid }
@@ -15,6 +16,7 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:reviewed_at) { '2023-05-22T12:42:10.907Z' }
   let(:status) { 'submitted' }
   let(:review_status) { 'assessment_completed' }
+  let(:work_stream) { 'criminal_applications_team' }
 
   let(:submitted_application) do
     LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => parent_id) }
@@ -50,5 +52,9 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
 
   it 'represents the applicant_name' do
     expect(representation.fetch(:applicant_name)).to eq 'Kit Pound'
+  end
+
+  it 'represents the work_stream' do
+    expect(representation.fetch(:work_stream)).to eq 'criminal_applications_team'
   end
 end

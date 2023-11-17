@@ -8,7 +8,8 @@ module Datastore
                  :return_details,
                  :ioj_passport,
                  :means_passport,
-                 :supporting_evidence
+                 :supporting_evidence,
+                 :work_stream
 
         expose :client_details do
           expose :applicant do
