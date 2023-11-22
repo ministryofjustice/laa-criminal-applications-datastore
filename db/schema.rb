@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_141454) do
     t.string "offence_class"
     t.virtual "office_code", type: :string, as: "((submitted_application -> 'provider_details'::text) ->> 'office_code'::text)", stored: true
     t.jsonb "return_details"
-    t.string "work_stream"
+    t.string "work_stream", default: "criminal_applications_team", null: false
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["reference"], name: "index_crime_applications_on_reference"
     t.index ["review_status", "reviewed_at"], name: "index_crime_applications_on_review_status_and_reviewed_at"
@@ -40,6 +40,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_141454) do
     t.index ["status", "returned_at"], name: "index_crime_applications_on_status_and_returned_at", order: { returned_at: :desc }
     t.index ["status", "reviewed_at"], name: "index_crime_applications_on_status_and_reviewed_at", order: { reviewed_at: :desc }
     t.index ["status", "submitted_at"], name: "index_crime_applications_on_status_and_submitted_at", order: { submitted_at: :desc }
+    t.index ["work_stream"], name: "index_crime_applications_on_work_stream"
   end
 
   create_table "redacted_crime_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
