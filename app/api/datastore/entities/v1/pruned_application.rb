@@ -8,6 +8,7 @@ module Datastore
                  :return_details,
                  :ioj_passport,
                  :means_passport,
+                 :means_details,
                  :supporting_evidence,
                  :work_stream
 

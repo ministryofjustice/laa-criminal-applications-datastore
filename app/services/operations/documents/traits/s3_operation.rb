@@ -6,7 +6,7 @@ module Operations
 
         def client
           @client ||= Aws::S3::Client.new(
-            **{ # rubocop:disable Style/RedundantDoubleSplatHashBraces
+            **{
               endpoint:
             }.merge(default_client_cfg).compact_blank
           )

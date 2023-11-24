@@ -6,6 +6,7 @@ module Datastore
         expose :parent_id
         expose :created_at
 
+        expose :means_details
         expose :supporting_evidence
         expose :work_stream
 
@@ -26,6 +27,10 @@ module Datastore
 
         def supporting_evidence
           submitted_value('supporting_evidence') || []
+        end
+
+        def means_details
+          submitted_value('means_details') || {}
         end
       end
     end
