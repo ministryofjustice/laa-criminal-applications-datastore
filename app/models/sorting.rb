@@ -13,6 +13,9 @@ class Sorting
     applicant_name: [:applicant_last_name, :applicant_first_name],
     returned_at: [:returned_at],
     reviewed_at: [:reviewed_at],
+    return_reason: [:return_reason],
+    office_code: [:office_code],
+    reference: [:reference],
     submitted_at: [:submitted_at]
   }.freeze
 

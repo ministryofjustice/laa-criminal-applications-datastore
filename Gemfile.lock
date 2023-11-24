@@ -4,6 +4,10 @@ GIT
   tag: v1.0.10
   specs:
     laa-criminal-legal-aid-schemas (1.0.10)
+  revision: aa0a86bf5bd66514b74c65ce0b55f4b3a7154d2b
+  tag: v1.0.9
+  specs:
+    laa-criminal-legal-aid-schemas (1.0.9)
       dry-schema (~> 1.13)
       dry-struct (~> 1.6.0)
       json-schema (~> 4.0.0)

@@ -20,6 +20,9 @@ module Datastore
 
             optional :submitted_after, type: DateTime
             optional :submitted_before, type: DateTime
+
+            optional :reviewed_after, type: DateTime
+            optional :reviewed_before, type: DateTime
           end
 
           optional :sorting, type: JSON, desc: 'Sorting JSON.', default: Sorting.new.attributes do
