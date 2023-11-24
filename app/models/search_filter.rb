@@ -10,6 +10,8 @@ class SearchFilter
   attribute :search_text, :string
   attribute :submitted_after, :datetime
   attribute :submitted_before, :datetime
+  attribute :reviewed_after, :datetime
+  attribute :reviewed_before, :datetime
   attribute :work_stream, array: true, default: -> { [] }
 
   def active_filters
@@ -39,6 +41,14 @@ class SearchFilter
 
   def filter_submitted_before(scope)
     scope.where('submitted_at <  ?', submitted_before)
+  end
+
+  def filter_reviewed_after(scope)
+    scope.where('reviewed_at >  ?', reviewed_after)
+  end
+
+  def filter_reviewed_before(scope)
+    scope.where('reviewed_at <  ?', reviewed_before)
   end
 
   def filter_application_id_in(scope)

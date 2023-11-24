@@ -1,13 +1,26 @@
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
+#
 RSpec.describe Datastore::Entities::V1::SearchResult do
   subject(:representation) do
     JSON.parse(described_class.represent(crime_application).to_json).symbolize_keys
   end
 
   let(:crime_application) do
-    instance_double(CrimeApplication, id:, review_status:, status:, submitted_at:, reviewed_at:,
-                                              submitted_application:, work_stream:)
+    instance_double(
+      CrimeApplication,
+      id:,
+      review_status:,
+      status:,
+      submitted_at:,
+      reviewed_at:,
+      submitted_application:,
+      work_stream:,
+      return_reason:,
+      return_details:,
+      office_code:
+    )
   end
 
   let(:id) { SecureRandom.uuid }
@@ -16,6 +29,9 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:reviewed_at) { '2023-05-22T12:42:10.907Z' }
   let(:status) { 'submitted' }
   let(:review_status) { 'assessment_completed' }
+  let(:return_reason) { 'evidence_issue' }
+  let(:return_details) { { 'details' => 'There was an issue with the uploaded evidence' } }
+  let(:office_code) { 'XYZ123' }
   let(:work_stream) { 'criminal_applications_team' }
 
   let(:submitted_application) do
@@ -57,4 +73,27 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   it 'represents the work_stream' do
     expect(representation.fetch(:work_stream)).to eq 'criminal_applications_team'
   end
+
+  it 'represents the office_code' do
+    expect(representation.fetch(:office_code)).to eq office_code
+  end
+
+  it 'represents the return_reason' do
+    expect(representation.fetch(:return_reason)).to eq 'evidence_issue'
+  end
+
+  it 'represents the return_details' do
+    expect(representation.fetch(:return_details)).to eq 'There was an issue with the uploaded evidence'
+  end
+
+  context 'when return details are empty' do
+    let(:return_details) { {} }
+    let(:return_reason) { nil }
+
+    it 'represents details and reason as nil' do
+      expect(representation.fetch(:return_reason)).to be_nil
+      expect(representation.fetch(:return_details)).to be_nil
+    end
+  end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers
