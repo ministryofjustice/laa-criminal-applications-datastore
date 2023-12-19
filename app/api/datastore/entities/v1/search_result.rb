@@ -15,6 +15,8 @@ module Datastore
         expose :return_details
         expose :office_code
         expose :provider_name
+        expose :application_type
+        expose :case_type
 
         private
 
@@ -44,6 +46,14 @@ module Datastore
 
         def reference
           object.submitted_application&.dig('reference').to_i
+        end
+
+        def case_type
+          object.submitted_application&.dig('case_details', 'case_type')
+        end
+
+        def application_type
+          object.submitted_application&.dig('application_type')
         end
       end
     end
