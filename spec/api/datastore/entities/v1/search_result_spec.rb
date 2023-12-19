@@ -33,6 +33,8 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:return_details) { { 'details' => 'There was an issue with the uploaded evidence' } }
   let(:office_code) { 'XYZ123' }
   let(:work_stream) { 'criminal_applications_team' }
+  let(:case_type) { 'summary_only' }
+  let(:application_type) { 'initial' }
 
   let(:submitted_application) do
     LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => parent_id) }
@@ -94,6 +96,14 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
       expect(representation.fetch(:return_reason)).to be_nil
       expect(representation.fetch(:return_details)).to be_nil
     end
+  end
+
+  it 'represents the case_type' do
+    expect(representation.fetch(:case_type)).to eq 'appeal_to_crown_court'
+  end
+
+  it 'represents the application_type' do
+    expect(representation.fetch(:application_type)).to eq 'initial'
   end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers

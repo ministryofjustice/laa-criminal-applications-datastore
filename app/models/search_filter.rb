@@ -13,6 +13,7 @@ class SearchFilter
   attribute :reviewed_after, :datetime
   attribute :reviewed_before, :datetime
   attribute :work_stream, array: true, default: -> { [] }
+  attribute :case_type, array: true, default: -> { [] }
 
   def active_filters
     attributes.compact_blank.keys
@@ -73,5 +74,9 @@ class SearchFilter
 
   def filter_search_text(scope)
     scope.where("searchable_text @@ plainto_tsquery('english', ?)", search_text)
+  end
+
+  def filter_case_type(scope)
+    scope.where(case_type:)
   end
 end

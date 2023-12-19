@@ -16,7 +16,8 @@ class Sorting
     return_reason: [:return_reason],
     office_code: [:office_code],
     reference: [:reference],
-    submitted_at: [:submitted_at]
+    submitted_at: [:submitted_at],
+    case_type: [:case_type]
   }.freeze
 
   DEFAULT_SORT_BY = :submitted_at

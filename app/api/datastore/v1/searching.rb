@@ -17,6 +17,7 @@ module Datastore
             optional(:status, type: [String], values: Types::APPLICATION_STATUSES)
             optional(:review_status, type: [String], values: Types::REVIEW_APPLICATION_STATUSES)
             optional(:work_stream, type: [String], values: Types::WORK_STREAM_TYPES)
+            optional(:case_type, type: [String], values: Types::CASE_TYPES)
 
             optional :submitted_after, type: DateTime
             optional :submitted_before, type: DateTime
