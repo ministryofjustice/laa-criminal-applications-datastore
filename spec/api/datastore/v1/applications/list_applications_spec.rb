@@ -59,7 +59,7 @@ RSpec.describe 'list applications' do
       end
 
       context 'when outside of range' do
-        let(:query) { '?per_page=201' }
+        let(:query) { '?per_page=1001' }
 
         it 'returns an error message' do
           expect(response).to have_http_status :bad_request
