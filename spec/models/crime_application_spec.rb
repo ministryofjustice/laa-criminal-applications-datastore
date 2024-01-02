@@ -121,6 +121,15 @@ describe CrimeApplication do
     end
   end
 
+  # TODO: determine if application_type needs be chached on the model.
+  describe '#application_type' do
+    subject(:application_type) { described_class.new(valid_attributes).application_type }
+
+    it 'returns the application type from the submitted json' do
+      expect(application_type).to eq 'initial'
+    end
+  end
+
   describe '#applicant_name' do
     context 'when created' do
       subject!(:application) do

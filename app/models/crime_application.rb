@@ -9,6 +9,10 @@ class CrimeApplication < ApplicationRecord
   before_validation :set_overall_offence_class, :set_work_stream, on: :create
   before_save :copy_first_court_hearing_name
 
+  def application_type
+    submitted_application.fetch('application_type')
+  end
+
   private
 
   def shift_payload_attributes

@@ -8,7 +8,8 @@ describe Events::Submission do
       submitted_at: DateTime.parse('2023-02-27'),
       reference: 673_209,
       submitted_application: { 'parent_id' => '9a123b' },
-      work_stream: 'extradition'
+      work_stream: 'extradition',
+      application_type: 'initial'
     )
   end
 
@@ -18,6 +19,7 @@ describe Events::Submission do
                     id: 'f7b429cc',
                     submitted_at: DateTime.parse('2023-02-27'),
                     parent_id: '9a123b',
-                    work_stream: 'extradition'
+                    work_stream: 'extradition',
+                    application_type: 'initial'
                   }
 end
