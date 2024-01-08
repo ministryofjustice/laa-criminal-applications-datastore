@@ -62,6 +62,9 @@ Style/HashSyntax:
   EnforcedStyle: ruby19_no_mixed_keys
   EnforcedShorthandSyntax: consistent
 
+Style/RedundantParentheses:
+  Enabled: false
+
 # https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Naming/BlockForwarding
 Naming/BlockForwarding:
   EnforcedStyle: explicit
