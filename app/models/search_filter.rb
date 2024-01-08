@@ -21,7 +21,7 @@ class SearchFilter
 
   def apply_to_scope(scope)
     active_filters.each do |f|
-      scope = send("filter_#{f}", scope)
+      scope = send(:"filter_#{f}", scope)
     end
 
     scope
