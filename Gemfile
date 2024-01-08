@@ -18,6 +18,7 @@ gem 'prometheus_exporter'
 # Exceptions notifications
 gem 'sentry-rails'
 gem 'sentry-ruby'
+gem 'stackprof'
 
 # Datastore API authentication
 gem 'moj-simple-jwt-auth', '0.1.0'
