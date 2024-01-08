@@ -6,6 +6,12 @@ Rails.application.config.to_prepare do
     config.breadcrumbs_logger = [:active_support_logger, :http_logger]
     config.environment = HostEnv.env_name
 
+    # to enable performance
+    config.traces_sample_rate = 1.0
+
+    # to enable profiling
+    config.profiles_sample_rate = 1.0
+
     # Filtering
     # https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
 
