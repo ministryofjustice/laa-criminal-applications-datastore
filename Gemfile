@@ -16,7 +16,7 @@ gem 'kaminari-activerecord'
 gem 'prometheus_exporter'
 
 # Exceptions notifications
-gem 'sentry-rails'
+gem 'sentry-rails', '>= 5.16.1'
 gem 'sentry-ruby'
 gem 'stackprof'
 
