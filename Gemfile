@@ -28,11 +28,7 @@ gem 'aws-sdk-s3'
 gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
-<<<<<<< HEAD
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v1.0.24'
-=======
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', branch: 'CRIMAPP-290-PSE-spike'
->>>>>>> 4767903 (Include application_type in event data)
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', ref: '69d76f8'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

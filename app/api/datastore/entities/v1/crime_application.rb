@@ -10,6 +10,9 @@ module Datastore
         expose :supporting_evidence
         expose :work_stream
 
+        expose :post_submission_evidence
+        expose :pse_notes
+
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
 
@@ -27,6 +30,14 @@ module Datastore
 
         def supporting_evidence
           submitted_value('supporting_evidence') || []
+        end
+
+        def post_submission_evidence
+          submitted_value('post_submission_evidence') || []
+        end
+
+        def pse_notes
+          submitted_value('pse_notes')
         end
 
         def means_details
