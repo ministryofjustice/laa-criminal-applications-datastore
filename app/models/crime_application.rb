@@ -25,6 +25,7 @@ class CrimeApplication < ApplicationRecord
 
   def set_overall_offence_class
     return unless submitted_application
+    return if application_type == Types::ApplicationType['post_submission_evidence']
 
     self.offence_class = Utils::OffenceClassCalculator.new(
       offences: submitted_application['case_details']['offences']
@@ -35,6 +36,7 @@ class CrimeApplication < ApplicationRecord
   # data consistency for reporting and consuming services
   def copy_first_court_hearing_name
     return if submitted_application.blank?
+    return if application_type == Types::ApplicationType['post_submission_evidence']
 
     case_details = submitted_application.fetch('case_details')
     return if case_details['first_court_hearing_name'].present?
@@ -45,10 +47,14 @@ class CrimeApplication < ApplicationRecord
 
   def set_work_stream
     return unless submitted_application
-
-    self.work_stream = Utils::WorkStreamCalculator.new(
-      first_court_name: submitted_application['case_details']['first_court_hearing_name'],
-      hearing_court_name: submitted_application['case_details']['hearing_court_name']
-    ).work_stream
+    if application_type == Types::ApplicationType['post_submission_evidence']
+      parent_app = CrimeApplication.find(submitted_application['parent_id'])
+      self.work_stream = parent_app.work_stream
+    else
+      self.work_stream = Utils::WorkStreamCalculator.new(
+        first_court_name: submitted_application['case_details']['first_court_hearing_name'],
+        hearing_court_name: submitted_application['case_details']['hearing_court_name']
+      ).work_stream
+    end
   end
 end

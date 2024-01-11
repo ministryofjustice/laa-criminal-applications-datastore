@@ -1,21 +1,24 @@
 module Datastore
   module Entities
     module V1
-      class BaseApplicationEntity < Grape::Entity
+      class PostSubmissionEvidenceApplication < Grape::Entity
         expose :id
         expose :schema_version
         expose :reference
         expose :application_type
         expose :submitted_at
-        expose :date_stamp
 
-        expose :ioj_passport
-        expose :means_passport
+        expose :status
+        expose :parent_id
+        expose :created_at
+
+        expose :supporting_evidence
+        expose :work_stream
+
+        expose :notes
 
         expose :provider_details
         expose :client_details
-        expose :case_details
-        expose :interests_of_justice
 
         private
 
@@ -35,16 +38,22 @@ module Datastore
           submitted_value('application_type')
         end
 
-        def date_stamp
-          submitted_value('date_stamp')
+        def parent_id
+          submitted_value('parent_id')
         end
 
-        def ioj_passport
-          submitted_value('ioj_passport')
+        # created_at is the date when the application was started on crime apply
+        # and therefore we take the value from the application json rather than the table
+        def created_at
+          submitted_value('created_at')
         end
 
-        def means_passport
-          submitted_value('means_passport')
+        def supporting_evidence
+          submitted_value('supporting_evidence') || []
+        end
+
+        def notes
+          submitted_value('notes')
         end
 
         def provider_details
@@ -53,18 +62,6 @@ module Datastore
 
         def client_details
           submitted_value('client_details')
-        end
-
-        def case_details
-          return if application_type == Types::ApplicationType['post_submission_evidence']
-
-          case_details = submitted_value('case_details') || {}
-          case_details['offence_class'] = object.offence_class
-          case_details
-        end
-
-        def interests_of_justice
-          submitted_value('interests_of_justice')
         end
 
         def submitted_value(name)
