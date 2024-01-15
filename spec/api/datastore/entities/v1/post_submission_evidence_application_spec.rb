@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Datastore::Entities::V1::CrimeApplication do
+RSpec.describe Datastore::Entities::V1::PostSubmissionEvidenceApplication do
   subject(:representation) do
     JSON.parse(described_class.represent(crime_application).to_json)
   end
@@ -22,7 +22,9 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
   end
 
   let(:submitted_application) do
-    LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => SecureRandom.uuid) }
+    LaaCrimeSchemas.fixture(1.0, name: 'post_submission_evidence') do |json|
+      json.merge('parent_id' => SecureRandom.uuid)
+    end
   end
 
   context 'when retrieved from the submitted details' do
@@ -36,18 +38,6 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
 
     it 'represents the parent_id' do
       expect(representation.fetch('parent_id')).to eq submitted_application.fetch('parent_id')
-    end
-
-    it 'represents the interests of justice details' do
-      expect(representation.fetch('interests_of_justice')).to eq submitted_application.fetch('interests_of_justice')
-    end
-
-    it 'represents the interests of justice passport details' do
-      expect(representation.fetch('ioj_passport')).to eq submitted_application.fetch('ioj_passport')
-    end
-
-    it 'represents the means passport details' do
-      expect(representation.fetch('means_passport')).to eq submitted_application.fetch('means_passport')
     end
 
     it 'represents the reference' do
@@ -66,18 +56,9 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       expect(representation.fetch('created_at')).to eq submitted_application.fetch('created_at')
     end
 
+    # TODO: validate presence of supporting evidence for a PSE application (in apply?)
     it 'represents the supporting evidence' do
       expect(representation.fetch('supporting_evidence')).to eq submitted_application.fetch('supporting_evidence')
-    end
-  end
-
-  context 'when the "supporting_evidence" key is not in the submitted application' do
-    let(:submitted_application) do
-      super().delete('submitted_application')
-    end
-
-    it 'represents the supporting evidence as an empty array' do
-      expect(representation.fetch('supporting_evidence')).to eq []
     end
   end
 
@@ -86,24 +67,8 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       expect(representation.fetch('submitted_at')).to eq crime_application.submitted_at.iso8601(3)
     end
 
-    it 'represents returned_at' do
-      expect(representation.fetch('returned_at')).to eq crime_application.returned_at.iso8601(3)
-    end
-
     it 'represents the status' do
       expect(representation.fetch('status')).to eq crime_application.status
     end
-
-    it 'represents the return_details' do
-      expect(representation.fetch('return_details').symbolize_keys).to eq crime_application.return_details
-    end
-  end
-
-  it 'represents the overall offence class within the case details' do
-    expect(representation.fetch('case_details').fetch('offence_class')).to eq crime_application.offence_class
-  end
-
-  it 'represents the work stream' do
-    expect(representation.fetch('work_stream')).to eq crime_application.work_stream
   end
 end

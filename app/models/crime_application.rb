@@ -45,8 +45,10 @@ class CrimeApplication < ApplicationRecord
     case_details['first_court_hearing_name'] = case_details['hearing_court_name']
   end
 
+  # rubocop:disable Metrics/AbcSize
   def set_work_stream
     return unless submitted_application
+
     if application_type == Types::ApplicationType['post_submission_evidence']
       parent_app = CrimeApplication.find(submitted_application['parent_id'])
       self.work_stream = parent_app.work_stream
@@ -57,4 +59,5 @@ class CrimeApplication < ApplicationRecord
       ).work_stream
     end
   end
+  # rubocop:enable Metrics/AbcSize
 end
