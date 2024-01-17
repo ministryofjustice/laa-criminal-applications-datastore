@@ -55,7 +55,6 @@ RSpec.describe Datastore::Entities::V1::PostSubmissionEvidenceApplication do
       expect(representation.fetch('created_at')).to eq submitted_application.fetch('created_at')
     end
 
-    # TODO: validate presence of supporting evidence for a PSE application (in apply?)
     it 'represents the supporting evidence' do
       expect(representation.fetch('supporting_evidence')).to eq submitted_application.fetch('supporting_evidence')
     end
