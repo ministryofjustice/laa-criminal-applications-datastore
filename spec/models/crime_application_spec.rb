@@ -91,6 +91,36 @@ describe CrimeApplication do
           ).to eq 'criminal_applications_team'
         end
       end
+
+      context 'when application is post submission evidence application' do
+        subject(:pse_application) { described_class.find(pse_application_attributes['id']) }
+
+        let(:pse_application_attributes) do
+          JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'post_submission_evidence').read)
+        end
+
+        before do
+          described_class.create!(submitted_application: pse_application_attributes)
+        end
+
+        it 'does not set the overall offence class' do
+          expect(
+            pse_application.offence_class
+          ).to be_nil
+        end
+
+        it 'does not copy the first court hearing name' do
+          expect(
+            pse_application.submitted_application['case_details']
+          ).to be_nil
+        end
+
+        it 'sets the work stream from the parent application' do
+          expect(
+            pse_application.work_stream
+          ).to eq application_attributes['work_stream']
+        end
+      end
     end
   end
 
