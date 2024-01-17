@@ -11,8 +11,7 @@ module Datastore
                  :means_details,
                  :supporting_evidence,
                  :work_stream,
-                 :notes,
-                 :review_status
+                 :notes
 
         expose :client_details do
           expose :applicant do

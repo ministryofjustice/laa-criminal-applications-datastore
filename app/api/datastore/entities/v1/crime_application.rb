@@ -13,8 +13,6 @@ module Datastore
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
 
-        expose :review_status
-
         private
 
         def parent_id
