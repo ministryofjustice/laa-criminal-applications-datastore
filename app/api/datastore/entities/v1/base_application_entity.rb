@@ -7,15 +7,10 @@ module Datastore
         expose :reference
         expose :application_type
         expose :submitted_at
-        expose :date_stamp
-
-        expose :ioj_passport
-        expose :means_passport
-
-        expose :provider_details
-        expose :client_details
-        expose :case_details
-        expose :interests_of_justice
+        expose :status
+        expose :parent_id
+        expose :created_at
+        expose :work_stream
 
         private
 
@@ -35,38 +30,18 @@ module Datastore
           submitted_value('application_type')
         end
 
-        def date_stamp
-          submitted_value('date_stamp')
-        end
-
-        def ioj_passport
-          submitted_value('ioj_passport')
-        end
-
-        def means_passport
-          submitted_value('means_passport')
-        end
-
-        def provider_details
-          submitted_value('provider_details')
-        end
-
-        def client_details
-          submitted_value('client_details')
-        end
-
-        def case_details
-          case_details = submitted_value('case_details') || {}
-          case_details['offence_class'] = object.offence_class
-          case_details
-        end
-
-        def interests_of_justice
-          submitted_value('interests_of_justice')
-        end
-
         def submitted_value(name)
           object.submitted_application&.dig(name)
+        end
+
+        def parent_id
+          submitted_value('parent_id')
+        end
+
+        # created_at is the date when the application was started on crime apply
+        # and therefore we take the value from the application json rather than the table
+        def created_at
+          submitted_value('created_at')
         end
       end
     end
