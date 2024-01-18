@@ -9,6 +9,8 @@ RSpec.describe 'get application' do
     )
   end
 
+  let(:validator) { LaaCrimeSchemas::Validator.new(response.body, version: 1.0) }
+
   describe 'GET /api/applications/:application_id' do
     subject(:api_request) do
       get "/api/v1/applications/#{application_id}"
@@ -36,9 +38,7 @@ RSpec.describe 'get application' do
       end
 
       it 'returned details satisfy with schema' do
-        expect(
-          LaaCrimeSchemas::Validator.new(response.body, version: 1.0)
-        ).to be_valid
+        expect(validator).to be_valid, validator.fully_validate
       end
     end
 
@@ -79,9 +79,7 @@ RSpec.describe 'get application' do
       end
 
       it 'returned details satisfy with schema' do
-        expect(
-          LaaCrimeSchemas::Validator.new(response.body, version: 1.0)
-        ).to be_valid
+        expect(validator).to be_valid, validator.fully_validate
       end
     end
   end
