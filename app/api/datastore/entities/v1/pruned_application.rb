@@ -10,7 +10,8 @@ module Datastore
                  :means_passport,
                  :means_details,
                  :supporting_evidence,
-                 :work_stream
+                 :work_stream,
+                 :notes
 
         expose :client_details do
           expose :applicant do
