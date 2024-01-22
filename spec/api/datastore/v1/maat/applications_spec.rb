@@ -47,6 +47,7 @@ RSpec.describe 'get application ready for maat' do
       let(:expected_maat_application) do
         {
           'application_type' => application.submitted_application['application_type'],
+          'benefit_type' => application.submitted_application['benefit_type'],
           'reference' => application.submitted_application['reference'],
           'reviewed_at' => application.reviewed_at,
           'client_details' => application.submitted_application['client_details'],

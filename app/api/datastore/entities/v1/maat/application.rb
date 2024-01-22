@@ -18,8 +18,13 @@ module Datastore
           expose :provider_details
           expose :client_details
           expose :case_details
+          expose :benefit_type
 
           private
+
+          def benefit_type
+            submitted_value('benefit_type')
+          end
 
           def case_details
             submitted_value('case_details').except(
