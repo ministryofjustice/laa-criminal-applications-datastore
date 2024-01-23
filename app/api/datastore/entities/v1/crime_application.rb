@@ -14,49 +14,10 @@ module Datastore
 
         expose :means_details
         expose :supporting_evidence
+        expose :additional_information
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
-
-        private
-
-        def date_stamp
-          submitted_value('date_stamp')
-        end
-
-        def ioj_passport
-          submitted_value('ioj_passport')
-        end
-
-        def means_passport
-          submitted_value('means_passport')
-        end
-
-        def provider_details
-          submitted_value('provider_details')
-        end
-
-        def client_details
-          submitted_value('client_details')
-        end
-
-        def case_details
-          case_details = submitted_value('case_details') || {}
-          case_details['offence_class'] = object.offence_class
-          case_details
-        end
-
-        def interests_of_justice
-          submitted_value('interests_of_justice')
-        end
-
-        def supporting_evidence
-          submitted_value('supporting_evidence') || []
-        end
-
-        def means_details
-          submitted_value('means_details') || {}
-        end
       end
     end
   end

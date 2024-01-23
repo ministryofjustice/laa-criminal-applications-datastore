@@ -40,6 +40,8 @@ RSpec.describe 'get application ready for maat' do
           'hearing_date' => application.submitted_application['case_details']['hearing_date'],
           'offence_class' => expected_offence_class,
           'urn' => application.submitted_application['case_details']['urn'],
+          'date_case_concluded' => application.submitted_application['case_details']['date_case_concluded'],
+          'has_case_concluded' => application.submitted_application['case_details']['has_case_concluded']
         }
       end
       # rubocop:enable Layout/LineLength
