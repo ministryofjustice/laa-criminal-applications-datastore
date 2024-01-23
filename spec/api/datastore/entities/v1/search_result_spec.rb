@@ -35,6 +35,7 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:work_stream) { 'criminal_applications_team' }
   let(:case_type) { 'summary_only' }
   let(:application_type) { 'initial' }
+  let(:means_passport) { ['on_benefit_check'] }
 
   let(:submitted_application) do
     LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => parent_id) }
@@ -104,6 +105,10 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
 
   it 'represents the application_type' do
     expect(representation.fetch(:application_type)).to eq 'initial'
+  end
+
+  it 'represents the means_passport' do
+    expect(representation.fetch(:means_passport)).to eq ['on_benefit_check']
   end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -17,6 +17,7 @@ module Datastore
         expose :provider_name
         expose :application_type
         expose :case_type
+        expose :means_passport
 
         private
 
@@ -54,6 +55,10 @@ module Datastore
 
         def application_type
           object.submitted_application&.dig('application_type')
+        end
+
+        def means_passport
+          object.submitted_application&.dig('means_passport')
         end
       end
     end
