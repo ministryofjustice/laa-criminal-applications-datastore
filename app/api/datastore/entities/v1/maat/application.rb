@@ -8,7 +8,8 @@ module Datastore
                    :status,
                    :parent_id,
                    :created_at,
-                   :work_stream
+                   :work_stream,
+                   :additional_information
 
           expose :submitted_at, as: :declaration_signed_at
           expose :ioj_bypass, proc: ->(_) { interests_of_justice.empty? }
@@ -29,26 +30,6 @@ module Datastore
               'is_first_court_hearing',
               'first_court_hearing_name'
             )
-          end
-
-          def date_stamp
-            submitted_value('date_stamp')
-          end
-
-          def means_passport
-            submitted_value('means_passport')
-          end
-
-          def provider_details
-            submitted_value('provider_details')
-          end
-
-          def client_details
-            submitted_value('client_details')
-          end
-
-          def interests_of_justice
-            submitted_value('interests_of_justice')
           end
         end
       end
