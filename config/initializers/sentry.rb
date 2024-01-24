@@ -7,10 +7,10 @@ Rails.application.config.to_prepare do
     config.environment = HostEnv.env_name
 
     # to enable performance
-    config.traces_sample_rate = 1.0
+    config.traces_sample_rate = 0.05
 
     # to enable profiling
-    config.profiles_sample_rate = 1.0
+    config.profiles_sample_rate = 0.05
 
     # Filtering
     # https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
