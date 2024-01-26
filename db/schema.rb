@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_18_161740) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_26_131332) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -34,7 +34,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_18_161740) do
     t.string "work_stream", default: "criminal_applications_team", null: false
     t.virtual "return_reason", type: :string, as: "(return_details ->> 'reason'::text)", stored: true
     t.virtual "case_type", type: :string, as: "((submitted_application -> 'case_details'::text) ->> 'case_type'::text)", stored: true
+    t.virtual "application_type", type: :string, as: "(submitted_application ->> 'application_type'::text)", stored: true
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
+    t.index ["application_type"], name: "index_crime_applications_on_application_type"
     t.index ["case_type"], name: "index_crime_applications_on_case_type"
     t.index ["office_code"], name: "index_crime_applications_on_office_code"
     t.index ["reference"], name: "index_crime_applications_on_reference"
