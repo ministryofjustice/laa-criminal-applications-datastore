@@ -43,7 +43,10 @@ RSpec.describe 'get application ready for maat' do
           'date_case_concluded' => application.submitted_application['case_details']['date_case_concluded'],
           'has_case_concluded' => application.submitted_application['case_details']['has_case_concluded'],
           'is_client_remanded' => application.submitted_application['case_details']['is_client_remanded'],
-          'date_client_remanded' => application.submitted_application['case_details']['date_client_remanded']
+          'date_client_remanded' => application.submitted_application['case_details']['date_client_remanded'],
+          'is_preorder_work_claimed' => application.submitted_application['case_details']['is_preorder_work_claimed'],
+          'preorder_work_date' => application.submitted_application['case_details']['preorder_work_date'],
+          'preorder_work_details' => application.submitted_application['case_details']['preorder_work_details']
         }
       end
       # rubocop:enable Layout/LineLength
