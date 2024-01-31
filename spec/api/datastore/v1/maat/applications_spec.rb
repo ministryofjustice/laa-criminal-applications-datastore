@@ -20,14 +20,14 @@ RSpec.describe 'get application ready for maat' do
 
     context 'with a ready for assessment application' do
       before do
+        allow(Utils::OffenceClassCalculator).to receive(:new) {
+                                                  instance_double(Utils::OffenceClassCalculator,
+                                                                  offence_class: calculated_offence_class)
+                                                }
         api_request
       end
 
-      let(:expected_offence_class) do
-        Utils::OffenceClassCalculator.new(
-          offences: application.submitted_application['case_details']['offences']
-        ).offence_class
-      end
+      let(:calculated_offence_class) { Types::OffenceClass.values.sample }
 
       # rubocop:disable Layout/LineLength
       let(:expected_case_details) do
@@ -38,7 +38,7 @@ RSpec.describe 'get application ready for maat' do
           'appeal_with_changes_details' => application.submitted_application['case_details']['appeal_with_changes_details'],
           'hearing_court_name' => application.submitted_application['case_details']['hearing_court_name'],
           'hearing_date' => application.submitted_application['case_details']['hearing_date'],
-          'offence_class' => expected_offence_class,
+          'offence_class' => calculated_offence_class,
           'urn' => application.submitted_application['case_details']['urn'],
           'date_case_concluded' => application.submitted_application['case_details']['date_case_concluded'],
           'has_case_concluded' => application.submitted_application['case_details']['has_case_concluded'],

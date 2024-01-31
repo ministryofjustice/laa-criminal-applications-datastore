@@ -23,7 +23,7 @@ module Datastore
           private
 
           def case_details
-            submitted_value('case_details').except(
+            super.except(
               'offences',
               'codefendants',
               # TODO: clarify with MAAT if they need the first court hearing details
