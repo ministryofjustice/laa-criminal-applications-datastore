@@ -90,9 +90,8 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
 
   describe "conforms to the 'maat_application' schema" do
     let(:schema) do
-      JSON.parse(File.read(File.join(
-                             LaaCrimeSchemas.root, 'schemas', '1.0', 'maat_application.json'
-                           )))
+      schema_file_path = File.join(LaaCrimeSchemas.root, 'schemas', '1.0', 'maat_application.json')
+      JSON.parse(File.read(schema_file_path))
     end
 
     it 'exposes only the expected root properties' do
@@ -101,10 +100,24 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       expect(representation.keys).to match_array(expected_root_properties)
     end
 
-    it 'exposes only the expected case_details properties' do
+    it 'exposes only the expected case_details root properties' do
       expected_case_details = schema.dig('properties', 'case_details', 'properties').keys
 
       expect(representation.fetch('case_details').keys).to match_array(expected_case_details)
+    end
+
+    it 'exposes only the expected client_details root properties' do
+      expected_case_details = schema.dig('properties', 'client_details', 'properties').keys
+
+      expect(representation.fetch('client_details').keys).to match_array(expected_case_details)
+    end
+
+    it 'exposes only the expected applicant root properties' do
+      expected_applicant_details = schema.dig(
+        'properties', 'client_details', 'properties', 'applicant', 'properties'
+      ).keys
+
+      expect(representation.dig('client_details', 'applicant').keys).to match_array(expected_applicant_details)
     end
   end
 end
