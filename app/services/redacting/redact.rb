@@ -34,6 +34,8 @@ module Redacting
                     details.slice(*fields).compact_blank
                   when :array
                     details.map { |item| item.slice(*fields).compact_blank }
+                  when :string
+                    details
                   else
                     raise "unknown rule path type: #{type}"
                   end
@@ -71,6 +73,8 @@ module Redacting
     def redact(details)
       if details.is_a?(Array)
         details.map { |item| redact(item.dup) }
+      elsif details.is_a?(String)
+        REDACTED_KEYWORD
       else
         details.each_key { |key| details[key] = REDACTED_KEYWORD }
       end
