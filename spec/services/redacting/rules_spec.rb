@@ -15,6 +15,7 @@ describe Redacting::Rules do
           case_details.codefendants
           interests_of_justice
           supporting_evidence
+          additional_information
         ]
       )
     end

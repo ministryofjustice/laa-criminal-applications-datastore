@@ -27,6 +27,10 @@ module Redacting
         redact: %w[s3_object_key filename],
         type: :array # [{}, {}, ...]
       },
+      'additional_information' => {
+        redact: :value,
+        type: :string
+      }
     }.freeze
 
     def self.pii_attributes
