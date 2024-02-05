@@ -22,23 +22,14 @@ module Redacting
       # Then we redact from this copy anything according to the rules
       Rules.pii_attributes.each do |path, rules|
         path = path.split('.')
-        details = redacted_payload.dig(*path)
+        payload_details = redacted_payload.dig(*path)
 
-        next if details.blank?
+        next if payload_details.blank?
 
         fields = rules.fetch(:redact)
         type   = rules.fetch(:type, :object)
 
-        details = case type
-                  when :object
-                    details.slice(*fields).compact_blank
-                  when :array
-                    details.map { |item| item.slice(*fields).compact_blank }
-                  when :string
-                    details
-                  else
-                    raise "unknown rule path type: #{type}"
-                  end
+        details = details_by_type(payload_details, type, fields)
 
         merge_redacted(path, details)
       end
@@ -56,6 +47,19 @@ module Redacting
     end
 
     private
+
+    def details_by_type(details, type, fields)
+      case type
+      when :object
+        details.slice(*fields).compact_blank
+      when :array
+        details.map { |item| item.slice(*fields).compact_blank }
+      when :string
+        details
+      else
+        raise "unknown rule path type: #{type}"
+      end
+    end
 
     def merge_redacted(path, details)
       redacted_payload.deep_merge!(
