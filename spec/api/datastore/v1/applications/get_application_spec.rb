@@ -38,7 +38,7 @@ RSpec.describe 'get application' do
       end
 
       it 'returned details satisfy with schema' do
-        expect(validator).to be_valid, validator.fully_validate
+        expect(validator).to be_valid, -> { validator.fully_validate }
       end
 
       context 'when post submission evidence application' do
@@ -53,7 +53,7 @@ RSpec.describe 'get application' do
         end
 
         it 'returned details satisfy with schema' do
-          expect(validator).to be_valid, validator.fully_validate
+          expect(validator).to be_valid, -> { validator.fully_validate }
         end
       end
     end
