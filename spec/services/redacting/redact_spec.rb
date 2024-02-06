@@ -96,6 +96,18 @@ describe Redacting::Redact do
         )
       end
     end
+
+    context 'with additional information' do
+      let(:submitted_application) do
+        super().deep_merge('additional_information' => 'Additional information here')
+      end
+
+      let(:additional_information) { redacted_application['additional_information'] }
+
+      it 'redacts the expected attributes' do
+        expect(additional_information).to eq('__redacted__')
+      end
+    end
   end
 
   describe 'metadata attributes' do
