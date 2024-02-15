@@ -119,5 +119,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
 
       expect(representation.dig('client_details', 'applicant').keys).to match_array(expected_applicant_details)
     end
+
+    describe 'means details relevant to MAAT' do
+
+      it 'exposes only the expected means details root properties' do
+        expected_means_details = ['income_details', 'outgoings_details']
+
+        expect(representation.dig('means_details').keys).to match_array(expected_means_details)
+      end
+    end
   end
 end
