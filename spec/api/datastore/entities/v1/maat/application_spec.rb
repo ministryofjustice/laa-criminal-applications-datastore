@@ -95,7 +95,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     end
 
     let(:maat_means_schema) do
-      schema_file_path = File.join(LaaCrimeSchemas.root, 'schemas', '1.0', 'maat','means.json')
+      schema_file_path = File.join(LaaCrimeSchemas.root, 'schemas', '1.0', 'maat', 'means.json')
       JSON.parse(File.read(schema_file_path))
     end
 
@@ -127,7 +127,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
 
     describe 'means details relevant to MAAT' do
       it 'exposes only the expected means details root properties' do
-        expected_means_details = maat_means_schema.dig('properties').keys
+        expected_means_details = maat_means_schema['properties'].keys
 
         expect(representation['means_details'].keys).to match_array(expected_means_details)
       end
