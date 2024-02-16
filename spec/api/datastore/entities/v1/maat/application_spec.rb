@@ -94,6 +94,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       JSON.parse(File.read(schema_file_path))
     end
 
+    let(:maat_means_schema) do
+      schema_file_path = File.join(LaaCrimeSchemas.root, 'schemas', '1.0', 'maat', 'means.json')
+      JSON.parse(File.read(schema_file_path))
+    end
+
     it 'exposes only the expected root properties' do
       expected_root_properties = schema['properties'].keys
 
@@ -118,6 +123,30 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       ).keys
 
       expect(representation.dig('client_details', 'applicant').keys).to match_array(expected_applicant_details)
+    end
+
+    describe 'means details relevant to MAAT' do
+      it 'exposes only the expected means details root properties' do
+        expected_means_details = maat_means_schema['properties'].keys
+
+        expect(representation['means_details'].keys).to match_array(expected_means_details)
+      end
+
+      it 'exposes only the expected income_details properties for applcation fixture' do
+        possible_income_details = maat_means_schema.dig('properties', 'income_details', 'properties').keys
+
+        fixture_properties = representation['means_details']['income_details'].keys
+
+        expect(possible_income_details).to include(*fixture_properties)
+      end
+
+      it 'exposes only the expected outgoings_details properties for application fixture' do
+        possible_outgoings_details = maat_means_schema.dig('properties', 'outgoings_details', 'properties').keys
+
+        fixture_properties = representation['means_details']['outgoings_details'].keys
+
+        expect(possible_outgoings_details).to include(*fixture_properties)
+      end
     end
   end
 end

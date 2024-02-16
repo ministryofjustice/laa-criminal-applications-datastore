@@ -18,6 +18,10 @@ module Datastore
           expose :means_passport
           expose :provider_details
           expose :submitted_at, as: :declaration_signed_at
+          expose :means_details do
+            expose :income_details
+            expose :outgoings_details
+          end
 
           private
 
@@ -32,6 +36,23 @@ module Datastore
                           hearing_court_name
                           hearing_date
                         ])
+          end
+
+          def income_details
+            means_details.fetch('income_details', nil)&.slice(%w[
+                                                                benefits
+                                                                dependants
+                                                                employment_type
+                                                                employment_details
+                                                                other_income
+                                                              ])
+          end
+
+          def outgoings_details
+            means_details.fetch('outgoings_details', nil)&.slice(%w[
+                                                                   outgoings
+                                                                   housing_payment_type
+                                                                 ])
           end
 
           def ioj_bypass
