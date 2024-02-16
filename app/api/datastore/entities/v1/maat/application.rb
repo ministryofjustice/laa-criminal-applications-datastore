@@ -23,7 +23,6 @@ module Datastore
             expose :outgoings_details
           end
 
-
           private
 
           def case_details
@@ -40,20 +39,20 @@ module Datastore
           end
 
           def income_details
-            means_details['income_details'].slice(*%w[
-              benefits
-              dependants
-              employment_type
-              employment_details
-              other_income
-            ])
+            means_details.fetch('income_details', nil)&.slice(*%w[
+                                                    benefits
+                                                    dependants
+                                                    employment_type
+                                                    employment_details
+                                                    other_income
+                                                  ])
           end
 
           def outgoings_details
-            means_details['outgoings_details'].slice(*%w[
-              outgoings
-              housing_payment_type
-            ])
+            means_details.fetch('outgoings_details', nil)&.slice(*%w[
+                                                       outgoings
+                                                       housing_payment_type
+                                                     ])
           end
 
           def ioj_bypass
