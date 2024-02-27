@@ -5,9 +5,9 @@ ruby File.read('.ruby-version').chomp
 
 gem 'pg', '~> 1.4'
 gem 'puma'
-gem 'rails', '~> 7.0.4'
+gem 'rails', '~> 7.0.8', '>= 7.0.8.1'
 
-gem 'grape', '~> 1.7.0'
+gem 'grape', '~> 1.8.0'
 gem 'grape-entity', '~> 0.10.2'
 gem 'grape_logging'
 gem 'kaminari-activerecord'
@@ -16,7 +16,7 @@ gem 'kaminari-activerecord'
 gem 'prometheus_exporter'
 
 # Exceptions notifications
-gem 'sentry-rails'
+gem 'sentry-rails', '>= 5.16.1'
 gem 'sentry-ruby'
 gem 'stackprof'
 
@@ -34,9 +34,9 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'byebug'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
-  gem 'dotenv-rails'
+  gem 'dotenv-rails', '>= 3.0.0'
   gem 'pry'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 6.1.1'
 end
 
 group :test do
