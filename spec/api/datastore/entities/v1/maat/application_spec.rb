@@ -78,6 +78,34 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     expect(representation.fetch('date_stamp')).to eq submitted_application.fetch('date_stamp')
   end
 
+  describe 'client_details' do
+    subject(:client_details) { representation.fetch('client_details') }
+
+    it { is_expected.to be_a(Hash) }
+
+    context 'when benefit_type is not `none`' do
+      it 'does not modify the benefit_type' do
+        expect(client_details['applicant'].fetch('benefit_type')).to eq('universal_credit')
+      end
+    end
+
+    context 'when benefit_type is `none`' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'client_details' => {
+              'applicant' => { 'benefit_type' => 'none' }
+            }
+          )
+        end
+      end
+
+      it 'sets benefit_type to nil' do
+        expect(client_details['applicant'].fetch('benefit_type')).to be_nil
+      end
+    end
+  end
+
   describe 'case_details' do
     subject(:case_details) { representation.fetch('case_details') }
 

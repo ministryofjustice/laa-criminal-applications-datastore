@@ -25,6 +25,12 @@ module Datastore
 
           private
 
+          def client_details
+            super['applicant']['benefit_type'] = nil if super['applicant']['benefit_type'] == 'none'
+
+            super
+          end
+
           def case_details
             super.slice(*%w[
                           urn
