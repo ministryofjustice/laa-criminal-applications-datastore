@@ -5,9 +5,9 @@ ruby File.read('.ruby-version').chomp
 
 gem 'pg', '~> 1.4'
 gem 'puma'
-gem 'rails', '~> 7.0.4'
+gem 'rails', '~> 7.0.8', '>= 7.0.8.1'
 
-gem 'grape', '~> 1.7.0'
+gem 'grape', '~> 1.8.0'
 gem 'grape-entity', '~> 0.10.2'
 gem 'grape_logging'
 gem 'kaminari-activerecord'
@@ -16,7 +16,7 @@ gem 'kaminari-activerecord'
 gem 'prometheus_exporter'
 
 # Exceptions notifications
-gem 'sentry-rails'
+gem 'sentry-rails', '>= 5.16.1'
 gem 'sentry-ruby'
 gem 'stackprof'
 
@@ -28,22 +28,23 @@ gem 'aws-sdk-s3'
 gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v1.0.40'
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v1.0.43'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'byebug'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
-  gem 'dotenv-rails'
+  # Issue with freezing ENV with dotenv-rails v3 https://github.com/bkeepers/dotenv/issues/482
+  gem 'dotenv-rails', '~> 2.8.1'
   gem 'pry'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 6.1.1'
 end
 
 group :test do
   gem 'brakeman'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', require: false
+  gem 'rubocop-rails', '>= 2.24.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'webmock'
