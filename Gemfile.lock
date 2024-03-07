@@ -353,7 +353,7 @@ GEM
     zeitwerk (2.6.13)
 
 PLATFORMS
-  x86_64-darwin-22
+  ruby
 
 DEPENDENCIES
   aws-sdk-s3
@@ -385,7 +385,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 2.7.8p225
+   ruby 3.2.2p53
 
 BUNDLED WITH
-   2.4.12
+   2.3.17
