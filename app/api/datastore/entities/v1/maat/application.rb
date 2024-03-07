@@ -38,6 +38,12 @@ module Datastore
                         ])
           end
 
+          def client_details
+            super['applicant']['benefit_type'] = nil if super['applicant']['benefit_type'] == 'none'
+
+            super
+          end
+
           def income_details
             means_details.fetch('income_details', nil)&.slice(%w[
                                                                 benefits
