@@ -5,7 +5,7 @@ ruby File.read('.ruby-version').chomp
 
 gem 'pg', '~> 1.4'
 gem 'puma'
-gem 'rails', '~> 7.0.4'
+gem 'rails', '~> 7.0.8'
 
 gem 'grape', '~> 1.7.0'
 gem 'grape-entity', '~> 0.10.2'
