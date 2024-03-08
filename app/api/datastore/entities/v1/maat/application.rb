@@ -26,7 +26,7 @@ module Datastore
           private
 
           def client_details
-            super['applicant']['benefit_type'] = nil if super['applicant']['benefit_type'] == 'none'
+            super['applicant']['benefit_type'] = nil if super.dig('applicant', 'benefit_type') == 'none'
 
             super
           end
