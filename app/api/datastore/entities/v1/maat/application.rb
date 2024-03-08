@@ -58,6 +58,10 @@ module Datastore
             means_details.fetch('outgoings_details', nil)&.slice(%w[
                                                                    outgoings
                                                                    housing_payment_type
+                                                                   income_tax_rate_above_threshold
+                                                                   outgoings_more_than_income
+                                                                   how_manage
+                                                                   pays_council_tax
                                                                  ])
           end
 
