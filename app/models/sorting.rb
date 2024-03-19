@@ -11,13 +11,14 @@ class Sorting
 
   SORT_COLUMNS = {
     applicant_name: [:applicant_last_name, :applicant_first_name],
-    returned_at: [:returned_at],
-    reviewed_at: [:reviewed_at],
-    return_reason: [:return_reason],
+    application_type: [:application_type],
+    case_type: [:case_type],
     office_code: [:office_code],
     reference: [:reference],
-    submitted_at: [:submitted_at],
-    case_type: [:case_type]
+    return_reason: [:return_reason],
+    returned_at: [:returned_at],
+    reviewed_at: [:reviewed_at],
+    submitted_at: [:submitted_at]
   }.freeze
 
   DEFAULT_SORT_BY = :submitted_at
