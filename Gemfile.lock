@@ -199,7 +199,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
-    minitest (5.22.2)
+    minitest (5.22.3)
     moj-simple-jwt-auth (0.1.0)
       json
       jwt
@@ -218,7 +218,7 @@ GEM
     net-smtp (0.4.0.1)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.16.2)
+    nokogiri (1.15.6)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     parallel (1.24.0)
@@ -286,14 +286,14 @@ GEM
     rspec-mocks (3.13.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (6.1.1)
+    rspec-rails (6.1.2)
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       railties (>= 6.1)
-      rspec-core (~> 3.12)
-      rspec-expectations (~> 3.12)
-      rspec-mocks (~> 3.12)
-      rspec-support (~> 3.12)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
     rspec-support (3.13.1)
     rubocop (1.62.0)
       json (~> 2.3)
@@ -375,7 +375,7 @@ DEPENDENCIES
   pry
   puma
   rails (~> 7.0.8, >= 7.0.8.1)
-  rspec-rails (>= 6.1.1)
+  rspec-rails (>= 6.1.2)
   rubocop
   rubocop-performance
   rubocop-rails (>= 2.24.0)
@@ -387,7 +387,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 2.7.8p225
 
 BUNDLED WITH
    2.3.17
