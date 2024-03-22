@@ -37,7 +37,7 @@ group :development, :test do
   # Issue with freezing ENV with dotenv-rails v3 https://github.com/bkeepers/dotenv/issues/482
   gem 'dotenv-rails', '~> 2.8.1'
   gem 'pry'
-  gem 'rspec-rails', '>= 6.1.1'
+  gem 'rspec-rails', '>= 6.1.2'
 end
 
 group :test do
