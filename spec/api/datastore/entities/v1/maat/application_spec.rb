@@ -176,5 +176,19 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(possible_outgoings_details).to include(*fixture_properties)
       end
     end
+
+    describe 'extract_details' do
+      it 'exposes details not metadata for income_benefits' do
+        expected_income_benefits = maat_means_schema.dig(
+          'properties', 'income_details', 'properties', 'income_benefits', 'items', 'properties'
+        ).keys
+
+        expect(representation.dig('means_details', 'income_details',
+                                  'income_benefits').last.keys).to match_array(expected_income_benefits)
+        expect(representation.dig('means_details', 'income_details', 'income_benefits').last.keys).to include('details')
+        expect(representation.dig('means_details', 'income_details',
+                                  'income_benefits').last.keys).not_to include('metadata')
+      end
+    end
   end
 end
