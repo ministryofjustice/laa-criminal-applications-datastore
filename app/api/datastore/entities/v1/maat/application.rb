@@ -59,7 +59,7 @@ module Datastore
                                                                          employment_details
                                                                        ])
 
-            extract_details(income)
+            extract_details(income) if income
             income
           end
 
@@ -75,7 +75,7 @@ module Datastore
           end
 
           def extract_details(section) # rubocop:disable Metrics/MethodLength
-            section.map do |element|
+            section&.map do |element|
               if ARRAYS_WITH_DETAILS.include?(element.first)
                 new_element = [element.first]
 
