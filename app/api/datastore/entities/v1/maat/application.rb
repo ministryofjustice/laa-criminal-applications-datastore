@@ -25,11 +25,6 @@ module Datastore
 
           private
 
-          ARRAYS_WITH_DETAILS = %w[
-            income_payments
-            income_benefits
-          ].freeze
-
           def client_details
             super['applicant']['benefit_type'] = nil if super.dig('applicant', 'benefit_type') == 'none'
 
@@ -49,47 +44,29 @@ module Datastore
                         ])
           end
 
-          # rubocop:disable Lint/RedundantSplatExpansion
           def income_details
-            income = means_details.fetch('income_details', nil)&.slice(*%w[
-                                                                         income_payments
-                                                                         income_benefits
-                                                                         dependants
-                                                                         employment_type
-                                                                         employment_details
-                                                                       ])
-
-            extract_details(income)
-            income
+            means_details.fetch('income_details', nil)&.slice(%w[
+                                                                benefits
+                                                                dependants
+                                                                employment_type
+                                                                employment_details
+                                                                other_income
+                                                              ])
           end
 
           def outgoings_details
-            means_details.fetch('outgoings_details', nil)&.slice(*%w[
+            means_details.fetch('outgoings_details', nil)&.slice(%w[
                                                                    outgoings
+                                                                   housing_payment_type
+                                                                   income_tax_rate_above_threshold
+                                                                   outgoings_more_than_income
+                                                                   how_manage
+                                                                   pays_council_tax
                                                                  ])
           end
-          # rubocop:enable Lint/RedundantSplatExpansion
 
           def ioj_bypass
             interests_of_justice.blank?
-          end
-
-          def extract_details(section) # rubocop:disable Metrics/MethodLength
-            section.map do |element|
-              if ARRAYS_WITH_DETAILS.include?(element.first)
-                new_element = [element.first]
-
-                element.last.map do |payment|
-                  payment['details'] = payment.dig('metadata', 'details') unless payment['metadata'] == {}
-                  payment.delete('metadata')
-                  payment
-                end
-
-                new_element << element.last
-              else
-                element
-              end
-            end
           end
         end
       end
