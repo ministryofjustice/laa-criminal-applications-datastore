@@ -49,26 +49,22 @@ module Datastore
                         ])
           end
 
-          # rubocop:disable Lint/RedundantSplatExpansion
           def income_details
-            income = means_details.fetch('income_details', nil)&.slice(*%w[
-                                                                         income_payments
-                                                                         income_benefits
-                                                                         dependants
-                                                                         employment_type
-                                                                         employment_details
-                                                                       ])
+            income = means_details.fetch('income_details', nil)&.slice(
+              'income_payments',
+              'income_benefits',
+              'dependants',
+              'employment_type',
+              'employment_details'
+            )
 
             extract_details(income) if income
             income
           end
 
           def outgoings_details
-            means_details.fetch('outgoings_details', nil)&.slice(*%w[
-                                                                   outgoings
-                                                                 ])
+            means_details.fetch('outgoings_details', nil)&.slice('outgoings')
           end
-          # rubocop:enable Lint/RedundantSplatExpansion
 
           def ioj_bypass
             interests_of_justice.blank?
