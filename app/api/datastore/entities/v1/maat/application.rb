@@ -25,7 +25,7 @@ module Datastore
 
           private
 
-          ARRAYS_WITH_DETAILS = %w[
+          PAYMENT_TYPES_WITH_DETAILS = %w[
             income_payments
             income_benefits
           ].freeze
@@ -49,6 +49,7 @@ module Datastore
                         ])
           end
 
+          # Maintain `nil` return value if there are no payments
           def income_details
             income = means_details.fetch('income_details', nil)&.slice(
               'income_payments',
@@ -58,8 +59,14 @@ module Datastore
               'employment_details'
             )
 
-            extract_details(income) if income
-            income
+            income&.each do |type, list|
+              next unless PAYMENT_TYPES_WITH_DETAILS.include?(type)
+
+              list.each do |item|
+                next if item['metadata'] == {}
+                item['details'] = item.dig('metadata', 'details')
+              end
+            end
           end
 
           def outgoings_details
@@ -68,24 +75,6 @@ module Datastore
 
           def ioj_bypass
             interests_of_justice.blank?
-          end
-
-          def extract_details(section) # rubocop:disable Metrics/MethodLength
-            section&.map do |element|
-              if ARRAYS_WITH_DETAILS.include?(element.first)
-                new_element = [element.first]
-
-                element.last.map do |payment|
-                  payment['details'] = payment.dig('metadata', 'details') unless payment['metadata'] == {}
-                  payment.delete('metadata')
-                  payment
-                end
-
-                new_element << element.last
-              else
-                element
-              end
-            end
           end
         end
       end

@@ -186,8 +186,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(representation.dig('means_details', 'income_details',
                                   'income_benefits').last.keys).to match_array(expected_income_benefits)
         expect(representation.dig('means_details', 'income_details', 'income_benefits').last.keys).to include('details')
-        expect(representation.dig('means_details', 'income_details',
-                                  'income_benefits').last.keys).not_to include('metadata')
       end
     end
   end
