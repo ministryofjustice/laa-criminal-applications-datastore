@@ -50,7 +50,7 @@ module Datastore
           end
 
           # Maintain `nil` return value if there are no payments
-          def income_details
+          def income_details # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
             income = means_details.fetch('income_details', nil)&.slice(
               'income_payments',
               'income_benefits',
@@ -63,7 +63,9 @@ module Datastore
               next unless PAYMENT_TYPES_WITH_DETAILS.include?(type)
 
               list.each do |item|
+                next unless item['metadata'].is_a?(Hash)
                 next if item['metadata'] == {}
+
                 item['details'] = item.dig('metadata', 'details')
               end
             end
