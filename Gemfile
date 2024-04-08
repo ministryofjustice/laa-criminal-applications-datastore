@@ -28,7 +28,7 @@ gem 'aws-sdk-s3'
 gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
-    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', tag: 'v1.0.60'
+    github: 'ministryofjustice/laa-criminal-legal-aid-schemas', ref: '4bf901171a85d4fbd8eea36273565daba185970d'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
