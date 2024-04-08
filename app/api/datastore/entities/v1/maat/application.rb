@@ -21,6 +21,7 @@ module Datastore
           expose :means_details do
             expose :income_details
             expose :outgoings_details
+            expose :capital_details
           end
 
           private
@@ -73,6 +74,17 @@ module Datastore
 
           def outgoings_details
             means_details.fetch('outgoings_details', nil)&.slice('outgoings')
+          end
+
+          def capital_details
+            means_details.fetch('capital_details', nil)&.slice(
+              'premium_bonds_total_value',
+              'trust_fund_amount_held',
+              'savings',
+              'national_savings_certificates',
+              'investments',
+              'properties'
+            )
           end
 
           def ioj_bypass
