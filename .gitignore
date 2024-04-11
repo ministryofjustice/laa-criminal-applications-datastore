@@ -26,3 +26,6 @@
 .env.development.local
 .env.test.local
 .env.local
+
+# Ignore JetBrains files
+.idea/
