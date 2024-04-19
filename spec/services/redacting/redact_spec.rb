@@ -49,6 +49,7 @@ describe Redacting::Redact do
             'postcode' => 'SW1A 2AA',
           },
           'benefit_type' => 'universal_credit',
+          'last_jsa_appointment_date' => nil,
           'correspondence_address' => nil
         })
       end
