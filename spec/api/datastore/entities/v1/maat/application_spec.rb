@@ -145,8 +145,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       expect(representation.fetch('client_details').keys).to match_array(expected_case_details)
     end
 
-    # TODO: CRIMAPP-795
-    it 'exposes only the expected applicant root properties', skip: 'Schema mismatch CRIMAPP-795' do
+    it 'exposes only the expected applicant root properties' do
       expected_applicant_details = schema.dig(
         'properties', 'client_details', 'properties', 'applicant', 'properties'
       ).keys
