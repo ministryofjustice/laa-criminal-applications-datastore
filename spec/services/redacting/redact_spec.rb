@@ -51,8 +51,8 @@ describe Redacting::Redact do
           'benefit_type' => 'universal_credit',
           'last_jsa_appointment_date' => nil,
           'correspondence_address' => nil,
-          'relationship_to_someone_else' => nil,
           'residence_type' => nil,
+          'relationship_to_someone_else' => nil
         })
       end
     end
