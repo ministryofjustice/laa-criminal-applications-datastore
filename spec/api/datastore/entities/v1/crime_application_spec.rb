@@ -68,6 +68,10 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
     it 'represents the supporting evidence' do
       expect(representation.fetch('supporting_evidence')).to eq submitted_application.fetch('supporting_evidence')
     end
+
+    it 'represents the evidence details' do
+      expect(representation.fetch('evidence_details')).to eq submitted_application.fetch('evidence_details')
+    end
   end
 
   context 'when the "supporting_evidence" key is not in the submitted application' do
@@ -78,6 +82,16 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
     it 'represents the supporting evidence as an empty array' do
       expect(representation.fetch('supporting_evidence')).to eq []
     end
+  end
+
+  context 'when the "evidence_details" key is not in the submitted application' do
+    subject { representation.fetch('evidence_details') }
+
+    let(:submitted_application) do
+      super().delete('evidence_details')
+    end
+
+    it { is_expected.to eq({}) }
   end
 
   context 'when retrieved from the database' do
