@@ -52,7 +52,7 @@ describe Redacting::Redact do
           'last_jsa_appointment_date' => nil,
           'correspondence_address' => nil,
           'residence_type' => nil,
-          'relationship_to_someone_else' => nil
+          'relationship_to_owner_of_usual_home_address' => nil
         })
       end
     end
