@@ -87,6 +87,10 @@ module Datastore
         def supporting_evidence
           submitted_value('supporting_evidence') || []
         end
+
+        def evidence_details
+          submitted_value('evidence_details') || {}
+        end
       end
     end
   end

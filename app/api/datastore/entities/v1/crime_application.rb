@@ -14,6 +14,7 @@ module Datastore
 
         expose :means_details
         expose :supporting_evidence
+        expose :evidence_details
         expose :additional_information
 
         expose :returned_at, expose_nil: false

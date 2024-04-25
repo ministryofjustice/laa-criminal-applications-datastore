@@ -10,6 +10,7 @@ module Datastore
                  :means_passport,
                  :means_details,
                  :supporting_evidence,
+                 :evidence_details,
                  :work_stream,
                  :additional_information
 

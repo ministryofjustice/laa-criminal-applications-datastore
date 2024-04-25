@@ -58,6 +58,10 @@ RSpec.describe Datastore::Entities::V1::PostSubmissionEvidenceApplication do
     it 'represents the supporting evidence' do
       expect(representation.fetch('supporting_evidence')).to eq submitted_application.fetch('supporting_evidence')
     end
+
+    it 'represents the evidence details', skip: 'CRIMAPP-798' do
+      expect(representation.fetch('evidence_details')).to eq submitted_application.fetch('evidence_details')
+    end
   end
 
   context 'when retrieved from the database' do
