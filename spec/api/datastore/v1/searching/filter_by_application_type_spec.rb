@@ -27,7 +27,7 @@ RSpec.describe 'searches filter by application type' do
   describe 'filtering by "initial"' do
     let(:search) { { application_type: ['initial'] } }
 
-    it 'returns only "initial" applications', skip: 'Schema mismatch CRIMAPP-795' do
+    it 'returns only "initial" applications' do
       expect(records.count).to be 1
       expect(records.pluck('application_type').uniq).to eq(['initial'])
     end
@@ -36,7 +36,7 @@ RSpec.describe 'searches filter by application type' do
   describe 'filtering by multiple application types' do
     let(:search) { { application_type: %w[initial post_submission_evidence] } }
 
-    it 'returns records with a application_type in application_types', skip: 'Schema mismatch CRIMAPP-795' do
+    it 'returns records with a application_type in application_types' do
       expect(records.count).to be 2
       expect(records.pluck('application_type').uniq).to match_array(%w[initial post_submission_evidence])
     end

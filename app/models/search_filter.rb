@@ -81,9 +81,7 @@ class SearchFilter
     scope.where(case_type:)
   end
 
-  # :nocov:
   def filter_application_type(scope)
     scope.where(application_type:)
   end
-  # :nocov:
 end
