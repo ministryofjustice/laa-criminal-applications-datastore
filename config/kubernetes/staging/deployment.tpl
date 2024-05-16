@@ -79,11 +79,6 @@ spec:
               secretKeyRef:
                 name: api-auth-secrets
                 key: crime_review
-          - name: API_AUTH_SECRET_MAAT_ADAPTER
-            valueFrom:
-              secretKeyRef:
-                name: api-auth-secrets
-                key: maat_adapter
           - name: API_AUTH_SECRET_MAAT_ADAPTER_DEV
             valueFrom:
               secretKeyRef:
