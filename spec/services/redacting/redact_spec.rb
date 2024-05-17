@@ -53,10 +53,10 @@ describe Redacting::Redact do
           'correspondence_address' => nil,
           'residence_type' => nil,
           'relationship_to_owner_of_usual_home_address' => nil,
-          "has_partner" => "yes",
-          "relationship_status" => nil,
-          "relationship_to_partner" => "living_together",
-          "separation_date" => nil,
+          'has_partner' => 'yes',
+          'relationship_status' => nil,
+          'relationship_to_partner' => 'living_together',
+          'separation_date' => nil,
         })
       end
     end
