@@ -183,9 +183,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           'properties', 'income_details', 'properties', 'income_benefits', 'items', 'properties'
         ).keys
 
-        expect(representation.dig('means_details', 'income_details',
-                                  'income_benefits').last.keys).to match_array(expected_income_benefits)
-        expect(representation.dig('means_details', 'income_details', 'income_benefits').last.keys).to include('details')
+        income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+        other_income_benefit = income_benefits.find { |income_benefit| income_benefit['payment_type'] == 'other' }
+
+        expect(other_income_benefit.keys).to match_array(expected_income_benefits)
+        expect(other_income_benefit.keys).to include('details')
       end
     end
   end
