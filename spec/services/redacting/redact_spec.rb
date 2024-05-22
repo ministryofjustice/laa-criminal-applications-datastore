@@ -57,6 +57,12 @@ describe Redacting::Redact do
           'relationship_status' => nil,
           'relationship_to_partner' => 'living_together',
           'separation_date' => nil,
+          'benefit_check_result' => false,
+          'confirm_details' => "yes",
+          'confirm_dwp_result' => "no",
+          'has_benefit_evidence' => "no",
+          'has_nino' => "yes",
+          'will_enter_nino' => nil,
         })
       end
     end
