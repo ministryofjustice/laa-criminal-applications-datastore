@@ -34,7 +34,9 @@ module Datastore
           def client_details
             super['applicant']['benefit_type'] = nil if super.dig('applicant', 'benefit_type') == 'none'
             super['applicant'].except!('relationship_to_owner_of_usual_home_address', 'relationship_status',
-                                       'relationship_to_partner', 'separation_date')
+                                       'relationship_to_partner', 'separation_date', 'benefit_check_result',
+                                       'confirm_details', 'confirm_dwp_result', 'has_benefit_evidence', 'has_nino',
+                                       'will_enter_nino', 'benefit_check_status')
 
             super
           end
