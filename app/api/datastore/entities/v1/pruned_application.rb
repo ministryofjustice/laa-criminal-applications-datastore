@@ -18,6 +18,10 @@ module Datastore
           expose :applicant do
             expose :applicant_details, merge: true
           end
+
+          expose :partner do
+            expose :applicant_details, merge: true
+          end
         end
 
         private
@@ -26,6 +30,12 @@ module Datastore
           return {} if client_details.nil?
 
           client_details['applicant'].slice('first_name', 'last_name')
+        end
+
+        def partner_details
+          return {} if partner_details.nil?
+
+          partner_details['partner'].slice('first_name', 'last_name')
         end
       end
     end
