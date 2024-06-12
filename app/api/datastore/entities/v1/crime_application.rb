@@ -16,6 +16,7 @@ module Datastore
         expose :supporting_evidence
         expose :evidence_details
         expose :additional_information
+        expose :is_partner_included_in_means_assessment
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false

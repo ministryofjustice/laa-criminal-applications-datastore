@@ -19,6 +19,10 @@ module Datastore
           submitted_value('additional_information')
         end
 
+        def is_partner_included_in_means_assessment
+          submitted_value('is_partner_included_in_means_assessment')
+        end
+
         def application_type
           submitted_value('application_type')
         end

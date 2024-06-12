@@ -12,7 +12,8 @@ module Datastore
                  :supporting_evidence,
                  :evidence_details,
                  :work_stream,
-                 :additional_information
+                 :additional_information,
+                 :is_partner_included_in_means_assessment
 
         expose :client_details do
           expose :applicant do
