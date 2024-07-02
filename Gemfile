@@ -5,7 +5,7 @@ ruby File.read('.ruby-version').chomp
 
 gem 'pg', '~> 1.4'
 gem 'puma'
-gem 'rails', '~> 7.0.8', '>= 7.0.8.1'
+gem 'rails', '~> 7.0.8', '>= 7.0.8.4'
 
 gem 'grape', '~> 1.8.0'
 gem 'grape-entity', '~> 0.10.2'
@@ -16,7 +16,7 @@ gem 'kaminari-activerecord'
 gem 'prometheus_exporter'
 
 # Exceptions notifications
-gem 'sentry-rails', '>= 5.16.1'
+gem 'sentry-rails', '>= 5.17.0'
 gem 'sentry-ruby'
 gem 'stackprof'
 
@@ -36,9 +36,9 @@ group :development, :test do
   gem 'byebug'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   # Issue with freezing ENV with dotenv-rails v3 https://github.com/bkeepers/dotenv/issues/482
-  gem 'dotenv-rails', '~> 2.8.1'
+  gem 'dotenv-rails', '~> 3.0.0'
   gem 'pry'
-  gem 'rspec-rails', '>= 6.1.1'
+  gem 'rspec-rails', '>= 6.1.2'
 end
 
 group :test do
