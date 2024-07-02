@@ -61,7 +61,7 @@ module Datastore
               'income_benefits',
               'dependants',
               'employment_type',
-              'employment_details'
+              'employment_income_payments'
             )
 
             income&.each do |type, list|
