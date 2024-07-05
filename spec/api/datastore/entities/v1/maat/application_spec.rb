@@ -21,7 +21,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
   end
 
   let(:submitted_application) do
-    LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => SecureRandom.uuid) }
+    app_fixture = LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => SecureRandom.uuid) }
+    means_details = JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'means').read)
+    app_fixture.deep_merge('means_details' => means_details)
   end
 
   it 'represents the provider details' do
@@ -127,10 +129,10 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       JSON.parse(File.read(schema_file_path))
     end
 
-    it 'exposes only the expected root properties' do
-      expected_root_properties = schema['properties'].keys
+    it 'is fully valid' do
+      validator = LaaCrimeSchemas::Validator.new(representation, version: 1.0, schema_name: 'maat_application')
 
-      expect(representation.keys).to match_array(expected_root_properties)
+      expect(validator).to be_valid, -> { validator.fully_validate }
     end
 
     it 'exposes only the expected case_details root properties' do
