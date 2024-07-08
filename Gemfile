@@ -29,6 +29,7 @@ gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas',
+    branch: 'CRIMAPP-1069-default-employment-types-to-empty-array',
     tag: 'v1.1.23'
 
 group :development, :test do
