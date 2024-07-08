@@ -29,8 +29,7 @@ gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas',
-    branch: 'CRIMAPP-1069-default-employment-types-to-empty-array',
-    tag: 'v1.1.23'
+    tag: 'v1.1.24'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
