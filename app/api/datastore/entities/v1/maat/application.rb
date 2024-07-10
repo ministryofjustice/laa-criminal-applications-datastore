@@ -19,7 +19,7 @@ module Datastore
           expose :provider_details
           expose :submitted_at, as: :declaration_signed_at
           expose :means_details do
-            expose :income_details
+            expose :income_details, using: IncomeDetails
             expose :outgoings_details
             expose :capital_details
           end
@@ -54,26 +54,8 @@ module Datastore
                         ])
           end
 
-          # Maintain `nil` return value if there are no payments
-          def income_details # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
-            income = means_details.fetch('income_details', nil)&.slice(
-              'income_payments',
-              'income_benefits',
-              'dependants',
-              'employment_type',
-              'employment_income_payments'
-            )
-
-            income&.each do |type, list|
-              next unless PAYMENT_TYPES_WITH_DETAILS.include?(type)
-
-              list.each do |item|
-                next unless item['metadata'].is_a?(Hash)
-                next if item['metadata'] == {}
-
-                item['details'] = item.dig('metadata', 'details')
-              end
-            end
+          def income_details
+            means_details.fetch('income_details', nil)
           end
 
           def outgoings_details

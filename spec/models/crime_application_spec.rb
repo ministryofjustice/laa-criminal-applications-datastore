@@ -69,8 +69,20 @@ describe CrimeApplication do
             LaaCrimeSchemas.fixture(1.0) do |json|
               json.deep_merge(
                 'case_details' => {
-                  # For the sake of this test, only `offence_class` attrs are required
-                  'offences' => [{ 'offence_class' => 'C' }, { 'offence_class' => 'F' }]
+                  'offences' => [
+                    {
+                      'name' => 'class c offence',
+                      'offence_class' => 'C',
+                      'slipstreamable' => false,
+                      'dates' => [{ 'date_from' => '2000-01-01', 'date_to' => nil }]
+                    },
+                    {
+                      'name' => 'class f offence',
+                      'offence_class' => 'F',
+                      'slipstreamable' => false,
+                      'dates' => [{ 'date_from' => '2000-01-01', 'date_to' => nil }]
+                    }
+                  ]
                 }
               )
             end
@@ -88,12 +100,14 @@ describe CrimeApplication do
         it 'has a set work stream' do
           expect(
             application.work_stream
-          ).to eq 'criminal_applications_team'
+          ).to eq 'criminal_applications_team_2'
         end
       end
 
       context 'when application is post submission evidence application' do
         subject(:pse_application) { described_class.find(pse_application_attributes['id']) }
+
+        let(:parent_application) { described_class.find(pse_application_attributes['parent_id']) }
 
         let(:pse_application_attributes) do
           JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'post_submission_evidence').read)
@@ -116,9 +130,7 @@ describe CrimeApplication do
         end
 
         it 'sets the work stream from the parent application' do
-          expect(
-            pse_application.work_stream
-          ).to eq application_attributes['work_stream']
+          expect(pse_application.work_stream).to eq parent_application.work_stream
         end
       end
     end

@@ -53,10 +53,15 @@ class CrimeApplication < ApplicationRecord
       self.work_stream = parent_app.work_stream
     else
       self.work_stream = Utils::WorkStreamCalculator.new(
-        first_court_name: submitted_application['case_details']['first_court_hearing_name'],
-        hearing_court_name: submitted_application['case_details']['hearing_court_name']
+        submitted_application_struct
       ).work_stream
     end
+  end
+
+  def submitted_application_struct
+    @submitted_application_struct ||= LaaCrimeSchemas::Structs::CrimeApplication.new(
+      submitted_application
+    )
   end
 
   def post_submission_evidence?
