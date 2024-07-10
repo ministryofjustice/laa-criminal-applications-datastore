@@ -48,6 +48,10 @@ module Datastore
           submitted_value('id')
         end
 
+        def is_means_tested
+          submitted_value('is_means_tested')
+        end
+
         def ioj_passport
           submitted_value('ioj_passport')
         end
