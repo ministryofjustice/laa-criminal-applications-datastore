@@ -102,9 +102,8 @@ RSpec.describe 'list applications' do
     let(:query) { nil }
 
     it 'is an array of valid crime application details' do
-      expect(
-        LaaCrimeSchemas::Validator.new(records.first, version: 1.0, schema_name: 'pruned_application')
-      ).to be_valid
+      validator = LaaCrimeSchemas::Validator.new(records.first, version: 1.0, schema_name: 'pruned_application')
+      expect(validator).to be_valid, -> { validator.fully_validate } 
     end
 
     describe 'pruned details' do

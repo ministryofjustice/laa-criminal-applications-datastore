@@ -9,6 +9,7 @@ module Datastore
                  :ioj_passport,
                  :means_passport,
                  :means_details,
+                 :is_means_tested,
                  :supporting_evidence,
                  :evidence_details,
                  :work_stream,
