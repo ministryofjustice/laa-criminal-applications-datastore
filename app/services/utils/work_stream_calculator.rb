@@ -33,10 +33,7 @@ module Utils
     end
 
     def non_means_tested?
-      return false if means_passport.blank?
-
-      # TODO: find out if this is the correct way to identify non_means_tested
-      means_passport.include?(Types::MeansPassportType['on_not_means_tested'])
+      is_means_tested == 'no'
     end
 
     def self_employed?
@@ -60,6 +57,6 @@ module Utils
       means_details&.income_details
     end
 
-    delegate :case_details, :means_details, :means_passport, to: :application
+    delegate :case_details, :means_details, :is_means_tested, to: :application
   end
 end

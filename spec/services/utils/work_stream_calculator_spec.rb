@@ -6,16 +6,16 @@ describe Utils::WorkStreamCalculator do
 
   let(:application) do
     instance_double(
-      LaaCrimeSchemas::Structs::CrimeApplication, case_details:, means_details:, means_passport:
+      LaaCrimeSchemas::Structs::CrimeApplication, case_details:, means_details:, is_means_tested:
     )
   end
 
   let(:first_court_name) { nil }
   let(:hearing_court_name) { 'Cardiff Crown Court' }
   let(:case_details) { instance_double(LaaCrimeSchemas::Structs::CaseDetails) }
-  let(:means_passport) { [] }
   let(:means_details) { instance_double(LaaCrimeSchemas::Structs::MeansDetails, income_details:) }
   let(:income_details) { LaaCrimeSchemas::Structs::IncomeDetails.new }
+  let(:is_means_tested) { 'yes' }
 
   before do
     allow(case_details).to receive_messages(
@@ -141,20 +141,18 @@ describe Utils::WorkStreamCalculator do
         calculator.work_stream == LaaCrimeSchemas::Types::WorkStreamType['non_means_tested']
       end
 
-      context 'when there is no means passport' do
-        let(:means_passport) { nil }
+      context 'when `is_means_tested` is nil' do
+        let(:is_means_tested) { nil }
 
         it { is_expected.to be false }
       end
 
-      context 'when the application is passported an other type' do
-        let(:means_passport) { ['on_something_else'] }
-
+      context 'when the application is not means tested' do
         it { is_expected.to be false }
       end
 
-      context 'when the application is passported on_not_means_tested' do
-        let(:means_passport) { ['on_not_means_tested'] }
+      context 'when the application is means tested' do
+        let(:is_means_tested) { 'no' }
 
         it { is_expected.to be true }
       end
