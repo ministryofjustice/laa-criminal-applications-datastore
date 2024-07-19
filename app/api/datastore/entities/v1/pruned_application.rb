@@ -13,7 +13,10 @@ module Datastore
                  :supporting_evidence,
                  :evidence_details,
                  :work_stream,
-                 :additional_information
+                 :additional_information,
+                 :pre_cifc_reference_number,
+                 :pre_cifc_maat_id,
+                 :pre_cifc_usn
 
         expose :client_details do
           expose :applicant do

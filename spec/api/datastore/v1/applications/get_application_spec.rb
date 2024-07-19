@@ -56,6 +56,28 @@ RSpec.describe 'get application' do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
       end
+
+      context 'when change in financial circumstances application' do
+        let(:submitted_application) do
+          JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'change_in_financial_circumstances').read)
+        end
+
+        it 'returns http status 200' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it "returns the application's details" do
+          body = JSON.parse(response.body)
+
+          expect(body['id']).to eq('696dd4fd-b619-4637-ab42-a5f4565bcf4a')
+          expect(body['pre_cifc_reference_number']).to eq('pre_cifc_maat_id')
+          expect(body['pre_cifc_maat_id']).to eq('987654321')
+        end
+
+        it 'returned details satisfy with schema' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+      end
     end
 
     context 'when not found' do

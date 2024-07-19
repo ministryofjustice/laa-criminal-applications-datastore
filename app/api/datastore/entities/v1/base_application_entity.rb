@@ -95,6 +95,18 @@ module Datastore
         def evidence_details
           submitted_value('evidence_details') || {}
         end
+
+        def pre_cifc_reference_number
+          submitted_value('pre_cifc_reference_number')
+        end
+
+        def pre_cifc_maat_id
+          submitted_value('pre_cifc_maat_id')
+        end
+
+        def pre_cifc_usn
+          submitted_value('pre_cifc_usn')
+        end
       end
     end
   end
