@@ -25,6 +25,8 @@ module Datastore
             crime_application = CrimeApplication.find(params[:application_id])
             if crime_application.application_type == Types::ApplicationType['post_submission_evidence']
               Datastore::Entities::V1::PostSubmissionEvidenceApplication.represent(crime_application)
+            elsif crime_application.application_type == Types::ApplicationType['change_in_financial_circumstances']
+              Datastore::Entities::V1::ChangeInFinancialCircumstancesApplication.represent(crime_application)
             else
               Datastore::Entities::V1::CrimeApplication.represent(crime_application)
             end
