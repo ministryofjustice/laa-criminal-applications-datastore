@@ -14,6 +14,7 @@ RSpec.describe 'get application ready for maat' do
     let(:submitted_application) do
       JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     end
+
     let(:application_usn) { application.submitted_application['reference'] }
     let(:maat_application) { JSON.parse(response.body) }
 
@@ -34,6 +35,22 @@ RSpec.describe 'get application ready for maat' do
         expect(
           LaaCrimeSchemas::Validator.new(response.body, version: 1.0, schema_name: 'maat_application')
         ).to be_valid
+      end
+    end
+
+    context 'with a non-means application' do
+      let(:submitted_application) do
+        super().deep_merge(
+          'is_means_tested' => 'no',
+          'means_passport' => %w[on_benefit_check on_not_means_tested]
+        )
+      end
+
+      before { api_request }
+
+      it 'returns http status Unprocessable Entity' do
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to match(/did not match one of the following values: on_age_under18, on_benefit_check/)
       end
     end
 

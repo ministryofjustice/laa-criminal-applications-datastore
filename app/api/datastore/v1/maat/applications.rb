@@ -11,17 +11,10 @@ module Datastore
           params do
             requires :usn, type: Integer, desc: 'Application USN.'
           end
+
           route_param :usn do
             get do
-              Datastore::Entities::V1::MAAT::Application.represent(
-                CrimeApplication.find_by!(
-                  reference: params[:usn],
-                  review_status: [
-                    Types::ReviewApplicationStatus['ready_for_assessment'],
-                    Types::ReviewApplicationStatus['assessment_completed']
-                  ]
-                )
-              )
+              Operations::MAAT::GetApplication.new(reference: params[:usn]).call
             end
           end
         end

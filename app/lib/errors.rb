@@ -13,4 +13,7 @@ module Errors
 
   class DocumentUploadError < StandardError
   end
+
+  class NotValidForMAAT < StandardError
+  end
 end
