@@ -30,8 +30,63 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     expect(representation.fetch('provider_details')).to eq submitted_application.fetch('provider_details')
   end
 
-  it 'represents the client details' do
-    expect(representation.fetch('client_details')).to eq submitted_application.fetch('client_details')
+  describe '#client_details' do
+    subject(:client_details) { representation.fetch('client_details') }
+
+    it 'represents the client details' do
+      expect(client_details.keys).to eq %w[applicant partner]
+    end
+
+    describe '#applicant' do
+      let(:applicant) do
+        {
+          benefit_type: 'universal_credit',
+          correspondence_address: nil,
+          correspondence_address_type: 'home_address',
+          date_of_birth: '2001-06-09',
+          first_name: 'Kit',
+          has_partner: 'yes',
+          home_address: {
+            address_line_one: '1 Road',
+            address_line_two: 'Village',
+            city: 'Some nice city',
+            country: 'United Kingdom',
+            lookup_id: nil,
+            postcode: 'SW1A 2AA'
+          },
+          last_jsa_appointment_date:  nil,
+          last_name: 'Pound',
+          nino: 'AJ123456C',
+          other_names: '',
+         residence_type: nil,
+         telephone_number:  '07771231231'
+        }.deep_stringify_keys
+      end
+
+      it 'represents the applicant' do
+        expect(client_details.fetch('applicant')).to eq(applicant)
+      end
+    end
+
+    describe '#partner' do
+      let(:expected) do
+        {
+          benefit_type: nil,
+          date_of_birth: '2001-12-23',
+          first_name: 'Jennifer',
+          last_jsa_appointment_date:  nil,
+          last_name: 'Holland',
+          nino: 'AB123456C',
+          other_names: 'Diane',
+          conflict_of_interest: 'no',
+          involvement_in_case: 'codefendant',
+        }.deep_stringify_keys
+      end
+
+      it 'represents the partner' do
+        expect(client_details.fetch('partner')).to eq(expected)
+      end
+    end
   end
 
   describe 'ioj_bypass' do
@@ -118,6 +173,62 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     end
   end
 
+  describe 'MAAT validity' do
+    let(:validator) { LaaCrimeSchemas::Validator.new(representation, version: 1.0, schema_name: 'maat_application') }
+
+    it 'is valid' do
+      expect(validator).to be_valid, -> { validator.fully_validate }
+    end
+
+    context 'when partner is not given' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge('client_details' => { 'partner' => nil })
+        end
+      end
+
+      it 'is valid' do
+        expect(validator).to be_valid, -> { validator.fully_validate }
+      end
+    end
+
+    context 'when means details are not given' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'income_details' => nil,
+              'outgoings_details' => nil,
+              'capital_details' => nil
+            }
+          )
+        end
+      end
+
+      it 'is valid' do
+        expect(validator).to be_valid, -> { validator.fully_validate }
+      end
+    end
+
+    context 'when assets are missing' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.merge(
+            'means_details' => {
+              'income_details' => nil,
+              'outgoings_details' => nil,
+              'capital_details' => { 'trust_fund_amount' => 1212 }
+            }
+          )
+        end
+      end
+
+      it 'is valid' do
+        expect(validator).to be_valid, -> { validator.fully_validate }
+      end
+    end
+  end
+
   describe "conforms to the 'maat_application' schema" do
     let(:schema) do
       schema_file_path = File.join(LaaCrimeSchemas.root, 'schemas', '1.0', 'maat_application.json')
@@ -127,12 +238,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     let(:maat_means_schema) do
       schema_file_path = File.join(LaaCrimeSchemas.root, 'schemas', '1.0', 'maat', 'means.json')
       JSON.parse(File.read(schema_file_path))
-    end
-
-    it 'is fully valid' do
-      validator = LaaCrimeSchemas::Validator.new(representation, version: 1.0, schema_name: 'maat_application')
-
-      expect(validator).to be_valid, -> { validator.fully_validate }
     end
 
     it 'exposes only the expected case_details root properties' do
