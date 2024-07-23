@@ -11,6 +11,7 @@ Rails.application.config.to_prepare do
 
     # to enable profiling
     config.profiles_sample_rate = 0.05
+    config.rails.register_error_subscriber = true
 
     # Filtering
     # https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
@@ -18,6 +19,7 @@ Rails.application.config.to_prepare do
     params_filter = ActiveSupport::ParameterFilter.new(
       Rails.application.config.filter_parameters
     )
+
     config.before_send = lambda do |event, _hint|
       params_filter.filter(event.to_hash)
     end
