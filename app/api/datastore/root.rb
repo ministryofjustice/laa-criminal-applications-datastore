@@ -19,6 +19,7 @@ module Datastore
 
     desc 'Catch-all route.'
     route_setting :authorised_consumers, %w[*]
+
     route :any, '*path' do
       error!({ status: 404, error: 'Not found' }, 404)
     end

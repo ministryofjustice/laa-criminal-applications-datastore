@@ -34,5 +34,11 @@ module Datastore
     rescue_from Errors::DocumentUploadError do |ex|
       error!({ status: 400, error: ex.message }, 400)
     end
+
+    rescue_from Errors::NotValidForMAAT do |ex|
+      Rails.error.report(ex, handled: true)
+
+      error!({ status: 404, error: 'Record not found' }, 404)
+    end
   end
 end

@@ -14,6 +14,7 @@ RSpec.describe 'get application ready for maat' do
     let(:submitted_application) do
       JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     end
+
     let(:application_usn) { application.submitted_application['reference'] }
     let(:maat_application) { JSON.parse(response.body) }
 
@@ -34,6 +35,28 @@ RSpec.describe 'get application ready for maat' do
         expect(
           LaaCrimeSchemas::Validator.new(response.body, version: 1.0, schema_name: 'maat_application')
         ).to be_valid
+      end
+    end
+
+    context 'with a non-means application' do
+      before do
+        allow(Rails.error).to receive(:report)
+      end
+
+      let(:submitted_application) do
+        super().deep_merge(
+          'means_passport' => %w[on_benefit_check on_not_means_tested]
+        )
+      end
+
+      it 'reports a schema error and returns Not found' do
+        api_request
+
+        expect(Rails.error).to have_received(:report).with(
+          an_instance_of(Errors::NotValidForMAAT), handled: true
+        )
+
+        expect(response).to have_http_status(:not_found)
       end
     end
 
