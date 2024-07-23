@@ -5,9 +5,9 @@ module Datastore
         class IncomeDetails < Grape::Entity
           self.hash_access = :to_s
 
-          expose :income_payments, using: Payment
-          expose :income_benefits, using: Payment
-          expose :dependants
+          expose :income_payments, using: Payment, expose_nil: false
+          expose :income_benefits, using: Payment, expose_nil: false
+          expose :dependants, expose_nil: false
           expose :employment_type
           expose :employment_income_payments, expose_nil: false
 
