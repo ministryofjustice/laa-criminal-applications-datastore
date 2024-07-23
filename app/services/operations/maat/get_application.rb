@@ -20,7 +20,7 @@ module Operations
       def validate!
         return if schema_validator.valid?
 
-        raise Errors::NotValidForMAAT, schema_validator.fully_validate
+        raise Errors::NotValidForMAAT, schema_validator.fully_validate.first.fetch(:message)
       end
 
       def schema_validator

@@ -39,18 +39,24 @@ RSpec.describe 'get application ready for maat' do
     end
 
     context 'with a non-means application' do
+      before do
+        allow(Rails.error).to receive(:report)
+      end
+
       let(:submitted_application) do
         super().deep_merge(
-          'is_means_tested' => 'no',
           'means_passport' => %w[on_benefit_check on_not_means_tested]
         )
       end
 
-      before { api_request }
+      it 'reports a schema error and returns Not found' do
+        api_request
 
-      it 'returns http status Unprocessable Entity' do
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.body).to match(/did not match one of the following values: on_age_under18, on_benefit_check/)
+        expect(Rails.error).to have_received(:report).with(
+          an_instance_of(Errors::NotValidForMAAT), handled: true
+        )
+
+        expect(response).to have_http_status(:not_found)
       end
     end
 

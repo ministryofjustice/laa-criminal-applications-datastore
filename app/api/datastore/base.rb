@@ -36,7 +36,9 @@ module Datastore
     end
 
     rescue_from Errors::NotValidForMAAT do |ex|
-      error!({ status: 422, error: ex.message }, 422)
+      Rails.error.report(ex, handled: true)
+
+      error!({ status: 404, error: 'Record not found' }, 404)
     end
   end
 end
