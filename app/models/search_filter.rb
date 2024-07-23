@@ -42,7 +42,7 @@ class SearchFilter
   end
 
   def filter_submitted_before(scope)
-    scope.where('submitted_at <  ?', submitted_before)
+    scope.where(submitted_at: ...submitted_before)
   end
 
   def filter_reviewed_after(scope)
@@ -50,7 +50,7 @@ class SearchFilter
   end
 
   def filter_reviewed_before(scope)
-    scope.where('reviewed_at <  ?', reviewed_before)
+    scope.where(reviewed_at: ...reviewed_before)
   end
 
   def filter_application_id_in(scope)
