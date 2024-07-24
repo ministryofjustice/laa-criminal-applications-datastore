@@ -3,12 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version').chomp
 
-gem 'pg', '~> 1.4'
+gem 'pg', '~> 1.5.6'
 gem 'puma'
-gem 'rails', '~> 7.0.8', '>= 7.0.8.1'
+gem 'rails', '~> 7.1.3'
 
-gem 'grape', '~> 1.8.0'
-gem 'grape-entity', '~> 0.10.2'
+gem 'grape', '~> 2.1.3'
+gem 'grape-entity', '~> 1.0.1'
 gem 'grape_logging'
 gem 'kaminari-activerecord'
 
@@ -16,7 +16,7 @@ gem 'kaminari-activerecord'
 gem 'prometheus_exporter'
 
 # Exceptions notifications
-gem 'sentry-rails', '>= 5.16.1'
+gem 'sentry-rails', '>= 5.18.1'
 gem 'sentry-ruby'
 gem 'stackprof'
 
@@ -45,7 +45,7 @@ group :test do
   gem 'brakeman'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', '>= 2.24.0', require: false
+  gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'webmock'

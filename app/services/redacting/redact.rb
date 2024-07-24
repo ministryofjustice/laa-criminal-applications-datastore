@@ -4,7 +4,7 @@ module Redacting
       raise ArgumentError, "expected `CrimeApplication` instance, got `#{record.class}`" unless
         record.is_a?(CrimeApplication)
 
-      super(record)
+      super
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
