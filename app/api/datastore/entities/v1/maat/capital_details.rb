@@ -7,6 +7,7 @@ module Datastore
 
           expose :premium_bonds_total_value
           expose :trust_fund_amount_held
+          expose :partner_trust_fund_amount_held
           expose :savings, expose_nil: false
           expose :national_savings_certificates, expose_nil: false
           expose :investments, expose_nil: false
