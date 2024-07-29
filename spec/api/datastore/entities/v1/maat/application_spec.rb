@@ -352,6 +352,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(possible_income_details).to include(*fixture_properties)
       end
 
+      it 'exposes only the expected capital_details properties for application fixture' do
+        possible_capital_details = maat_means_schema.dig('properties', 'capital_details', 'properties').keys
+
+        fixture_properties = representation['means_details']['capital_details'].keys
+
+        expect(possible_capital_details).to include(*fixture_properties)
+      end
+
       it 'exposes only the expected outgoings_details properties for application fixture' do
         possible_outgoings_details = maat_means_schema.dig('properties', 'outgoings_details', 'properties').keys
 
