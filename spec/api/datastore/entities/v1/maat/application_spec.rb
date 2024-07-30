@@ -227,6 +227,83 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(validator).to be_valid, -> { validator.fully_validate }
       end
     end
+
+    context 'with attribute `manage_without_income` in `income_details`' do
+      context 'when manage_without_income is valid' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'manage_without_income' => 'living_on_streets'
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+      end
+
+      context 'when manage_without_income is invalid' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'manage_without_income' => 'invalid_text'
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).not_to be_valid, -> { validator.fully_validate }
+        end
+      end
+
+      context 'when manage_without_income is nil' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'manage_without_income' => nil
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+      end
+
+      context 'when manage_without_income is missing' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working']
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+      end
+    end
   end
 
   describe "conforms to the 'maat_application' schema" do
@@ -267,7 +344,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(representation['means_details'].keys).to match_array(expected_means_details)
       end
 
-      it 'exposes only the expected income_details properties for applcation fixture' do
+      it 'exposes only the expected income_details properties for application fixture' do
         possible_income_details = maat_means_schema.dig('properties', 'income_details', 'properties').keys
 
         fixture_properties = representation['means_details']['income_details'].keys

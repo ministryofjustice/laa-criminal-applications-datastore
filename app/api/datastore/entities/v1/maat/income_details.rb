@@ -10,6 +10,8 @@ module Datastore
           expose :dependants, expose_nil: false
           expose :employment_type
           expose :employment_income_payments, expose_nil: false
+          expose :manage_without_income, expose_nil: false
+          expose :manage_other_details, expose_nil: false
 
           def income_payments
             object['income_payments'].reject { |p| p['payment_type'] == 'employment' }
