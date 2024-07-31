@@ -304,6 +304,46 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         end
       end
     end
+
+    context 'with `partner_trust_fund_amount` in `capital_details`' do
+      context 'when partner_trust_fund_amount is present' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => nil,
+                'outgoings_details' => nil,
+                'capital_details' => { 'partner_trust_fund_amount_held' => partner_trust_fund_amount_held }
+              }
+            )
+          end
+        end
+
+        context 'when valid' do
+          let(:partner_trust_fund_amount_held) { 1000 }
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+        end
+
+        context 'when invalid' do
+          let(:partner_trust_fund_amount_held) { 'should_be_a_number' }
+
+          it 'is valid' do
+            expect(validator).not_to be_valid, -> { validator.fully_validate }
+          end
+        end
+      end
+
+      context 'when partner_trust_fund_amount is not present' do
+        let(:partner_trust_fund_amount_held) { nil }
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+      end
+    end
   end
 
   describe "conforms to the 'maat_application' schema" do
@@ -350,6 +390,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         fixture_properties = representation['means_details']['income_details'].keys
 
         expect(possible_income_details).to include(*fixture_properties)
+      end
+
+      it 'exposes only the expected capital_details properties for application fixture' do
+        possible_capital_details = maat_means_schema.dig('properties', 'capital_details', 'properties').keys
+
+        fixture_properties = representation['means_details']['capital_details'].keys
+
+        expect(possible_capital_details).to include(*fixture_properties)
       end
 
       it 'exposes only the expected outgoings_details properties for application fixture' do
