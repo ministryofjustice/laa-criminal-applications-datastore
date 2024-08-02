@@ -344,6 +344,182 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         end
       end
     end
+
+    # rubocop:disable RSpec/ExampleLength
+    context 'when `income_payments`' do
+      context 'when income_payment of type `other` is present' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_payments' => [
+                    {
+                      'payment_type' => 'state_pension',
+                      'amount' => 10_000,
+                      'frequency' => 'week',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'maintenance',
+                      'amount' => 30_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'student_loan_grant',
+                      'amount' => 50_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'other',
+                      'amount' => 250,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {
+                        'details' => 'Details of the other payment'
+                      }
+                    }
+                  ]
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'add `student_loan_grant` amount to `other` payment amount' do
+          income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+          expect(income_payments).to contain_exactly(
+            {
+              'payment_type' => 'state_pension',
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'maintenance',
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'student_loan_grant',
+                'amount' => 50_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'other',
+                'amount' => 50_250,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {
+                  'details' => 'Details of the other payment'
+                },
+                'details' => 'Details of the other payment'
+            }
+          )
+        end
+      end
+
+      context 'when income_payment of type `other` is missing' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_payments' => [
+                    {
+                      'payment_type' => 'state_pension',
+                      'amount' => 10_000,
+                      'frequency' => 'week',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'maintenance',
+                      'amount' => 30_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'rent',
+                      'amount' => 600,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'student_loan_grant',
+                      'amount' => 50_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    }
+                  ]
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'add `student_loan_grant` amount to `other` payment amount' do
+          income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+          expect(income_payments).to contain_exactly(
+            {
+              'payment_type' => 'state_pension',
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'maintenance',
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'rent',
+                'amount' => 600,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'student_loan_grant',
+                'amount' => 50_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+            }, {
+              'payment_type' => 'other',
+                'amount' => 50_600,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {
+                  'details' => 'Details of the other payment'
+                },
+                'details' => 'Details of the other payment'
+            }
+          )
+        end
+      end
+    end
+    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "conforms to the 'maat_application' schema" do
