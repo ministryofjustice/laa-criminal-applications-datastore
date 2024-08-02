@@ -356,6 +356,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'employment_type' => ['not_working'],
                   'income_payments' => [
                     {
+                      'payment_type' => 'employment',
+                      'amount' => 10_000,
+                      'frequency' => 'week',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
                       'payment_type' => 'state_pension',
                       'amount' => 10_000,
                       'frequency' => 'week',
@@ -439,6 +446,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'income_details' => {
                   'employment_type' => ['not_working'],
                   'income_payments' => [
+                    {
+                      'payment_type' => 'employment',
+                      'amount' => 10_000,
+                      'frequency' => 'week',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
                     {
                       'payment_type' => 'state_pension',
                       'amount' => 10_000,
