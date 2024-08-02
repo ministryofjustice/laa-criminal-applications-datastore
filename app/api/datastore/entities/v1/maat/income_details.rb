@@ -23,20 +23,27 @@ module Datastore
           expose :manage_other_details, expose_nil: false
 
           def income_payments
-            update_other_income_payment if other_income_payment?
-            create_other_income_payment if total_other_income_payment.positive? && !other_income_payment?
+            update_or_create_other_income_payment if total_other_income_payment.positive?
             object['income_payments'].reject { |p| p['payment_type'] == 'employment' }
           end
 
           private
+
+          def other_income_payment?
+            object['income_payments'].any? { |income_payment| income_payment['payment_type'] == 'other' }
+          end
+
+          def update_or_create_other_income_payment
+            other_income_payment? ? update_other_income_payment : create_other_income_payment
+          end
 
           def create_other_income_payment
             object['income_payments'].push(
               {
                 'payment_type' => 'other',
                 'amount' => total_other_income_payment,
-                'frequency' => 'month',
-                'ownership_type' => 'applicant',
+                'frequency' => 'month', # TODO: : Annualize
+                'ownership_type' => 'applicant', # TODO: : Fix ownership
                 'metadata' => {
                   'details' => 'Details of the other payment'
                 }
@@ -48,10 +55,6 @@ module Datastore
             object['income_payments'].map do |payment|
               payment['amount'] += total_other_income_payment if payment['payment_type'] == 'other'
             end
-          end
-
-          def other_income_payment?
-            object['income_payments'].any? { |income_payment| income_payment['payment_type'] == 'other' }
           end
 
           def total_other_income_payment
