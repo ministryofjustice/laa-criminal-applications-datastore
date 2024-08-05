@@ -13,8 +13,9 @@ describe Utils::WorkStreamCalculator do
   let(:first_court_name) { nil }
   let(:hearing_court_name) { 'Cardiff Crown Court' }
   let(:case_details) { instance_double(LaaCrimeSchemas::Structs::CaseDetails) }
-  let(:means_details) { instance_double(LaaCrimeSchemas::Structs::MeansDetails, income_details:) }
+  let(:means_details) { instance_double(LaaCrimeSchemas::Structs::MeansDetails, income_details:, capital_details:) }
   let(:income_details) { LaaCrimeSchemas::Structs::IncomeDetails.new }
+  let(:capital_details) { LaaCrimeSchemas::Structs::CapitalDetails.new }
   let(:is_means_tested) { 'yes' }
 
   before do
@@ -129,6 +130,62 @@ describe Utils::WorkStreamCalculator do
         let(:income_details) do
           LaaCrimeSchemas::Structs::IncomeDetails.new(
             applicant_self_assessment_tax_bill: 'no', partner_self_assessment_tax_bill: nil
+          )
+        end
+
+        it { is_expected.to be false }
+      end
+
+      context 'when subject to a freezing order' do
+        context 'when answered in income section' do
+          let(:income_details) do
+            LaaCrimeSchemas::Structs::IncomeDetails.new(has_frozen_income_or_assets: 'yes')
+          end
+
+          it { is_expected.to be true }
+        end
+
+        context 'when answered in capital section' do
+          let(:capital_details) do
+            LaaCrimeSchemas::Structs::CapitalDetails.new(has_frozen_income_or_assets: 'yes')
+          end
+
+          it { is_expected.to be true }
+        end
+      end
+
+      context 'when not subject to a freezing order' do
+        context 'when answered in income section' do
+          let(:income_details) do
+            LaaCrimeSchemas::Structs::IncomeDetails.new(has_frozen_income_or_assets: 'no')
+          end
+
+          it { is_expected.to be false }
+        end
+
+        context 'when answered in capital section' do
+          let(:capital_details) do
+            LaaCrimeSchemas::Structs::CapitalDetails.new(has_frozen_income_or_assets: 'no')
+          end
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context 'when there is rental income' do
+        let(:income_details) do
+          LaaCrimeSchemas::Structs::IncomeDetails.new(
+            income_payments: [{ payment_type: 'rent', amount: 2500, frequency: 'annual' }]
+          )
+        end
+
+        it { is_expected.to be true }
+      end
+
+      context 'when there is no rental income' do
+        let(:income_details) do
+          LaaCrimeSchemas::Structs::IncomeDetails.new(
+            income_payments: [{ payment_type: 'maintenance', amount: 2500, frequency: 'annual' }]
           )
         end
 

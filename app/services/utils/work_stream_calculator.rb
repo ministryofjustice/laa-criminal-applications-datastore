@@ -19,7 +19,7 @@ module Utils
     def calculated_work_stream
       return 'extradition' if extradition_case?
       return 'non_means_tested' if non_means_tested?
-      return 'criminal_applications_team_2' if self_employed? || self_assessment_tax_bill?
+      return 'criminal_applications_team_2' if cat_2_case?
 
       'criminal_applications_team'
     end
@@ -34,6 +34,10 @@ module Utils
 
     def non_means_tested?
       is_means_tested == 'no'
+    end
+
+    def cat_2_case?
+      self_employed? || self_assessment_tax_bill? || restraint_or_freezing_order? || rental_income?
     end
 
     def self_employed?
@@ -55,6 +59,19 @@ module Utils
 
     def income_details
       means_details&.income_details
+    end
+
+    def restraint_or_freezing_order?
+      return false unless income_details || means_details&.capital_details
+
+      income_details&.has_frozen_income_or_assets == 'yes' ||
+        means_details&.capital_details&.has_frozen_income_or_assets == 'yes'
+    end
+
+    def rental_income?
+      return false unless income_details
+
+      income_details.income_payments.find { |p| p.payment_type == 'rent' }
     end
 
     delegate :case_details, :means_details, :is_means_tested, to: :application
