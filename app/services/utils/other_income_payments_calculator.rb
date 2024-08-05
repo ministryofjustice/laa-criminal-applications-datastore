@@ -1,5 +1,5 @@
 module Utils
-  class IncomePaymentsCalculator
+  class OtherIncomePaymentsCalculator
     OTHER_INCOME_PAYMENTS = %w[
       interest_investment
       student_loan_grant
@@ -18,7 +18,7 @@ module Utils
       @income_payments = income_payments
     end
 
-    def update
+    def call
       update_or_create_other_income_payment(APPLICANT) if total_other_income_payment(APPLICANT).positive?
       update_or_create_other_income_payment(PARTNER) if total_other_income_payment(PARTNER).positive?
       income_payments.reject { |p| p['payment_type'] == 'employment' }

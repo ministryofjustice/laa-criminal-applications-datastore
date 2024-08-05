@@ -14,7 +14,11 @@ module Datastore
           expose :manage_other_details, expose_nil: false
 
           def income_payments
-            Utils::IncomePaymentsCalculator.new(income_payments: object['income_payments']).update
+            Utils::OtherIncomePaymentsCalculator.new(income_payments: object['income_payments']).call
+          end
+
+          def income_benefits
+            Utils::OtherIncomeBenefitsCalculator.new(income_benefits: object['income_benefits']).call
           end
         end
       end

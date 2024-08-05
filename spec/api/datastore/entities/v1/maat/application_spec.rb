@@ -346,7 +346,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     end
 
     # rubocop:disable RSpec/ExampleLength
-    context 'when `income_payments`' do
+    context 'when `income_payments` are present' do
       context 'when income_payment of type `other` is present' do
         let(:submitted_application) do
           LaaCrimeSchemas.fixture(1.0) do |json|
@@ -621,6 +621,258 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               },
               'details' => 'Details of the other partner payment'
             },
+          )
+        end
+      end
+    end
+
+    context 'when `income_benefits` are present' do
+      context 'when income_benefit of type `other` is present' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_benefits' => [
+                    {
+                      'payment_type' => 'child',
+                      'amount' => 500,
+                      'frequency' => 'week',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'incapacity',
+                      'amount' => 1000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'jsa',
+                      'amount' => 700,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'industrial_injuries_disablement',
+                      'amount' => 1500,
+                      'frequency' => 'month',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'jsa',
+                      'amount' => 1500,
+                      'frequency' => 'annual',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'other',
+                      'amount' => 550,
+                      'frequency' => 'month',
+                      'ownership_type' => 'partner',
+                      'metadata' => {
+                        'details' => 'Details of the other partner benefit'
+                      }
+                    },
+                    {
+                      'payment_type' => 'other',
+                      'amount' => 750,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {
+                        'details' => 'Details of the other benefit'
+                      }
+                    }
+                  ]
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'add `jsa` amount to `other` benefit amount' do
+          income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+          expect(income_benefits).to contain_exactly(
+            {
+              'payment_type' => 'child',
+              'amount' => 500,
+              'frequency' => 'week',
+              'ownership_type' => 'applicant',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'incapacity',
+              'amount' => 1000,
+              'frequency' => 'month',
+              'ownership_type' => 'applicant',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'jsa',
+              'amount' => 700,
+              'frequency' => 'month',
+              'ownership_type' => 'applicant',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'industrial_injuries_disablement',
+              'amount' => 1500,
+              'frequency' => 'month',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'jsa',
+              'amount' => 1500,
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'other',
+              'amount' => 8100, # other(550 * 12) jsa:1500
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {
+                'details' => 'Details of the other partner benefit'
+              },
+              'details' => 'Details of the other partner benefit'
+            },
+            {
+              'payment_type' => 'other',
+              'amount' => 17_400, # other(750 * 12) + jsa(700 * 12)
+              'frequency' => 'annual',
+              'ownership_type' => 'applicant',
+              'metadata' => {
+                'details' => 'Details of the other benefit'
+              },
+              'details' => 'Details of the other benefit'
+            }
+          )
+        end
+      end
+
+      context 'when income_benefit of type `other` is missing' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_benefits' => [
+                    {
+                      'payment_type' => 'child',
+                      'amount' => 500,
+                      'frequency' => 'week',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'incapacity',
+                      'amount' => 1000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'jsa',
+                      'amount' => 700,
+                      'frequency' => 'month',
+                      'ownership_type' => 'applicant',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'industrial_injuries_disablement',
+                      'amount' => 1500,
+                      'frequency' => 'month',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'jsa',
+                      'amount' => 1500,
+                      'frequency' => 'annual',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                  ]
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'add `jsa` amount to `other` benefit amount' do
+          income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+          expect(income_benefits).to contain_exactly(
+            {
+              'payment_type' => 'child',
+              'amount' => 500,
+              'frequency' => 'week',
+              'ownership_type' => 'applicant',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'incapacity',
+              'amount' => 1000,
+              'frequency' => 'month',
+              'ownership_type' => 'applicant',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'jsa',
+              'amount' => 700,
+              'frequency' => 'month',
+              'ownership_type' => 'applicant',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'industrial_injuries_disablement',
+              'amount' => 1500,
+              'frequency' => 'month',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'jsa',
+              'amount' => 1500,
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'other',
+              'amount' => 8400, # jsa:(700 * 12)
+              'frequency' => 'annual',
+              'ownership_type' => 'applicant',
+              'metadata' => {
+                'details' => 'Details of the other applicant benefit'
+              },
+              'details' => 'Details of the other applicant benefit'
+            },
+            {
+              'payment_type' => 'other',
+              'amount' => 1500, # jsa:(1500)
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {
+                'details' => 'Details of the other partner benefit'
+              },
+              'details' => 'Details of the other partner benefit'
+            }
           )
         end
       end
