@@ -13,12 +13,33 @@ module Datastore
           expose :manage_without_income, expose_nil: false
           expose :manage_other_details, expose_nil: false
 
+          OTHER_INCOME_PAYMENTS = %w[
+            interest_investment
+            student_loan_grant
+            board_from_family
+            rent
+            financial_support_with_access
+            from_friends_relatives
+          ].freeze
+
+          OTHER_INCOME_BENEFITS = %w[
+            jsa
+          ].freeze
+
+          private
+
           def income_payments
-            Utils::OtherIncomePaymentsCalculator.new(income_payments: object['income_payments']).call
+            Utils::OtherPaymentCalculator.new(
+              payments: object['income_payments'].reject { |p| p['payment_type'] == 'employment' },
+              other_payments: OTHER_INCOME_PAYMENTS
+            ).call
           end
 
           def income_benefits
-            Utils::OtherIncomeBenefitsCalculator.new(income_benefits: object['income_benefits']).call
+            Utils::OtherPaymentCalculator.new(
+              payments: object['income_benefits'],
+              other_payments: OTHER_INCOME_BENEFITS
+            ).call
           end
         end
       end
