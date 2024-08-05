@@ -16,7 +16,7 @@ module Utils
     def call
       update_or_create_other_income_benefit(APPLICANT) if total_other_income_benefit(APPLICANT).positive?
       update_or_create_other_income_benefit(PARTNER) if total_other_income_benefit(PARTNER).positive?
-      income_benefits.reject { |p| p['payment_type'] == 'employment' }
+      income_benefits
     end
 
     private
