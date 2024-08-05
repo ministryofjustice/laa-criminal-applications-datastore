@@ -6,6 +6,7 @@ module Utils
 
     APPLICANT = 'applicant'.freeze
     PARTNER = 'partner'.freeze
+    OTHER = 'other'.freeze
 
     attr_reader :income_benefits
 
@@ -14,8 +15,8 @@ module Utils
     end
 
     def call
-      update_or_create_other_income_benefit(APPLICANT) if total_other_income_benefit(APPLICANT).positive?
-      update_or_create_other_income_benefit(PARTNER) if total_other_income_benefit(PARTNER).positive?
+      update_or_create_other_income_benefit(APPLICANT) if total_other_income_benefits_by_ownership(APPLICANT).positive?
+      update_or_create_other_income_benefit(PARTNER) if total_other_income_benefits_by_ownership(PARTNER).positive?
       income_benefits
     end
 
@@ -31,25 +32,24 @@ module Utils
 
     def other_income_benefit?(ownership_type)
       income_benefits.any? do |income_benefit|
-        income_benefit['payment_type'] == 'other' && income_benefit['ownership_type'] == ownership_type
+        income_benefit['payment_type'] == OTHER && income_benefit['ownership_type'] == ownership_type
       end
     end
 
     def update_other_income_benefit(ownership_type)
-      income_benefits.select { |p| p['ownership_type'] == ownership_type }.map do |payment|
-        next unless payment['payment_type'] == 'other'
-
-        annual_other_amount = annualized_amount(payment['amount'], payment['frequency'])
-        payment['amount'] = annual_other_amount + total_other_income_benefit(ownership_type)
-        payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
+      other_income_benefit = income_benefits.find { |p| p['ownership_type'] == ownership_type && p['payment_type'] == OTHER }
+      if other_income_benefit
+        annual_other_amount = annualized_amount(other_income_benefit['amount'], other_income_benefit['frequency'])
+        other_income_benefit['amount'] = annual_other_amount + total_other_income_benefits_by_ownership(ownership_type)
+        other_income_benefit['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
       end
     end
 
     def create_other_income_benefit(ownership_type)
       income_benefits.push(
         {
-          'payment_type' => 'other',
-          'amount' => total_other_income_benefit(ownership_type),
+          'payment_type' => OTHER,
+          'amount' => total_other_income_benefits_by_ownership(ownership_type),
           'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
           'ownership_type' => ownership_type,
           'metadata' => {}
@@ -57,14 +57,13 @@ module Utils
       )
     end
 
-    def total_other_income_benefit(ownership_type)
-      amount = 0
-      income_benefits.select { |p| p['ownership_type'] == ownership_type }.each do |payment|
-        if OTHER_INCOME_BENEFITS.include? payment['payment_type']
-          amount += annualized_amount(payment['amount'], payment['frequency'])
+    def total_other_income_benefits_by_ownership(ownership_type)
+      income_benefits.
+        select { |p| p['ownership_type'] == ownership_type && OTHER_INCOME_BENEFITS.include?(p['payment_type']) }.
+        inject(0) do |total, payment|
+          total += annualized_amount(payment['amount'], payment['frequency'])
+          total
         end
-      end
-      amount
     end
 
     def annualized_amount(amount, frequency)
