@@ -426,8 +426,8 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {}
             }, {
               'payment_type' => 'other',
-                'amount' => 50_250,
-                'frequency' => 'month',
+                'amount' => 603_000, # other:(250 * 12) + student_loan_grant:(50_000 * 12)
+                'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
                   'details' => 'Details of the other payment'
@@ -470,7 +470,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                     {
                       'payment_type' => 'rent',
                       'amount' => 600,
-                      'frequency' => 'month',
+                      'frequency' => 'week',
                       'ownership_type' => 'applicant',
                       'metadata' => {}
                     },
@@ -510,7 +510,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             }, {
               'payment_type' => 'rent',
                 'amount' => 600,
-                'frequency' => 'month',
+                'frequency' => 'week',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
             }, {
@@ -521,8 +521,8 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {}
             }, {
               'payment_type' => 'other',
-                'amount' => 50_600,
-                'frequency' => 'month',
+                'amount' => 631_200, # rent:(600 * 52) + student_loan_grant:(50000 * 12)
+                'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
                   'details' => 'Details of the other payment'

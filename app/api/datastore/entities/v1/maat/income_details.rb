@@ -42,7 +42,7 @@ module Datastore
               {
                 'payment_type' => 'other',
                 'amount' => total_other_income_payment,
-                'frequency' => 'month', # TODO: : Annualize
+                'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
                 'ownership_type' => 'applicant', # TODO: : Fix ownership
                 'metadata' => {
                   'details' => 'Details of the other payment'
@@ -53,16 +53,26 @@ module Datastore
 
           def update_other_income_payment
             object['income_payments'].map do |payment|
-              payment['amount'] += total_other_income_payment if payment['payment_type'] == 'other'
+              next unless payment['payment_type'] == 'other'
+
+              annual_other_amount = annualized_amount(payment['amount'], payment['frequency'])
+              payment['amount'] = annual_other_amount + total_other_income_payment
+              payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
             end
           end
 
           def total_other_income_payment
             other_amount = 0
             object['income_payments'].each do |payment|
-              other_amount += payment['amount'] if OTHER_INCOME_PAYMENTS.include? payment['payment_type']
+              if OTHER_INCOME_PAYMENTS.include? payment['payment_type']
+                other_amount += annualized_amount(payment['amount'], payment['frequency'])
+              end
             end
             other_amount
+          end
+
+          def annualized_amount(amount, frequency)
+            Utils::AnnualizedAmountCalculator.annualized_amount(amount:, frequency:)
           end
         end
       end
