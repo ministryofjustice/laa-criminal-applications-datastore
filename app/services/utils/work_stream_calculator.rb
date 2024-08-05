@@ -61,7 +61,7 @@ module Utils
       means_details&.income_details
     end
 
-    def restraint_or_freezing_order?
+    def restraint_or_freezing_order? # rubocop:disable Metrics/CyclomaticComplexity
       return false unless income_details || means_details&.capital_details
 
       income_details&.has_frozen_income_or_assets == 'yes' ||
