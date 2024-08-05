@@ -384,6 +384,29 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                       'metadata' => {}
                     },
                     {
+                      'payment_type' => 'maintenance',
+                      'amount' => 15_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'student_loan_grant',
+                      'amount' => 25_000,
+                      'frequency' => 'annual',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'other',
+                      'amount' => 10_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'partner',
+                      'metadata' => {
+                        'details' => 'Details of the other partner payment'
+                      }
+                    },
+                    {
                       'payment_type' => 'other',
                       'amount' => 250,
                       'frequency' => 'month',
@@ -412,19 +435,46 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
               'payment_type' => 'maintenance',
                 'amount' => 30_000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
               'payment_type' => 'student_loan_grant',
                 'amount' => 50_000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
+              'payment_type' => 'maintenance',
+              'amount' => 15_000,
+              'frequency' => 'month',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'student_loan_grant',
+              'amount' => 25_000,
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'other',
+              'amount' => 145_000, # other:(10_000 * 12) + student_loan_grant:(25_000)
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {
+                'details' => 'Details of the other partner payment'
+              },
+              'details' => 'Details of the other partner payment'
+            },
+            {
               'payment_type' => 'other',
                 'amount' => 603_000, # other:(250 * 12) + student_loan_grant:(50_000 * 12)
                 'frequency' => 'annual',
@@ -480,7 +530,21 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                       'frequency' => 'month',
                       'ownership_type' => 'applicant',
                       'metadata' => {}
-                    }
+                    },
+                    {
+                      'payment_type' => 'maintenance',
+                      'amount' => 15_000,
+                      'frequency' => 'month',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
+                    {
+                      'payment_type' => 'student_loan_grant',
+                      'amount' => 25_000,
+                      'frequency' => 'annual',
+                      'ownership_type' => 'partner',
+                      'metadata' => {}
+                    },
                   ]
                 }
               }
@@ -501,34 +565,62 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
               'payment_type' => 'maintenance',
                 'amount' => 30_000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
               'payment_type' => 'rent',
                 'amount' => 600,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
               'payment_type' => 'student_loan_grant',
                 'amount' => 50_000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
-            }, {
+            },
+            {
+              'payment_type' => 'maintenance',
+              'amount' => 15_000,
+              'frequency' => 'month',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
+              'payment_type' => 'student_loan_grant',
+              'amount' => 25_000,
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {}
+            },
+            {
               'payment_type' => 'other',
                 'amount' => 631_200, # rent:(600 * 52) + student_loan_grant:(50000 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
-                  'details' => 'Details of the other payment'
+                  'details' => 'Details of the other applicant payment'
                 },
-                'details' => 'Details of the other payment'
-            }
+                'details' => 'Details of the other applicant payment'
+            },
+            {
+              'payment_type' => 'other',
+              'amount' => 25_000, # student_loan_grant:(25_000)
+              'frequency' => 'annual',
+              'ownership_type' => 'partner',
+              'metadata' => {
+                'details' => 'Details of the other partner payment'
+              },
+              'details' => 'Details of the other partner payment'
+            },
           )
         end
       end

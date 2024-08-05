@@ -23,47 +23,48 @@ module Datastore
           expose :manage_other_details, expose_nil: false
 
           def income_payments
-            update_or_create_other_income_payment if total_other_income_payment.positive?
+            update_or_create_other_income_payment('applicant') if total_other_income_payment('applicant').positive?
+            update_or_create_other_income_payment('partner') if total_other_income_payment('partner').positive?
             object['income_payments'].reject { |p| p['payment_type'] == 'employment' }
           end
 
           private
 
-          def other_income_payment?
-            object['income_payments'].any? { |income_payment| income_payment['payment_type'] == 'other' }
+          def other_income_payment?(ownership_type)
+            object['income_payments'].any? { |income_payment| income_payment['payment_type'] == 'other' && income_payment['ownership_type'] == ownership_type }
           end
 
-          def update_or_create_other_income_payment
-            other_income_payment? ? update_other_income_payment : create_other_income_payment
+          def update_or_create_other_income_payment(ownership_type)
+            other_income_payment?(ownership_type) ? update_other_income_payment(ownership_type) : create_other_income_payment(ownership_type)
           end
 
-          def create_other_income_payment
+          def create_other_income_payment(ownership_type)
             object['income_payments'].push(
               {
                 'payment_type' => 'other',
-                'amount' => total_other_income_payment,
+                'amount' => total_other_income_payment(ownership_type),
                 'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
-                'ownership_type' => 'applicant', # TODO: : Fix ownership
+                'ownership_type' => ownership_type, # TODO: : Fix ownership
                 'metadata' => {
-                  'details' => 'Details of the other payment'
+                  'details' => "Details of the other #{ownership_type} payment"
                 }
               }
             )
           end
 
-          def update_other_income_payment
-            object['income_payments'].map do |payment|
+          def update_other_income_payment(ownership_type)
+            object['income_payments'].select { |p| p['ownership_type'] == ownership_type }.map do |payment|
               next unless payment['payment_type'] == 'other'
 
               annual_other_amount = annualized_amount(payment['amount'], payment['frequency'])
-              payment['amount'] = annual_other_amount + total_other_income_payment
+              payment['amount'] = annual_other_amount + total_other_income_payment(ownership_type)
               payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
             end
           end
 
-          def total_other_income_payment
+          def total_other_income_payment(ownership_type)
             other_amount = 0
-            object['income_payments'].each do |payment|
+            object['income_payments'].select { |p| p['ownership_type'] == ownership_type }.each do |payment|
               if OTHER_INCOME_PAYMENTS.include? payment['payment_type']
                 other_amount += annualized_amount(payment['amount'], payment['frequency'])
               end
