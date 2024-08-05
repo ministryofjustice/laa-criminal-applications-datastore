@@ -426,7 +426,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
-        it 'add `student_loan_grant` amount to `other` payment amount' do
+        it 'adds `student_loan_grant` amount to `other` payment amount' do
           income_payments = representation.dig('means_details', 'income_details', 'income_payments')
           expect(income_payments).to contain_exactly(
             {
@@ -556,7 +556,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
-        it 'add `student_loan_grant` amount to `other` payment amount' do
+        it 'creates `other` income payment add `student_loan_grant` amount to `other` income payment amount' do
           income_payments = representation.dig('means_details', 'income_details', 'income_payments')
           expect(income_payments).to contain_exactly(
             {
@@ -606,20 +606,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 631_200, # rent:(600 * 52) + student_loan_grant:(50000 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
-                'metadata' => {
-                  'details' => 'Details of the other applicant payment'
-                },
-                'details' => 'Details of the other applicant payment'
+                'metadata' => {}
             },
             {
               'payment_type' => 'other',
               'amount' => 25_000, # student_loan_grant:(25_000)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
-              'metadata' => {
-                'details' => 'Details of the other partner payment'
-              },
-              'details' => 'Details of the other partner payment'
+              'metadata' => {}
             },
           )
         end
@@ -699,7 +693,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
-        it 'add `jsa` amount to `other` benefit amount' do
+        it 'adds `jsa` amount to `other` benefit amount' do
           income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
           expect(income_benefits).to contain_exactly(
             {
@@ -815,7 +809,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
-        it 'add `jsa` amount to `other` benefit amount' do
+        it 'creates `other` income benefit and add `jsa` amount to `other` income benefit amount' do
           income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
           expect(income_benefits).to contain_exactly(
             {
@@ -858,20 +852,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'amount' => 8400, # jsa:(700 * 12)
               'frequency' => 'annual',
               'ownership_type' => 'applicant',
-              'metadata' => {
-                'details' => 'Details of the other applicant benefit'
-              },
-              'details' => 'Details of the other applicant benefit'
+              'metadata' => {}
             },
             {
               'payment_type' => 'other',
               'amount' => 1500, # jsa:(1500)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
-              'metadata' => {
-                'details' => 'Details of the other partner benefit'
-              },
-              'details' => 'Details of the other partner benefit'
+              'metadata' => {}
             }
           )
         end

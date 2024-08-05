@@ -52,21 +52,19 @@ module Utils
           'amount' => total_other_income_benefit(ownership_type),
           'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
           'ownership_type' => ownership_type,
-          'metadata' => {
-            'details' => "Details of the other #{ownership_type} benefit"
-          }
+          'metadata' => {}
         }
       )
     end
 
     def total_other_income_benefit(ownership_type)
-      other_amount = 0
+      amount = 0
       income_benefits.select { |p| p['ownership_type'] == ownership_type }.each do |payment|
         if OTHER_INCOME_BENEFITS.include? payment['payment_type']
-          other_amount += annualized_amount(payment['amount'], payment['frequency'])
+          amount += annualized_amount(payment['amount'], payment['frequency'])
         end
       end
-      other_amount
+      amount
     end
 
     def annualized_amount(amount, frequency)
