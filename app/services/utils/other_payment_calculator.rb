@@ -4,11 +4,11 @@ module Utils
     PARTNER = 'partner'.freeze
     OTHER = 'other'.freeze
 
-    attr_reader :payments, :other_payments
+    attr_reader :payments, :other_payment_types
 
-    def initialize(payments:, other_payments:)
+    def initialize(payments:, other_payment_types:)
       @payments = payments
-      @other_payments = other_payments
+      @other_payment_types = other_payment_types
     end
 
     def call
@@ -56,11 +56,11 @@ module Utils
 
     def total_other_payments_by_ownership(ownership_type)
       payments
-        .select { |p| p['ownership_type'] == ownership_type && other_payments.include?(p['payment_type']) }
+        .select { |p| p['ownership_type'] == ownership_type && other_payment_types.include?(p['payment_type']) }
         .inject(0) do |total, payment|
-        total += annualized_amount(payment['amount'], payment['frequency'])
-        total
-      end
+          total += annualized_amount(payment['amount'], payment['frequency'])
+          total
+        end
     end
 
     def annualized_amount(amount, frequency)

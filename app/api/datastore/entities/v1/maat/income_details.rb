@@ -31,14 +31,14 @@ module Datastore
           def income_payments
             Utils::OtherPaymentCalculator.new(
               payments: object['income_payments'].reject { |p| p['payment_type'] == 'employment' },
-              other_payments: OTHER_INCOME_PAYMENTS
+              other_payment_types: OTHER_INCOME_PAYMENTS
             ).call
           end
 
           def income_benefits
             Utils::OtherPaymentCalculator.new(
               payments: object['income_benefits'],
-              other_payments: OTHER_INCOME_BENEFITS
+              other_payment_types: OTHER_INCOME_BENEFITS
             ).call
           end
         end
