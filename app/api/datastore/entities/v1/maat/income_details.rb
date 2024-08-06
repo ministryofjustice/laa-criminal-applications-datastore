@@ -18,10 +18,12 @@ module Datastore
             board_from_family
             rent
             financial_support_with_access
+            other
           ].freeze
 
           OTHER_INCOME_BENEFITS = %w[
             jsa
+            other
           ].freeze
 
           private

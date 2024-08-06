@@ -43,10 +43,11 @@ module Utils
       other_payment = payments.find { |p| p['ownership_type'] == ownership_type && p['payment_type'] == OTHER }
       return unless other_payment
 
-      annual_other_amount = annualized_amount(other_payment['amount'], other_payment['frequency'])
-      other_payment['amount'] = annual_other_amount + total_other_payments_by_ownership(ownership_type)
+      other_payment_details = other_details(ownership_type)
+
+      other_payment['amount'] = total_other_payments_by_ownership(ownership_type)
       other_payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
-      other_payment['metadata']['details'] += "\n\n#{details(ownership_type)}\n"
+      other_payment['metadata']['details'] += "\n\n#{other_payment_details}\n"
     end
 
     def create_other_payment(ownership_type)
@@ -57,13 +58,13 @@ module Utils
           'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
           'ownership_type' => ownership_type,
           'metadata' => {
-            'details' => details((ownership_type))
+            'details' => other_details((ownership_type))
           }
         }
       )
     end
 
-    def details(ownership_type)
+    def other_details(ownership_type)
       other_payments_by_ownership(ownership_type).map do |s|
         "#{s['payment_type']}:#{s['amount']}:#{s['frequency']}:#{s['ownership_type']}"
       end.join(', ')

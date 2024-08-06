@@ -68,6 +68,7 @@ describe Utils::OtherPaymentCalculator do
       %w[
         student_loan_grant
         rent
+        other
       ]
     end
 
@@ -110,7 +111,7 @@ describe Utils::OtherPaymentCalculator do
             'details' => <<~HEREDOC
               Details of the other partner payment
 
-              rent:1500:fortnight:partner, student_loan_grant:15000:annual:partner
+              rent:1500:fortnight:partner, student_loan_grant:15000:annual:partner, other:700:month:partner
             HEREDOC
           },
         },
@@ -123,7 +124,7 @@ describe Utils::OtherPaymentCalculator do
             'details' => <<~HEREDOC
               Details of the other applicant payment
 
-              student_loan_grant:1000:four_weeks:applicant
+              student_loan_grant:1000:four_weeks:applicant, other:800:month:applicant
             HEREDOC
           }
         }
@@ -176,7 +177,7 @@ describe Utils::OtherPaymentCalculator do
     end
 
     let(:other_payment_types) do
-      %w[jsa]
+      %w[jsa other]
     end
 
     it 'is valid' do
@@ -218,7 +219,7 @@ describe Utils::OtherPaymentCalculator do
             'details' => <<~HEREDOC
               Details of the other applicant benefit
 
-              jsa:1500:fortnight:applicant
+              jsa:1500:fortnight:applicant, other:800:four_weeks:applicant
             HEREDOC
           }
         },
