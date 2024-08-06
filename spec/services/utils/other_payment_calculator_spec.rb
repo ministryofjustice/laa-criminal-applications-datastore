@@ -1,4 +1,5 @@
 require 'rails_helper'
+
 # rubocop:disable RSpec/ExampleLength Metrics/AbcSize
 describe Utils::OtherPaymentCalculator do
   subject { described_class.new(payments:, other_payment_types:, type:) }
@@ -65,12 +66,8 @@ describe Utils::OtherPaymentCalculator do
 
     let(:other_payment_types) do
       %w[
-        interest_investment
         student_loan_grant
-        board_from_family
         rent
-        financial_support_with_access
-        from_friends_relatives
       ]
     end
 

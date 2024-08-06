@@ -23,8 +23,6 @@ module Utils
           (amount * 12)
         when PAYMENT_FREQUENCY_TYPE[:annual]
           amount
-        else
-          raise "Invalid frequency #{frequency}"
         end
       end
     end
