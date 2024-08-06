@@ -470,9 +470,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {
-                'details' => "Details of the other partner payment\n\nstudent_loan_grant:25000:annual:partner"
+                'details' => "Details of the other partner payment\n\nstudent_loan_grant:25000:annual:partner\n"
               },
-              'details' => "Details of the other partner payment\n\nstudent_loan_grant:25000:annual:partner"
+              'details' => "Details of the other partner payment\n\nstudent_loan_grant:25000:annual:partner\n"
             },
             {
               'payment_type' => 'other',
@@ -480,9 +480,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
-                  'details' => "Details of the other payment\n\nstudent_loan_grant:50000:month:applicant"
+                  'details' => "Details of the other payment\n\nstudent_loan_grant:50000:month:applicant\n"
                 },
-                'details' => "Details of the other payment\n\nstudent_loan_grant:50000:month:applicant"
+                'details' => "Details of the other payment\n\nstudent_loan_grant:50000:month:applicant\n"
             }
           )
         end
@@ -743,9 +743,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {
-                'details' => "Details of the other partner benefit\n\njsa:1500:annual:partner"
+                'details' => "Details of the other partner benefit\n\njsa:1500:annual:partner\n"
               },
-              'details' => "Details of the other partner benefit\n\njsa:1500:annual:partner"
+              'details' => "Details of the other partner benefit\n\njsa:1500:annual:partner\n"
             },
             {
               'payment_type' => 'other',
@@ -753,9 +753,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'frequency' => 'annual',
               'ownership_type' => 'applicant',
               'metadata' => {
-                'details' => "Details of the other benefit\n\njsa:700:month:applicant"
+                'details' => "Details of the other benefit\n\njsa:700:month:applicant\n"
               },
-              'details' => "Details of the other benefit\n\njsa:700:month:applicant"
+              'details' => "Details of the other benefit\n\njsa:700:month:applicant\n"
             }
           )
         end

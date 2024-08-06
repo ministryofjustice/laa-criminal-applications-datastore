@@ -107,7 +107,11 @@ describe Utils::OtherPaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => "Details of the other partner payment\n\nrent:1500:fortnight:partner, student_loan_grant:15000:annual:partner"
+            'details' => <<~HEREDOC
+              Details of the other partner payment
+
+              rent:1500:fortnight:partner, student_loan_grant:15000:annual:partner
+            HEREDOC
           },
         },
         {
@@ -116,7 +120,11 @@ describe Utils::OtherPaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => "Details of the other applicant payment\n\nstudent_loan_grant:1000:four_weeks:applicant"
+            'details' => <<~HEREDOC
+              Details of the other applicant payment
+
+              student_loan_grant:1000:four_weeks:applicant
+            HEREDOC
           }
         }
       )
@@ -207,7 +215,11 @@ describe Utils::OtherPaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => "Details of the other applicant benefit\n\njsa:1500:fortnight:applicant"
+            'details' => <<~HEREDOC
+              Details of the other applicant benefit
+
+              jsa:1500:fortnight:applicant
+            HEREDOC
           }
         },
         {
