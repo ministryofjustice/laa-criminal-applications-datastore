@@ -472,13 +472,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'metadata' => {
                 'details' => <<~HEREDOC
                   Details of the other partner payment
-    
+
                   student_loan_grant:25000:annual:partner, other:10000:month:partner
                 HEREDOC
               },
               'details' => <<~HEREDOC
                 Details of the other partner payment
-    
+
                 student_loan_grant:25000:annual:partner, other:10000:month:partner
               HEREDOC
             },
@@ -490,13 +490,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other payment
-    
+
                     student_loan_grant:50000:month:applicant, other:250:month:applicant
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other payment
-    
+
                   student_loan_grant:50000:month:applicant, other:250:month:applicant
                 HEREDOC
 
@@ -762,13 +762,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'metadata' => {
                 'details' => <<~HEREDOC
                   Details of the other partner benefit
-    
+
                   jsa:1500:annual:partner, other:550:month:partner
                 HEREDOC
               },
               'details' => <<~HEREDOC
                 Details of the other partner benefit
-    
+
                 jsa:1500:annual:partner, other:550:month:partner
               HEREDOC
             },

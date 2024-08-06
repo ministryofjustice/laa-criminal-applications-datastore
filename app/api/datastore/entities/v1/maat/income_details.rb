@@ -13,6 +13,9 @@ module Datastore
           expose :manage_without_income, expose_nil: false
           expose :manage_other_details, expose_nil: false
 
+          # eForms collects student_loan_grant, board_from_family, rent and financial_support_with_access
+          # as separate items while MAAT has only one 'other income' field.
+          # Therefore annualized sum of all below income payments is treated as 'other income' in MAAT
           OTHER_INCOME_PAYMENTS = %w[
             student_loan_grant
             board_from_family
@@ -21,6 +24,9 @@ module Datastore
             other
           ].freeze
 
+          # eForms collects ‘Contribution-based Job Seekers Allowance(jsa)’ and ‘Other Benefits’
+          # as two separate items while MAAT has only one 'other benefits' field.
+          # Therefore annualized sum of all below income benefits is treated as 'other benefit' in MAAT
           OTHER_INCOME_BENEFITS = %w[
             jsa
             other

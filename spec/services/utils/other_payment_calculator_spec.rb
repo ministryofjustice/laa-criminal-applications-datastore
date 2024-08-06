@@ -72,7 +72,7 @@ describe Utils::OtherPaymentCalculator do
       ]
     end
 
-    it 'is valid' do
+    it 'returns annualized `other income` for both applicant and partner' do
       expect(subject.call).to contain_exactly(
         {
           'payment_type' => 'maintenance',
@@ -180,7 +180,7 @@ describe Utils::OtherPaymentCalculator do
       %w[jsa other]
     end
 
-    it 'is valid' do
+    it 'returns annualized `other benefits` for both applicant and partner' do
       expect(subject.call).to contain_exactly(
         {
           'payment_type' => 'child',
