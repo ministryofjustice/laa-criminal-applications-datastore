@@ -55,14 +55,27 @@ module Utils
           'amount' => total_other_payments_by_ownership(ownership_type),
           'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
           'ownership_type' => ownership_type,
-          'metadata' => {}
+          'metadata' => {
+            'details' => details((ownership_type))
+          }
         }
       )
     end
 
+    def details(ownership_type)
+      other_payments_by_ownership(ownership_type).map do |s|
+        "#{s['payment_type']}:#{s['amount']}:#{s['frequency']}:#{s['ownership_type']}"
+      end.join(', ')
+    end
+
+    def other_payments_by_ownership(ownership_type)
+      payments.select do |payment|
+        payment['ownership_type'] == ownership_type && other_payment_types.include?(payment['payment_type'])
+      end
+    end
+
     def total_other_payments_by_ownership(ownership_type)
-      payments
-        .select { |p| p['ownership_type'] == ownership_type && other_payment_types.include?(p['payment_type']) }
+      other_payments_by_ownership(ownership_type)
         .inject(0) do |total, payment|
           total += annualized_amount(payment['amount'], payment['frequency'])
           total

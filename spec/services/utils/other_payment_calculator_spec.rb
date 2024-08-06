@@ -215,7 +215,9 @@ describe Utils::OtherPaymentCalculator do
           'amount' => 10_800, # jsa(900 * 12)
           'frequency' => 'annual',
           'ownership_type' => 'partner',
-          'metadata' => {}
+          'metadata' => {
+            'details' => 'jsa:900:month:partner'
+          }
         }
       )
     end

@@ -606,14 +606,20 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
+                'metadata' => {
+                  'details' => 'rent:600:week:applicant, student_loan_grant:50000:month:applicant'
+                },
+                'details' => 'rent:600:week:applicant, student_loan_grant:50000:month:applicant'
             },
             {
               'payment_type' => 'other',
               'amount' => 25_000, # student_loan_grant(25_000)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
-              'metadata' => {}
+              'metadata' => {
+                'details' => 'student_loan_grant:25000:annual:partner'
+              },
+              'details' => 'student_loan_grant:25000:annual:partner'
             },
           )
         end
@@ -852,14 +858,20 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'amount' => 8400, # jsa(700 * 12)
               'frequency' => 'annual',
               'ownership_type' => 'applicant',
-              'metadata' => {}
+              'metadata' => {
+                'details' => 'jsa:700:month:applicant'
+              },
+              'details' => 'jsa:700:month:applicant'
             },
             {
               'payment_type' => 'other',
               'amount' => 1500, # jsa(1500)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
-              'metadata' => {}
+              'metadata' => {
+                'details' => 'jsa:1500:annual:partner'
+              },
+              'details' => 'jsa:1500:annual:partner'
             }
           )
         end
