@@ -466,7 +466,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'payment_type' => 'other',
-              'amount' => 145_000, # other:(10_000 * 12) + student_loan_grant:(25_000)
+              'amount' => 145_000, # other(10_000 * 12) + student_loan_grant(25_000)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {
@@ -476,7 +476,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'payment_type' => 'other',
-                'amount' => 603_000, # other:(250 * 12) + student_loan_grant:(50_000 * 12)
+                'amount' => 603_000, # other(250 * 12) + student_loan_grant(50_000 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
@@ -603,14 +603,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'payment_type' => 'other',
-                'amount' => 631_200, # rent:(600 * 52) + student_loan_grant:(50000 * 12)
+                'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {}
             },
             {
               'payment_type' => 'other',
-              'amount' => 25_000, # student_loan_grant:(25_000)
+              'amount' => 25_000, # student_loan_grant(25_000)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {}
@@ -733,7 +733,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'payment_type' => 'other',
-              'amount' => 8100, # other(550 * 12) jsa:1500
+              'amount' => 8100, # other(550 * 12) jsa(1500)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {
@@ -849,14 +849,14 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'payment_type' => 'other',
-              'amount' => 8400, # jsa:(700 * 12)
+              'amount' => 8400, # jsa(700 * 12)
               'frequency' => 'annual',
               'ownership_type' => 'applicant',
               'metadata' => {}
             },
             {
               'payment_type' => 'other',
-              'amount' => 1500, # jsa:(1500)
+              'amount' => 1500, # jsa(1500)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {}
