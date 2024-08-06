@@ -14,12 +14,10 @@ module Datastore
           expose :manage_other_details, expose_nil: false
 
           OTHER_INCOME_PAYMENTS = %w[
-            interest_investment
             student_loan_grant
             board_from_family
             rent
             financial_support_with_access
-            from_friends_relatives
           ].freeze
 
           OTHER_INCOME_BENEFITS = %w[
