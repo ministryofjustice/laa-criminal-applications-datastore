@@ -733,7 +733,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'payment_type' => 'other',
-              'amount' => 8100, # other(550 * 12) jsa(1500)
+              'amount' => 8100, # other(550 * 12) + jsa(1500)
               'frequency' => 'annual',
               'ownership_type' => 'partner',
               'metadata' => {
