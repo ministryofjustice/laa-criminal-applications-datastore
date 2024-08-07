@@ -16,13 +16,13 @@ module Datastore
           private
 
           def income_payments
-            Utils::OtherIncomePaymentCalculator.new(
+            Utils::MAAT::OtherIncomePaymentCalculator.new(
               payments: object['income_payments'],
             ).call
           end
 
           def income_benefits
-            Utils::OtherIncomeBenefitCalculator.new(
+            ::Utils::MAAT::OtherIncomeBenefitCalculator.new(
               payments: object['income_benefits'],
             ).call
           end

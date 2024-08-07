@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 # rubocop:disable RSpec/ExampleLength Metrics/AbcSize
-describe Utils::OtherIncomePaymentCalculator do
+describe Utils::MAAT::OtherIncomePaymentCalculator do
   subject { described_class.new(payments:) }
 
   context 'when `income_payments` are present with `other` payment_type' do
