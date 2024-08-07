@@ -1,5 +1,5 @@
 module Utils
-  class OtherIncomePaymentCalculator < OtherPaymentCalculator
+  class OtherIncomePaymentCalculator < OtherIncomeBase
     OTHER_INCOME_PAYMENT_TYPES = %w[
       student_loan_grant
       board_from_family

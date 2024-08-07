@@ -1,5 +1,5 @@
 module Utils
-  class OtherIncomeBenefitCalculator < OtherPaymentCalculator
+  class OtherIncomeBenefitCalculator < OtherIncomeBase
     OTHER_INCOME_BENEFIT_TYPES = %w[
       jsa
       other

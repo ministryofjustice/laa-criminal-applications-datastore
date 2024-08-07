@@ -1,5 +1,5 @@
 module Utils
-  class OtherPaymentCalculator
+  class OtherIncomeBase
     APPLICANT = 'applicant'.freeze
     PARTNER = 'partner'.freeze
     OTHER = 'other'.freeze
