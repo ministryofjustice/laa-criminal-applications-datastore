@@ -4,7 +4,7 @@ require 'rails_helper'
 describe Utils::OtherIncomePaymentCalculator do
   subject { described_class.new(payments:) }
 
-  context 'when `income_payments`' do
+  context 'when `income_payments` are present' do
     let(:payments) do
       [
         {
@@ -120,6 +120,14 @@ describe Utils::OtherIncomePaymentCalculator do
           }
         }
       )
+    end
+  end
+
+  context 'when `income_payments` are missing' do
+    let(:payments) { [] }
+
+    it 'returns empty array' do
+      expect(subject.call).to be_empty
     end
   end
 end
