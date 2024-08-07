@@ -35,18 +35,14 @@ module Datastore
           private
 
           def income_payments
-            Utils::OtherPaymentCalculator.new(
+            Utils::OtherIncomePaymentCalculator.new(
               payments: object['income_payments'],
-              payment_types: OTHER_INCOME_PAYMENT_TYPES,
-              type: 'income_payments'
             ).call
           end
 
           def income_benefits
-            Utils::OtherPaymentCalculator.new(
+            Utils::OtherIncomeBenefitCalculator.new(
               payments: object['income_benefits'],
-              payment_types: OTHER_INCOME_BENEFIT_TYPES,
-              type: 'income_benefits'
             ).call
           end
         end

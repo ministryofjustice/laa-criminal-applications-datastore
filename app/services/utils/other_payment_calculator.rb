@@ -4,23 +4,16 @@ module Utils
     PARTNER = 'partner'.freeze
     OTHER = 'other'.freeze
 
-    attr_reader :payments, :payment_types, :type
+    attr_reader :payments
 
-    def initialize(payments:, payment_types:, type:)
-      @payments = payments
-      @payment_types = payment_types
-      @type = type
+    def initialize(payments:)
+      @payments = payments.reject { |p| p['payment_type'] == 'employment' }
     end
 
     def call
       update_or_create_other_payment(APPLICANT) if total_other_payments_by_ownership(APPLICANT).positive?
       update_or_create_other_payment(PARTNER) if total_other_payments_by_ownership(PARTNER).positive?
-
-      if type == 'income_payments'
-        payments.reject { |p| p['payment_type'] == 'employment' }
-      else
-        payments
-      end
+      payments
     end
 
     private
