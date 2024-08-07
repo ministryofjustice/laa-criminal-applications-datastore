@@ -904,9 +904,17 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
-                  'details' => "Details of the other benefit\n\njsa:700:month:applicant, other:750:month:applicant\n"
+                  'details' => <<~HEREDOC
+                    Details of the other benefit
+
+                    jsa:700:month:applicant, other:750:month:applicant
+                  HEREDOC
                 },
-                'details' => "Details of the other benefit\n\njsa:700:month:applicant, other:750:month:applicant\n"
+                'details' => <<~HEREDOC
+                  Details of the other benefit
+
+                  jsa:700:month:applicant, other:750:month:applicant
+                HEREDOC
               }
             )
           end
