@@ -16,7 +16,7 @@ module Datastore
           # eForms collects student_loan_grant, board_from_family, rent and financial_support_with_access
           # as separate items while MAAT has only one 'other income' field.
           # Therefore annualized sum of all below income payments is treated as 'other income' in MAAT
-          OTHER_INCOME_PAYMENTS = %w[
+          OTHER_INCOME_PAYMENT_TYPES = %w[
             student_loan_grant
             board_from_family
             rent
@@ -27,7 +27,7 @@ module Datastore
           # eForms collects ‘Contribution-based Job Seekers Allowance(jsa)’ and ‘Other Benefits’
           # as two separate items while MAAT has only one 'other benefits' field.
           # Therefore annualized sum of all below income benefits is treated as 'other benefit' in MAAT
-          OTHER_INCOME_BENEFITS = %w[
+          OTHER_INCOME_BENEFIT_TYPES = %w[
             jsa
             other
           ].freeze
@@ -37,7 +37,7 @@ module Datastore
           def income_payments
             Utils::OtherPaymentCalculator.new(
               payments: object['income_payments'],
-              other_payment_types: OTHER_INCOME_PAYMENTS,
+              payment_types: OTHER_INCOME_PAYMENT_TYPES,
               type: 'income_payments'
             ).call
           end
@@ -45,7 +45,7 @@ module Datastore
           def income_benefits
             Utils::OtherPaymentCalculator.new(
               payments: object['income_benefits'],
-              other_payment_types: OTHER_INCOME_BENEFITS,
+              payment_types: OTHER_INCOME_BENEFIT_TYPES,
               type: 'income_benefits'
             ).call
           end

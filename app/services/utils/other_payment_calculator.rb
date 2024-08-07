@@ -4,11 +4,11 @@ module Utils
     PARTNER = 'partner'.freeze
     OTHER = 'other'.freeze
 
-    attr_reader :payments, :other_payment_types, :type
+    attr_reader :payments, :payment_types, :type
 
-    def initialize(payments:, other_payment_types:, type:)
+    def initialize(payments:, payment_types:, type:)
       @payments = payments
-      @other_payment_types = other_payment_types
+      @payment_types = payment_types
       @type = type
     end
 
@@ -72,7 +72,7 @@ module Utils
 
     def other_payments_by_ownership(ownership_type)
       payments.select do |payment|
-        payment['ownership_type'] == ownership_type && other_payment_types.include?(payment['payment_type'])
+        payment['ownership_type'] == ownership_type && payment_types.include?(payment['payment_type'])
       end
     end
 
