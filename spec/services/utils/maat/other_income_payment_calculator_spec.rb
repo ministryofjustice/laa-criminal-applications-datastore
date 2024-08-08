@@ -29,6 +29,13 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'metadata' => {}
         },
         {
+          'payment_type' => 'from_friends_relatives',
+          'amount' => 1_000,
+          'frequency' => 'annual',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
           'payment_type' => 'rent',
           'amount' => 15_00,
           'frequency' => 'fortnight',
@@ -80,6 +87,13 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'metadata' => {}
         },
         {
+          'payment_type' => 'from_friends_relatives',
+          'amount' => 1_000,
+          'frequency' => 'annual',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
           'payment_type' => 'rent',
           'amount' => 15_00,
           'frequency' => 'fortnight',
@@ -108,14 +122,14 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
         },
         {
           'payment_type' => 'other',
-          'amount' => 22_600, # other(800 * 12) + student_loan_grant(1000 * 13)
+          'amount' => 23_600, # other(800 * 12) + student_loan_grant(1000 * 13) + from_friends_relatives(1000)
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
             'details' => <<~HEREDOC
               Details of the other applicant payment
 
-              student_loan_grant:1000:four_weeks:applicant, other:800:month:applicant
+              student_loan_grant:1000:four_weeks:applicant, from_friends_relatives:1000:annual:applicant, other:800:month:applicant
             HEREDOC
           }
         }

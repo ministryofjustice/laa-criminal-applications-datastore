@@ -9,6 +9,7 @@ module Utils
         board_from_family
         rent
         financial_support_with_access
+        from_friends_relatives
         other
       ].freeze
 
