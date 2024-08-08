@@ -59,9 +59,8 @@ module Utils
       end
 
       def income_payment_notes(ownership_type)
-        other_payments_by_ownership(ownership_type).group_by{|h| h['ownership_type']}.map do |k, v|
-          b = v.map {|s| "#{s['payment_type']}:#{s['amount']}:#{s['frequency']}" }.join(', ')
-          "#{k}: #{b}"
+        other_payments_by_ownership(ownership_type).group_by { |h| h['ownership_type'] }.map do |owner, pymts|
+          "#{owner}: #{pymts.map { |p| "#{p['payment_type']}:#{p['amount']}:#{p['frequency']}" }.join(', ')}"
         end.join(', ')
       end
 
