@@ -116,7 +116,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
             'details' => <<~HEREDOC
               Details of the other partner payment
 
-              rent:1500:fortnight:partner, student_loan_grant:15000:annual:partner, other:700:month:partner
+              partner: rent:1500:fortnight, student_loan_grant:15000:annual, other:700:month
             HEREDOC
           },
         },
@@ -129,7 +129,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
             'details' => <<~HEREDOC
               Details of the other applicant payment
 
-              student_loan_grant:1000:four_weeks:applicant, from_friends_relatives:1000:annual:applicant, other:800:month:applicant
+              applicant: student_loan_grant:1000:four_weeks, from_friends_relatives:1000:annual, other:800:month
             HEREDOC
           }
         }
@@ -214,7 +214,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => 'rent:1500:fortnight:partner, student_loan_grant:15000:annual:partner'
+            'details' => 'partner: rent:1500:fortnight, student_loan_grant:15000:annual'
           },
         },
         {
@@ -223,7 +223,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => 'student_loan_grant:1000:four_weeks:applicant'
+            'details' => 'applicant: student_loan_grant:1000:four_weeks'
           }
         }
       )

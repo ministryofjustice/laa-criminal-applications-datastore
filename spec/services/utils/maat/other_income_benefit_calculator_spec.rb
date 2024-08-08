@@ -86,7 +86,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
             'details' => <<~HEREDOC
               Details of the other applicant benefit
 
-              jsa:1500:fortnight:applicant, other:800:four_weeks:applicant
+              applicant: jsa:1500:fortnight, other:800:four_weeks
             HEREDOC
           }
         },
@@ -96,7 +96,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => 'jsa:900:month:partner'
+            'details' => 'partner: jsa:900:month'
           }
         }
       )
@@ -173,7 +173,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => 'jsa:1500:fortnight:applicant'
+            'details' => 'applicant: jsa:1500:fortnight'
           }
         },
         {
@@ -182,7 +182,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => 'jsa:900:month:partner'
+            'details' => 'partner: jsa:900:month'
           }
         }
       )

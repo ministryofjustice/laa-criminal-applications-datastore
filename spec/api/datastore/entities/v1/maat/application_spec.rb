@@ -498,13 +498,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'details' => <<~HEREDOC
                     Details of the other partner payment
 
-                    student_loan_grant:25000:annual:partner, other:10000:month:partner
+                    partner: student_loan_grant:25000:annual, other:10000:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner payment
 
-                  student_loan_grant:25000:annual:partner, other:10000:month:partner
+                  partner: student_loan_grant:25000:annual, other:10000:month
                 HEREDOC
               },
               {
@@ -516,13 +516,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                     'details' => <<~HEREDOC
                       Details of the other payment
 
-                      student_loan_grant:50000:month:applicant, other:250:month:applicant
+                      applicant: student_loan_grant:50000:month, other:250:month
                     HEREDOC
                   },
                   'details' => <<~HEREDOC
                     Details of the other payment
 
-                    student_loan_grant:50000:month:applicant, other:250:month:applicant
+                    applicant: student_loan_grant:50000:month, other:250:month
                   HEREDOC
 
               }
@@ -649,9 +649,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'frequency' => 'annual',
                   'ownership_type' => 'applicant',
                   'metadata' => {
-                    'details' => 'rent:600:week:applicant, student_loan_grant:50000:month:applicant'
+                    'details' => 'applicant: rent:600:week, student_loan_grant:50000:month'
                   },
-                  'details' => 'rent:600:week:applicant, student_loan_grant:50000:month:applicant'
+                  'details' => 'applicant: rent:600:week, student_loan_grant:50000:month'
               },
               {
                 'payment_type' => 'other',
@@ -659,9 +659,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {
-                  'details' => 'student_loan_grant:25000:annual:partner'
+                  'details' => 'partner: student_loan_grant:25000:annual'
                 },
-                'details' => 'student_loan_grant:25000:annual:partner'
+                'details' => 'partner: student_loan_grant:25000:annual'
               },
             )
           end
@@ -889,13 +889,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'details' => <<~HEREDOC
                     Details of the other partner benefit
 
-                    jsa:1500:annual:partner, other:550:month:partner
+                    partner: jsa:1500:annual, other:550:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner benefit
 
-                  jsa:1500:annual:partner, other:550:month:partner
+                  partner: jsa:1500:annual, other:550:month
                 HEREDOC
               },
               {
@@ -907,13 +907,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'details' => <<~HEREDOC
                     Details of the other benefit
 
-                    jsa:700:month:applicant, other:750:month:applicant
+                    applicant: jsa:700:month, other:750:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other benefit
 
-                  jsa:700:month:applicant, other:750:month:applicant
+                  applicant: jsa:700:month, other:750:month
                 HEREDOC
               }
             )
@@ -1018,9 +1018,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
-                  'details' => 'jsa:700:month:applicant'
+                  'details' => 'applicant: jsa:700:month'
                 },
-                'details' => 'jsa:700:month:applicant'
+                'details' => 'applicant: jsa:700:month'
               },
               {
                 'payment_type' => 'other',
@@ -1028,9 +1028,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {
-                  'details' => 'jsa:1500:annual:partner'
+                  'details' => 'partner: jsa:1500:annual'
                 },
-                'details' => 'jsa:1500:annual:partner'
+                'details' => 'partner: jsa:1500:annual'
               }
             )
           end
