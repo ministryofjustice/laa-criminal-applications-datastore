@@ -15,21 +15,12 @@ module Datastore
 
           private
 
-          # TODO: : Need to confirm with MAAT team if they require the following income_payment objects
-          # in response once annualized
-          # - student_loan_grant
-          # - board_from_family
-          # - rent
-          # - financial_support_with_access
           def income_payments
             Utils::MAAT::OtherIncomePaymentCalculator.new(
               payments: object['income_payments'],
             ).call
           end
 
-          # TODO: : Need to confirm with MAAT team if they require the following income_benefit objects
-          # in response once annualized
-          # - jsa
           def income_benefits
             ::Utils::MAAT::OtherIncomeBenefitCalculator.new(
               payments: object['income_benefits'],
