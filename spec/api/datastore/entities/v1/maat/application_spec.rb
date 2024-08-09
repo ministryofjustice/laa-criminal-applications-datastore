@@ -469,23 +469,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {}
               },
               {
-                'payment_type' => 'student_loan_grant',
-                  'amount' => 50_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
-              },
-              {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'student_loan_grant',
-                'amount' => 25_000,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
@@ -616,30 +602,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {}
               },
               {
-                'payment_type' => 'rent',
-                  'amount' => 600,
-                  'frequency' => 'week',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
-              },
-              {
-                'payment_type' => 'student_loan_grant',
-                  'amount' => 50_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
-              },
-              {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'student_loan_grant',
-                'amount' => 25_000,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
@@ -860,23 +825,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {}
               },
               {
-                'payment_type' => 'jsa',
-                'amount' => 700,
-                'frequency' => 'month',
-                'ownership_type' => 'applicant',
-                'metadata' => {}
-              },
-              {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'jsa',
-                'amount' => 1500,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
@@ -992,23 +943,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {}
               },
               {
-                'payment_type' => 'jsa',
-                'amount' => 700,
-                'frequency' => 'month',
-                'ownership_type' => 'applicant',
-                'metadata' => {}
-              },
-              {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'jsa',
-                'amount' => 1500,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
