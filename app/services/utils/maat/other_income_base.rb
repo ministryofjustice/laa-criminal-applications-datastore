@@ -14,10 +14,14 @@ module Utils
       def call
         update_or_create_other_payment(APPLICANT) if total_other_payments_by_ownership(APPLICANT).positive?
         update_or_create_other_payment(PARTNER) if total_other_payments_by_ownership(PARTNER).positive?
-        payments
+        payments.reject { |p| payment_types_excluding_other.include? p['payment_type'] }
       end
 
       private
+
+      def payment_types_excluding_other
+        payment_types.reject { |payment_type| payment_type == OTHER }
+      end
 
       def update_or_create_other_payment(ownership_type)
         if other_payment?(ownership_type)
@@ -41,7 +45,7 @@ module Utils
 
         other_payment['amount'] = total_other_payments_by_ownership(ownership_type)
         other_payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
-        other_payment['metadata']['details'] += "\n\n#{income_payment_notes}\n"
+        other_payment['metadata']['details'] += "\n#{income_payment_notes}\n"
       end
 
       def create_other_payment(ownership_type)

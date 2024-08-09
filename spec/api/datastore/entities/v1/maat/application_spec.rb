@@ -469,23 +469,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {}
               },
               {
-                'payment_type' => 'student_loan_grant',
-                  'amount' => 50_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
-              },
-              {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'student_loan_grant',
-                'amount' => 25_000,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
@@ -497,13 +483,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other partner payment
-
                     partner: student_loan_grant:25000:annual, other:10000:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner payment
-
                   partner: student_loan_grant:25000:annual, other:10000:month
                 HEREDOC
               },
@@ -515,13 +499,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {
                     'details' => <<~HEREDOC
                       Details of the other payment
-
                       applicant: student_loan_grant:50000:month, other:250:month
                     HEREDOC
                   },
                   'details' => <<~HEREDOC
                     Details of the other payment
-
                     applicant: student_loan_grant:50000:month, other:250:month
                   HEREDOC
 
@@ -616,30 +598,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {}
               },
               {
-                'payment_type' => 'rent',
-                  'amount' => 600,
-                  'frequency' => 'week',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
-              },
-              {
-                'payment_type' => 'student_loan_grant',
-                  'amount' => 50_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
-              },
-              {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'student_loan_grant',
-                'amount' => 25_000,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
@@ -860,23 +821,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {}
               },
               {
-                'payment_type' => 'jsa',
-                'amount' => 700,
-                'frequency' => 'month',
-                'ownership_type' => 'applicant',
-                'metadata' => {}
-              },
-              {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'jsa',
-                'amount' => 1500,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
@@ -888,13 +835,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other partner benefit
-
                     partner: jsa:1500:annual, other:550:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner benefit
-
                   partner: jsa:1500:annual, other:550:month
                 HEREDOC
               },
@@ -906,13 +851,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other benefit
-
                     applicant: jsa:700:month, other:750:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other benefit
-
                   applicant: jsa:700:month, other:750:month
                 HEREDOC
               }
@@ -992,23 +935,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {}
               },
               {
-                'payment_type' => 'jsa',
-                'amount' => 700,
-                'frequency' => 'month',
-                'ownership_type' => 'applicant',
-                'metadata' => {}
-              },
-              {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
-                'ownership_type' => 'partner',
-                'metadata' => {}
-              },
-              {
-                'payment_type' => 'jsa',
-                'amount' => 1500,
-                'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {}
               },
