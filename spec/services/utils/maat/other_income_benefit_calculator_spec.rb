@@ -64,6 +64,20 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'metadata' => {}
         },
         {
+          'payment_type' => 'jsa',
+          'amount' => 15_00,
+          'frequency' => 'fortnight',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'jsa',
+          'amount' => 900,
+          'frequency' => 'month',
+          'ownership_type' => 'partner',
+          'metadata' => {}
+        },
+        {
           'payment_type' => 'other',
           'amount' => 49_400, # other(800 * 13) + jsa(15_00 * 26)
           'frequency' => 'annual',
@@ -137,6 +151,20 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'amount' => 1_000,
           'frequency' => 'four_weeks',
           'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'jsa',
+          'amount' => 15_00,
+          'frequency' => 'fortnight',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'jsa',
+          'amount' => 900,
+          'frequency' => 'month',
+          'ownership_type' => 'partner',
           'metadata' => {}
         },
         {

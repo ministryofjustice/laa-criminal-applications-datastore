@@ -80,6 +80,34 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'metadata' => {}
         },
         {
+          'payment_type' => 'student_loan_grant',
+          'amount' => 1_000,
+          'frequency' => 'four_weeks',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'from_friends_relatives',
+          'amount' => 1_000,
+          'frequency' => 'annual',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'rent',
+          'amount' => 15_00,
+          'frequency' => 'fortnight',
+          'ownership_type' => 'partner',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'student_loan_grant',
+          'amount' => 15_000,
+          'frequency' => 'annual',
+          'ownership_type' => 'partner',
+          'metadata' => {}
+        },
+        {
           'payment_type' => 'other',
           'amount' => 62_400, # other(700 * 12) + rent(1500 * 26) + student_loan_grant(15000)
           'frequency' => 'annual',
@@ -157,6 +185,27 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'amount' => 3_000,
           'frequency' => 'month',
           'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'student_loan_grant',
+          'amount' => 1_000,
+          'frequency' => 'four_weeks',
+          'ownership_type' => 'applicant',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'rent',
+          'amount' => 15_00,
+          'frequency' => 'fortnight',
+          'ownership_type' => 'partner',
+          'metadata' => {}
+        },
+        {
+          'payment_type' => 'student_loan_grant',
+          'amount' => 15_000,
+          'frequency' => 'annual',
+          'ownership_type' => 'partner',
           'metadata' => {}
         },
         {

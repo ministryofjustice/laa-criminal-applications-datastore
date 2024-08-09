@@ -14,14 +14,10 @@ module Utils
       def call
         update_or_create_other_payment(APPLICANT) if total_other_payments_by_ownership(APPLICANT).positive?
         update_or_create_other_payment(PARTNER) if total_other_payments_by_ownership(PARTNER).positive?
-        payments.reject { |p| payment_types_excluding_other.include? p['payment_type'] }
+        payments
       end
 
       private
-
-      def payment_types_excluding_other
-        payment_types.reject{|payment_type| payment_type == OTHER}
-      end
 
       def update_or_create_other_payment(ownership_type)
         if other_payment?(ownership_type)
