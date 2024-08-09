@@ -344,6 +344,754 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         end
       end
     end
+
+    # rubocop:disable RSpec/ExampleLength
+    context 'with `income_payments`' do
+      context 'when `income_payments` are missing' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_payments' => []
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'returns empty income_payments' do
+          income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+          expect(income_payments).to be_empty
+        end
+      end
+
+      context 'when `income_payments` are present' do
+        context 'when income_payment of type `other` is present' do
+          let(:submitted_application) do
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.merge(
+                'means_details' => {
+                  'income_details' => {
+                    'employment_type' => ['not_working'],
+                    'income_payments' => [
+                      {
+                        'payment_type' => 'employment',
+                        'amount' => 10_000,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'state_pension',
+                        'amount' => 10_000,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'maintenance',
+                        'amount' => 30_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'student_loan_grant',
+                        'amount' => 50_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'maintenance',
+                        'amount' => 15_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'student_loan_grant',
+                        'amount' => 25_000,
+                        'frequency' => 'annual',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'other',
+                        'amount' => 10_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {
+                          'details' => 'Details of the other partner payment'
+                        }
+                      },
+                      {
+                        'payment_type' => 'other',
+                        'amount' => 250,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {
+                          'details' => 'Details of the other payment'
+                        }
+                      }
+                    ]
+                  }
+                }
+              )
+            end
+          end
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+
+          it 'adds `student_loan_grant` amount to `other` payment amount' do
+            income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+            expect(income_payments).to contain_exactly(
+              {
+                'payment_type' => 'state_pension',
+                  'amount' => 10_000,
+                  'frequency' => 'week',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'maintenance',
+                  'amount' => 30_000,
+                  'frequency' => 'month',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'student_loan_grant',
+                  'amount' => 50_000,
+                  'frequency' => 'month',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'maintenance',
+                'amount' => 15_000,
+                'frequency' => 'month',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'student_loan_grant',
+                'amount' => 25_000,
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'other',
+                'amount' => 145_000, # other(10_000 * 12) + student_loan_grant(25_000)
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {
+                  'details' => <<~HEREDOC
+                    Details of the other partner payment
+
+                    partner: student_loan_grant:25000:annual, other:10000:month
+                  HEREDOC
+                },
+                'details' => <<~HEREDOC
+                  Details of the other partner payment
+
+                  partner: student_loan_grant:25000:annual, other:10000:month
+                HEREDOC
+              },
+              {
+                'payment_type' => 'other',
+                  'amount' => 603_000, # other(250 * 12) + student_loan_grant(50_000 * 12)
+                  'frequency' => 'annual',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {
+                    'details' => <<~HEREDOC
+                      Details of the other payment
+
+                      applicant: student_loan_grant:50000:month, other:250:month
+                    HEREDOC
+                  },
+                  'details' => <<~HEREDOC
+                    Details of the other payment
+
+                    applicant: student_loan_grant:50000:month, other:250:month
+                  HEREDOC
+
+              }
+            )
+          end
+        end
+
+        context 'when income_payment of type `other` is missing' do
+          let(:submitted_application) do
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.merge(
+                'means_details' => {
+                  'income_details' => {
+                    'employment_type' => ['not_working'],
+                    'income_payments' => [
+                      {
+                        'payment_type' => 'employment',
+                        'amount' => 10_000,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'state_pension',
+                        'amount' => 10_000,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'maintenance',
+                        'amount' => 30_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'rent',
+                        'amount' => 600,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'student_loan_grant',
+                        'amount' => 50_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'maintenance',
+                        'amount' => 15_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'student_loan_grant',
+                        'amount' => 25_000,
+                        'frequency' => 'annual',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                    ]
+                  }
+                }
+              )
+            end
+          end
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+
+          it 'creates `other` income payment add `student_loan_grant` amount to `other` income payment amount' do
+            income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+            expect(income_payments).to contain_exactly(
+              {
+                'payment_type' => 'state_pension',
+                  'amount' => 10_000,
+                  'frequency' => 'week',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'maintenance',
+                  'amount' => 30_000,
+                  'frequency' => 'month',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'rent',
+                  'amount' => 600,
+                  'frequency' => 'week',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'student_loan_grant',
+                  'amount' => 50_000,
+                  'frequency' => 'month',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {}
+              },
+              {
+                'payment_type' => 'maintenance',
+                'amount' => 15_000,
+                'frequency' => 'month',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'student_loan_grant',
+                'amount' => 25_000,
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'other',
+                  'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
+                  'frequency' => 'annual',
+                  'ownership_type' => 'applicant',
+                  'metadata' => {
+                    'details' => 'applicant: rent:600:week, student_loan_grant:50000:month'
+                  },
+                  'details' => 'applicant: rent:600:week, student_loan_grant:50000:month'
+              },
+              {
+                'payment_type' => 'other',
+                'amount' => 25_000, # student_loan_grant(25_000)
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {
+                  'details' => 'partner: student_loan_grant:25000:annual'
+                },
+                'details' => 'partner: student_loan_grant:25000:annual'
+              },
+            )
+          end
+        end
+
+        context 'when other income_payments are missing' do
+          let(:submitted_application) do
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.merge(
+                'means_details' => {
+                  'income_details' => {
+                    'employment_type' => ['not_working'],
+                    'income_payments' => [
+                      {
+                        'payment_type' => 'employment',
+                        'amount' => 10_000,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'state_pension',
+                        'amount' => 10_000,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'maintenance',
+                        'amount' => 30_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'maintenance',
+                        'amount' => 15_000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      }
+                    ]
+                  }
+                }
+              )
+            end
+          end
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+
+          it 'adds `student_loan_grant` amount to `other` payment amount' do
+            income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+            expect(income_payments).to contain_exactly(
+              {
+                'payment_type' => 'state_pension',
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'maintenance',
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'maintenance',
+                'amount' => 15_000,
+                'frequency' => 'month',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              }
+            )
+          end
+        end
+      end
+    end
+
+    context 'with `income_benefits`' do
+      context 'when `income_benefits` are missing' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_benefits' => []
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'returns empty income_benefits' do
+          income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+          expect(income_benefits).to be_empty
+        end
+      end
+
+      context 'when `income_benefits` are present' do
+        context 'when income_benefit of type `other` is present' do
+          let(:submitted_application) do
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.merge(
+                'means_details' => {
+                  'income_details' => {
+                    'employment_type' => ['not_working'],
+                    'income_benefits' => [
+                      {
+                        'payment_type' => 'child',
+                        'amount' => 500,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'incapacity',
+                        'amount' => 1000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'jsa',
+                        'amount' => 700,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'industrial_injuries_disablement',
+                        'amount' => 1500,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'jsa',
+                        'amount' => 1500,
+                        'frequency' => 'annual',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'other',
+                        'amount' => 550,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {
+                          'details' => 'Details of the other partner benefit'
+                        }
+                      },
+                      {
+                        'payment_type' => 'other',
+                        'amount' => 750,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {
+                          'details' => 'Details of the other benefit'
+                        }
+                      }
+                    ]
+                  }
+                }
+              )
+            end
+          end
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+
+          it 'adds `jsa` amount to `other` benefit amount' do
+            income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+            expect(income_benefits).to contain_exactly(
+              {
+                'payment_type' => 'child',
+                'amount' => 500,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'incapacity',
+                'amount' => 1000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'jsa',
+                'amount' => 700,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'industrial_injuries_disablement',
+                'amount' => 1500,
+                'frequency' => 'month',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'jsa',
+                'amount' => 1500,
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'other',
+                'amount' => 8100, # other(550 * 12) + jsa(1500)
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {
+                  'details' => <<~HEREDOC
+                    Details of the other partner benefit
+
+                    partner: jsa:1500:annual, other:550:month
+                  HEREDOC
+                },
+                'details' => <<~HEREDOC
+                  Details of the other partner benefit
+
+                  partner: jsa:1500:annual, other:550:month
+                HEREDOC
+              },
+              {
+                'payment_type' => 'other',
+                'amount' => 17_400, # other(750 * 12) + jsa(700 * 12)
+                'frequency' => 'annual',
+                'ownership_type' => 'applicant',
+                'metadata' => {
+                  'details' => <<~HEREDOC
+                    Details of the other benefit
+
+                    applicant: jsa:700:month, other:750:month
+                  HEREDOC
+                },
+                'details' => <<~HEREDOC
+                  Details of the other benefit
+
+                  applicant: jsa:700:month, other:750:month
+                HEREDOC
+              }
+            )
+          end
+        end
+
+        context 'when income_benefit of type `other` is missing' do
+          let(:submitted_application) do
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.merge(
+                'means_details' => {
+                  'income_details' => {
+                    'employment_type' => ['not_working'],
+                    'income_benefits' => [
+                      {
+                        'payment_type' => 'child',
+                        'amount' => 500,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'incapacity',
+                        'amount' => 1000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'jsa',
+                        'amount' => 700,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'industrial_injuries_disablement',
+                        'amount' => 1500,
+                        'frequency' => 'month',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'jsa',
+                        'amount' => 1500,
+                        'frequency' => 'annual',
+                        'ownership_type' => 'partner',
+                        'metadata' => {}
+                      },
+                    ]
+                  }
+                }
+              )
+            end
+          end
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+
+          it 'creates `other` income benefit and add `jsa` amount to `other` income benefit amount' do
+            income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+            expect(income_benefits).to contain_exactly(
+              {
+                'payment_type' => 'child',
+                'amount' => 500,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'incapacity',
+                'amount' => 1000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'jsa',
+                'amount' => 700,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'industrial_injuries_disablement',
+                'amount' => 1500,
+                'frequency' => 'month',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'jsa',
+                'amount' => 1500,
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'other',
+                'amount' => 8400, # jsa(700 * 12)
+                'frequency' => 'annual',
+                'ownership_type' => 'applicant',
+                'metadata' => {
+                  'details' => 'applicant: jsa:700:month'
+                },
+                'details' => 'applicant: jsa:700:month'
+              },
+              {
+                'payment_type' => 'other',
+                'amount' => 1500, # jsa(1500)
+                'frequency' => 'annual',
+                'ownership_type' => 'partner',
+                'metadata' => {
+                  'details' => 'partner: jsa:1500:annual'
+                },
+                'details' => 'partner: jsa:1500:annual'
+              }
+            )
+          end
+        end
+
+        context 'when other income_benefits are missing' do
+          let(:submitted_application) do
+            LaaCrimeSchemas.fixture(1.0) do |json|
+              json.merge(
+                'means_details' => {
+                  'income_details' => {
+                    'employment_type' => ['not_working'],
+                    'income_benefits' => [
+                      {
+                        'payment_type' => 'child',
+                        'amount' => 500,
+                        'frequency' => 'week',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      },
+                      {
+                        'payment_type' => 'incapacity',
+                        'amount' => 1000,
+                        'frequency' => 'month',
+                        'ownership_type' => 'applicant',
+                        'metadata' => {}
+                      }
+                    ]
+                  }
+                }
+              )
+            end
+          end
+
+          it 'is valid' do
+            expect(validator).to be_valid, -> { validator.fully_validate }
+          end
+
+          it 'creates `other` income benefit and add `jsa` amount to `other` income benefit amount' do
+            income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+            expect(income_benefits).to contain_exactly(
+              {
+                'payment_type' => 'child',
+                'amount' => 500,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              },
+              {
+                'payment_type' => 'incapacity',
+                'amount' => 1000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
+                'metadata' => {}
+              }
+            )
+          end
+        end
+      end
+    end
+    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "conforms to the 'maat_application' schema" do
