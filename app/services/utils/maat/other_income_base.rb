@@ -45,7 +45,7 @@ module Utils
 
         other_payment['amount'] = total_other_payments_by_ownership(ownership_type)
         other_payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
-        other_payment['metadata']['details'] += "\n\n#{income_payment_notes}\n"
+        other_payment['metadata']['details'] += "\n#{income_payment_notes}\n"
       end
 
       def create_other_payment(ownership_type)

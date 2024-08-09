@@ -87,7 +87,6 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'metadata' => {
             'details' => <<~HEREDOC
               Details of the other partner payment
-
               partner: rent:1500:fortnight, student_loan_grant:15000:annual, other:700:month
             HEREDOC
           },
@@ -100,7 +99,6 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'metadata' => {
             'details' => <<~HEREDOC
               Details of the other applicant payment
-
               applicant: student_loan_grant:1000:four_weeks, from_friends_relatives:1000:annual, other:800:month
             HEREDOC
           }

@@ -483,13 +483,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other partner payment
-
                     partner: student_loan_grant:25000:annual, other:10000:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner payment
-
                   partner: student_loan_grant:25000:annual, other:10000:month
                 HEREDOC
               },
@@ -501,13 +499,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {
                     'details' => <<~HEREDOC
                       Details of the other payment
-
                       applicant: student_loan_grant:50000:month, other:250:month
                     HEREDOC
                   },
                   'details' => <<~HEREDOC
                     Details of the other payment
-
                     applicant: student_loan_grant:50000:month, other:250:month
                   HEREDOC
 
@@ -839,13 +835,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other partner benefit
-
                     partner: jsa:1500:annual, other:550:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner benefit
-
                   partner: jsa:1500:annual, other:550:month
                 HEREDOC
               },
@@ -857,13 +851,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other benefit
-
                     applicant: jsa:700:month, other:750:month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other benefit
-
                   applicant: jsa:700:month, other:750:month
                 HEREDOC
               }

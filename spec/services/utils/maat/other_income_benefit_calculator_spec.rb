@@ -71,7 +71,6 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'metadata' => {
             'details' => <<~HEREDOC
               Details of the other applicant benefit
-
               applicant: jsa:1500:fortnight, other:800:four_weeks
             HEREDOC
           }
