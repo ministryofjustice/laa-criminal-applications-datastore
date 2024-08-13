@@ -16,7 +16,8 @@ module Datastore
                  :additional_information,
                  :pre_cifc_reference_number,
                  :pre_cifc_maat_id,
-                 :pre_cifc_usn
+                 :pre_cifc_usn,
+                 :pre_cifc_reason
 
         expose :client_details do
           expose :applicant do

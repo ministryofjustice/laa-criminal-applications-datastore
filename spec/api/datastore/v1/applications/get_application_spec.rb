@@ -72,6 +72,7 @@ RSpec.describe 'get application' do
           expect(body['id']).to eq('98ab235c-f125-4dcb-9604-19e81782e53b')
           expect(body['pre_cifc_reference_number']).to eq('pre_cifc_maat_id')
           expect(body['pre_cifc_maat_id']).to eq('987654321')
+          expect(body['pre_cifc_reason']).to eq('My client has a new job')
         end
 
         it 'returned details satisfy with schema' do

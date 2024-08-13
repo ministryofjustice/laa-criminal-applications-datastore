@@ -107,6 +107,10 @@ module Datastore
         def pre_cifc_usn
           submitted_value('pre_cifc_usn')
         end
+
+        def pre_cifc_reason
+          submitted_value('pre_cifc_reason')
+        end
       end
     end
   end
