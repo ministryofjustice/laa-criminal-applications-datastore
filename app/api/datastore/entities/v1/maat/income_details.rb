@@ -13,8 +13,18 @@ module Datastore
           expose :manage_without_income, expose_nil: false
           expose :manage_other_details, expose_nil: false
 
+          private
+
           def income_payments
-            object['income_payments'].reject { |p| p['payment_type'] == 'employment' }
+            Utils::MAAT::OtherIncomePaymentCalculator.new(
+              payments: object['income_payments'],
+            ).call
+          end
+
+          def income_benefits
+            ::Utils::MAAT::OtherIncomeBenefitCalculator.new(
+              payments: object['income_benefits'],
+            ).call
           end
         end
       end
