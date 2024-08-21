@@ -7,7 +7,7 @@ module Redacting
         redact: %w[legal_rep_telephone]
       },
       'client_details.applicant' => {
-        redact: %w[first_name last_name other_names nino telephone_number]
+        redact: %w[first_name last_name other_names nino arc telephone_number]
       },
       'client_details.applicant.home_address' => {
         redact: %w[lookup_id address_line_one address_line_two]
