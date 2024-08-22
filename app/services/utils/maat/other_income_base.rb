@@ -49,6 +49,7 @@ module Utils
       end
 
       def create_other_payment(ownership_type)
+        income_payment_notes = income_payment_notes(ownership_type)
         payments.push(
           {
             'payment_type' => OTHER,
@@ -56,7 +57,7 @@ module Utils
             'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
             'ownership_type' => ownership_type,
             'metadata' => {
-              'details' => income_payment_notes((ownership_type))
+              'details' => income_payment_notes
             }
           }
         )
