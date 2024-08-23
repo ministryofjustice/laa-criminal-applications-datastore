@@ -1083,7 +1083,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                     },
                     {
                       'amount' => 5000,
-                     'metadata' =>
+                      'metadata' =>
                        {
                          'details' => 'Details of the other applicant payment'
                        },
@@ -1123,10 +1123,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                     },
                     {
                       'amount' => 70_000,
-                     'metadata' =>
-                       {
-                         'details' => 'Details of the other income benefit'
-                       },
+                      'metadata' => {
+                        'details' => 'Details of the other income benefit'
+                      },
                      'frequency' => 'month',
                      'payment_type' => 'other',
                      'ownership_type' => 'applicant'
@@ -1140,10 +1139,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                     },
                     {
                       'amount' => 80_000,
-                     'metadata' =>
-                       {
-                         'details' => 'Details of the other income benefit'
-                       },
+                      'metadata' => {
+                        'details' => 'Details of the other income benefit'
+                      },
                      'frequency' => 'month',
                      'payment_type' => 'other',
                      'ownership_type' => 'partner'
