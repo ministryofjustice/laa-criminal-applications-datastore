@@ -17,13 +17,13 @@ module Datastore
 
           def income_payments
             Utils::MAAT::OtherIncomePaymentCalculator.new(
-              payments: object['income_payments'].map(&:dup),
+              payments: object['income_payments'].map(&:deep_dup),
             ).call
           end
 
           def income_benefits
             Utils::MAAT::OtherIncomeBenefitCalculator.new(
-              payments: object['income_benefits'].map(&:dup),
+              payments: object['income_benefits'].map(&:deep_dup),
             ).call
           end
         end
