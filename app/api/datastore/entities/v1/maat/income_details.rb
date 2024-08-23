@@ -22,7 +22,7 @@ module Datastore
           end
 
           def income_benefits
-            ::Utils::MAAT::OtherIncomeBenefitCalculator.new(
+            Utils::MAAT::OtherIncomeBenefitCalculator.new(
               payments: object['income_benefits'],
             ).call
           end
