@@ -56,7 +56,7 @@ module Utils
             'frequency' => Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
             'ownership_type' => ownership_type,
             'metadata' => {
-              'details' => income_payment_notes((ownership_type))
+              'details' => income_payment_notes(ownership_type)
             }
           }
         )

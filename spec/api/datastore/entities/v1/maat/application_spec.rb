@@ -1020,6 +1020,247 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         end
       end
     end
+
+    context 'with `income_payments` and `income_benefits`' do
+      context 'when `income_payments` and `income_benefits` are missing' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_payments' => [],
+                  'income_benefits' => []
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'returns empty income_payments' do
+          income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+          expect(income_payments).to be_empty
+        end
+
+        it 'returns empty income_benefits' do
+          income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+          expect(income_benefits).to be_empty
+        end
+      end
+
+      context 'when `income_payments` and `income_benefits` are present' do
+        let(:submitted_application) do
+          LaaCrimeSchemas.fixture(1.0) do |json|
+            json.merge(
+              'means_details' => {
+                'income_details' => {
+                  'employment_type' => ['not_working'],
+                  'income_payments' => [
+                    {
+                      'amount' => 100_000,
+                      'metadata' => {},
+                      'frequency' => 'annual',
+                      'payment_type' => 'state_pension',
+                      'ownership_type' => 'applicant'
+                    },
+                    {
+                      'amount' => 10_000,
+                      'metadata' => {},
+                      'frequency' => 'fortnight',
+                      'payment_type' => 'student_loan_grant',
+                      'ownership_type' => 'applicant'
+                    },
+                    {
+                      'amount' => 10_000,
+                      'metadata' => {},
+                      'frequency' => 'four_weeks',
+                      'payment_type' => 'board_from_family',
+                      'ownership_type' => 'applicant'
+                    },
+                    {
+                      'amount' => 5000,
+                      'metadata' =>
+                       {
+                         'details' => 'Details of the other applicant payment'
+                       },
+                     'frequency' => 'week',
+                     'payment_type' => 'other',
+                     'ownership_type' => 'applicant'
+                    },
+                    {
+                      'amount' => 40_000,
+                      'metadata' => {},
+                      'frequency' => 'fortnight',
+                      'payment_type' => 'state_pension',
+                      'ownership_type' => 'partner'
+                    },
+                    {
+                      'amount' => 10_000,
+                      'metadata' => {},
+                      'frequency' => 'week',
+                      'payment_type' => 'interest_investment',
+                      'ownership_type' => 'partner'
+                    },
+                    {
+                      'amount' => 6000,
+                      'metadata' => {},
+                      'frequency' => 'week',
+                      'payment_type' => 'from_friends_relatives',
+                      'ownership_type' => 'partner'
+                    }
+                  ],
+                  'income_benefits' => [
+                    {
+                      'amount' => 50_000,
+                      'metadata' => {},
+                      'frequency' => 'fortnight',
+                      'payment_type' => 'jsa',
+                      'ownership_type' => 'applicant'
+                    },
+                    {
+                      'amount' => 70_000,
+                      'metadata' => {
+                        'details' => 'Details of the other income benefit'
+                      },
+                     'frequency' => 'month',
+                     'payment_type' => 'other',
+                     'ownership_type' => 'applicant'
+                    },
+                    {
+                      'amount' => 5000,
+                      'metadata' => {},
+                      'frequency' => 'fortnight',
+                      'payment_type' => 'child',
+                      'ownership_type' => 'partner'
+                    },
+                    {
+                      'amount' => 80_000,
+                      'metadata' => {
+                        'details' => 'Details of the other income benefit'
+                      },
+                     'frequency' => 'month',
+                     'payment_type' => 'other',
+                     'ownership_type' => 'partner'
+                    }
+                  ]
+                }
+              }
+            )
+          end
+        end
+
+        it 'is valid' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
+
+        it 'return updated income_payments' do
+          income_payments = representation.dig('means_details', 'income_details', 'income_payments')
+
+          expect(income_payments).to contain_exactly(
+            {
+              'amount' => 100_000,
+              'metadata' => {},
+              'frequency' => 'annual',
+              'payment_type' => 'state_pension',
+              'ownership_type' => 'applicant'
+            },
+            {
+              'amount' => 650_000,
+              'metadata' =>
+                {
+                  'details' => <<~HEREDOC
+                    Details of the other applicant payment
+                    applicant: student_loan_grant:10000:fortnight, board_from_family:10000:four_weeks, other:5000:week
+                  HEREDOC
+                },
+              'frequency' => 'annual',
+              'payment_type' => 'other',
+              'ownership_type' => 'applicant',
+              'details' => <<~HEREDOC
+                Details of the other applicant payment
+                applicant: student_loan_grant:10000:fortnight, board_from_family:10000:four_weeks, other:5000:week
+              HEREDOC
+            },
+            {
+              'amount' => 40_000,
+              'metadata' => {},
+              'frequency' => 'fortnight',
+              'payment_type' => 'state_pension',
+              'ownership_type' => 'partner'
+            },
+            {
+              'amount' => 10_000,
+              'metadata' => {},
+              'frequency' => 'week',
+              'payment_type' => 'interest_investment',
+              'ownership_type' => 'partner'
+            },
+            {
+              'amount' => 312_000,
+              'metadata' => {
+                'details' => 'partner: from_friends_relatives:6000:week'
+              },
+              'frequency' => 'annual',
+              'payment_type' => 'other',
+              'ownership_type' => 'partner',
+              'details' => 'partner: from_friends_relatives:6000:week'
+            }
+          )
+        end
+
+        it 'return updated income_benefits' do
+          income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
+
+          expect(income_benefits).to contain_exactly(
+            {
+              'amount' => 2_140_000,
+              'metadata' =>
+                {
+                  'details' =>  <<~HEREDOC
+                    Details of the other income benefit
+                    applicant: jsa:50000:fortnight, other:70000:month
+                  HEREDOC
+                },
+              'frequency' => 'annual',
+              'payment_type' => 'other',
+              'ownership_type' => 'applicant',
+              'details' => <<~HEREDOC
+                Details of the other income benefit
+                applicant: jsa:50000:fortnight, other:70000:month
+              HEREDOC
+            },
+            {
+              'amount' => 5000,
+              'metadata' => {},
+              'frequency' => 'fortnight',
+              'payment_type' => 'child',
+              'ownership_type' => 'partner'
+            },
+            {
+              'amount' => 960_000,
+              'metadata' =>
+                {
+                  'details' => <<~HEREDOC
+                    Details of the other income benefit
+                    partner: other:80000:month
+                  HEREDOC
+                },
+              'frequency' => 'annual',
+              'payment_type' => 'other',
+              'ownership_type' => 'partner',
+              'details' => <<~HEREDOC
+                Details of the other income benefit
+                partner: other:80000:month
+              HEREDOC
+            }
+          )
+        end
+      end
+    end
     # rubocop:enable RSpec/ExampleLength
   end
 
