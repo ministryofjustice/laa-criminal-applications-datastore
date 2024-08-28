@@ -483,12 +483,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other partner payment
-                    Partner: student_loan_grant:£250.00/annual, other:£100.00/month
+                    Partner: Student loan grant:£250.00/annual, Other:£100.00/month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner payment
-                  Partner: student_loan_grant:£250.00/annual, other:£100.00/month
+                  Partner: Student loan grant:£250.00/annual, Other:£100.00/month
                 HEREDOC
               },
               {
@@ -499,12 +499,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'metadata' => {
                     'details' => <<~HEREDOC
                       Details of the other payment
-                      Applicant: student_loan_grant:£500.00/month, other:£2.50/month
+                      Applicant: Student loan grant:£500.00/month, Other:£2.50/month
                     HEREDOC
                   },
                   'details' => <<~HEREDOC
                     Details of the other payment
-                    Applicant: student_loan_grant:£500.00/month, other:£2.50/month
+                    Applicant: Student loan grant:£500.00/month, Other:£2.50/month
                   HEREDOC
 
               }
@@ -610,9 +610,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'frequency' => 'annual',
                   'ownership_type' => 'applicant',
                   'metadata' => {
-                    'details' => 'Applicant: rent:£6.00/week, student_loan_grant:£500.00/month'
+                    'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
                   },
-                  'details' => 'Applicant: rent:£6.00/week, student_loan_grant:£500.00/month'
+                  'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
               },
               {
                 'payment_type' => 'other',
@@ -620,9 +620,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {
-                  'details' => 'Partner: student_loan_grant:£250.00/annual'
+                  'details' => 'Partner: Student loan grant:£250.00/annual'
                 },
-                'details' => 'Partner: student_loan_grant:£250.00/annual'
+                'details' => 'Partner: Student loan grant:£250.00/annual'
               },
             )
           end
@@ -835,12 +835,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other partner benefit
-                    Partner: jsa:£15.00/annual, other:£5.50/month
+                    Partner: Jsa:£15.00/annual, Other:£5.50/month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other partner benefit
-                  Partner: jsa:£15.00/annual, other:£5.50/month
+                  Partner: Jsa:£15.00/annual, Other:£5.50/month
                 HEREDOC
               },
               {
@@ -851,12 +851,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'metadata' => {
                   'details' => <<~HEREDOC
                     Details of the other benefit
-                    Applicant: jsa:£7.00/month, other:£7.50/month
+                    Applicant: Jsa:£7.00/month, Other:£7.50/month
                   HEREDOC
                 },
                 'details' => <<~HEREDOC
                   Details of the other benefit
-                  Applicant: jsa:£7.00/month, other:£7.50/month
+                  Applicant: Jsa:£7.00/month, Other:£7.50/month
                 HEREDOC
               }
             )
@@ -947,9 +947,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
-                  'details' => 'Applicant: jsa:£7.00/month'
+                  'details' => 'Applicant: Jsa:£7.00/month'
                 },
-                'details' => 'Applicant: jsa:£7.00/month'
+                'details' => 'Applicant: Jsa:£7.00/month'
               },
               {
                 'payment_type' => 'other',
@@ -957,9 +957,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {
-                  'details' => 'Partner: jsa:£15.00/annual'
+                  'details' => 'Partner: Jsa:£15.00/annual'
                 },
-                'details' => 'Partner: jsa:£15.00/annual'
+                'details' => 'Partner: Jsa:£15.00/annual'
               }
             )
           end
@@ -1174,7 +1174,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 {
                   'details' => <<~HEREDOC
                     Details of the other applicant payment
-                    Applicant: student_loan_grant:£100.00/fortnight, board_from_family:£100.00/four_weeks, other:£50.00/week
+                    Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week
                   HEREDOC
                 },
               'frequency' => 'annual',
@@ -1182,7 +1182,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'ownership_type' => 'applicant',
               'details' => <<~HEREDOC
                 Details of the other applicant payment
-                Applicant: student_loan_grant:£100.00/fortnight, board_from_family:£100.00/four_weeks, other:£50.00/week
+                Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week
               HEREDOC
             },
             {
@@ -1202,12 +1202,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             {
               'amount' => 312_000,
               'metadata' => {
-                'details' => 'Partner: from_friends_relatives:£60.00/week'
+                'details' => 'Partner: From friends relatives:£60.00/week'
               },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
-              'details' => 'Partner: from_friends_relatives:£60.00/week'
+              'details' => 'Partner: From friends relatives:£60.00/week'
             }
           )
         end
@@ -1222,7 +1222,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 {
                   'details' =>  <<~HEREDOC
                     Details of the other income benefit
-                    Applicant: jsa:£500.00/fortnight, other:£700.00/month
+                    Applicant: Jsa:£500.00/fortnight, Other:£700.00/month
                   HEREDOC
                 },
               'frequency' => 'annual',
@@ -1230,7 +1230,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'ownership_type' => 'applicant',
               'details' => <<~HEREDOC
                 Details of the other income benefit
-                Applicant: jsa:£500.00/fortnight, other:£700.00/month
+                Applicant: Jsa:£500.00/fortnight, Other:£700.00/month
               HEREDOC
             },
             {
@@ -1246,7 +1246,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 {
                   'details' => <<~HEREDOC
                     Details of the other income benefit
-                    Partner: other:£800.00/month
+                    Partner: Other:£800.00/month
                   HEREDOC
                 },
               'frequency' => 'annual',
@@ -1254,7 +1254,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'ownership_type' => 'partner',
               'details' => <<~HEREDOC
                 Details of the other income benefit
-                Partner: other:£800.00/month
+                Partner: Other:£800.00/month
               HEREDOC
             }
           )
