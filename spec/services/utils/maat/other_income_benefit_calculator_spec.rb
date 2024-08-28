@@ -71,7 +71,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'metadata' => {
             'details' => <<~HEREDOC
               Details of the other applicant benefit
-              applicant: jsa:£15.00:fortnight, other:£8.00:four_weeks
+              Applicant: jsa:£15.00/fortnight, other:£8.00/four_weeks
             HEREDOC
           }
         },
@@ -81,7 +81,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => 'partner: jsa:£9.00:month'
+            'details' => 'Partner: jsa:£9.00/month'
           }
         }
       )
@@ -144,7 +144,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => 'applicant: jsa:£15.00:fortnight'
+            'details' => 'Applicant: jsa:£15.00/fortnight'
           }
         },
         {
@@ -153,7 +153,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => 'partner: jsa:£9.00:month'
+            'details' => 'Partner: jsa:£9.00/month'
           }
         }
       )
