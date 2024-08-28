@@ -48,14 +48,14 @@ spec:
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /health
+            path: /ping.json
             port: 3000
             httpHeaders:
               - name: X-Forwarded-Proto
                 value: https
               - name: X-Forwarded-Ssl
                 value: "on"
-          initialDelaySeconds: 30
+          initialDelaySeconds: 5
           periodSeconds: 10
         envFrom:
           - configMapRef:
