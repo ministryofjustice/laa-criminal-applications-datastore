@@ -64,8 +64,14 @@ module Utils
 
       def income_payment_notes(ownership_type)
         other_payments_by_ownership(ownership_type).group_by { |h| h['ownership_type'] }.map do |owner, pymts|
-          "#{owner}: #{pymts.map { |p| "#{p['payment_type']}:#{p['amount']}:#{p['frequency']}" }.join(', ')}"
+          "#{owner}: #{pymts.map do |p|
+                         "#{p['payment_type']}:#{formatted_amount(p['amount'])}:#{p['frequency']}"
+                       end.join(', ')}"
         end.join(', ')
+      end
+
+      def formatted_amount(amount)
+        format '£%.2f', amount.to_f / 100
       end
 
       def other_payments_by_ownership(ownership_type)
