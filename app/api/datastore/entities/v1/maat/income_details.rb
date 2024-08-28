@@ -12,13 +12,34 @@ module Datastore
           expose :employment_income_payments, expose_nil: false
           expose :manage_without_income, expose_nil: false
           expose :manage_other_details, expose_nil: false
+          expose :capital_attributes, expose_nil: false
 
           private
 
+          # rubocop:disable Metrics/AbcSize
           def income_payments
+            dividends = []
+            if object['capital_attributes'] && object['capital_attributes']['trust_fund_yearly_dividend']
+              dividends << dividend(object['capital_attributes']['trust_fund_yearly_dividend'], 'applicant')
+            end
+            if object['capital_attributes'] && object['capital_attributes']['partner_trust_fund_yearly_dividend']
+              dividends << dividend(object['capital_attributes']['partner_trust_fund_yearly_dividend'], 'partner')
+            end
+
             Utils::MAAT::OtherIncomePaymentCalculator.new(
-              payments: object['income_payments'].map(&:deep_dup),
+              payments: (object['income_payments'] + dividends).map(&:deep_dup)
             ).call
+          end
+          # rubocop:enable Metrics/AbcSize
+
+          def dividend(amount, ownership_type)
+            {
+              'amount' => amount,
+              'frequency' =>	'annual',
+              'metadata' =>	{},
+              'payment_type' =>	'trust_fund_yearly_dividend',
+              'ownership_type' =>	ownership_type,
+            }
           end
 
           def income_benefits
