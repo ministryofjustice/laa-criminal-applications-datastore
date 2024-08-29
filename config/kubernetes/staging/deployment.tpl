@@ -44,18 +44,30 @@ spec:
                 value: https
               - name: X-Forwarded-Ssl
                 value: "on"
-          initialDelaySeconds: 15
-          periodSeconds: 10
+          initialDelaySeconds: 5
+          periodSeconds: 5
         livenessProbe:
           httpGet:
-            path: /ping.json
+            path: /ping
             port: 3000
             httpHeaders:
               - name: X-Forwarded-Proto
                 value: https
               - name: X-Forwarded-Ssl
                 value: "on"
-          initialDelaySeconds: 5
+          failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /ping
+            port: 3000
+            httpHeaders:
+              - name: X-Forwarded-Proto
+                value: https
+              - name: X-Forwarded-Ssl
+                value: "on"
+          initialDelaySeconds: 1
+          failureThreshold: 20
           periodSeconds: 10
         envFrom:
           - configMapRef:
