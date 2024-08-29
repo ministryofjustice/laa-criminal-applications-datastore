@@ -19,10 +19,10 @@ module Datastore
           # rubocop:disable Metrics/AbcSize
           def income_payments
             dividends = []
-            if object['capital_attributes'] && object['capital_attributes']['trust_fund_yearly_dividend']
+            if object.dig('capital_attributes', 'trust_fund_yearly_dividend')
               dividends << dividend(object['capital_attributes']['trust_fund_yearly_dividend'], 'applicant')
             end
-            if object['capital_attributes'] && object['capital_attributes']['partner_trust_fund_yearly_dividend']
+            if object.dig('capital_attributes', 'partner_trust_fund_yearly_dividend')
               dividends << dividend(object['capital_attributes']['partner_trust_fund_yearly_dividend'], 'partner')
             end
 
@@ -35,9 +35,9 @@ module Datastore
           def dividend(amount, ownership_type)
             {
               'amount' => amount,
-              'frequency' =>	'annual',
+              'frequency' =>	Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual],
               'metadata' =>	{},
-              'payment_type' =>	'trust_fund_dividend',
+              'payment_type' =>	Utils::MAAT::OtherIncomePaymentCalculator::DIVIDEND,
               'ownership_type' =>	ownership_type,
             }
           end
