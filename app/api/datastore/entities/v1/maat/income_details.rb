@@ -12,18 +12,18 @@ module Datastore
           expose :employment_income_payments, expose_nil: false
           expose :manage_without_income, expose_nil: false
           expose :manage_other_details, expose_nil: false
-          expose :capital_attributes, expose_nil: false
+          expose :dividends, expose_nil: false
 
           private
 
           # rubocop:disable Metrics/AbcSize
           def income_payments
             dividends = []
-            if object.dig('capital_attributes', 'trust_fund_yearly_dividend')
-              dividends << dividend(object['capital_attributes']['trust_fund_yearly_dividend'], 'applicant')
+            if object.dig('dividends', 'trust_fund_yearly_dividend')
+              dividends << dividend(object['dividends']['trust_fund_yearly_dividend'], 'applicant')
             end
-            if object.dig('capital_attributes', 'partner_trust_fund_yearly_dividend')
-              dividends << dividend(object['capital_attributes']['partner_trust_fund_yearly_dividend'], 'partner')
+            if object.dig('dividends', 'partner_trust_fund_yearly_dividend')
+              dividends << dividend(object['dividends']['partner_trust_fund_yearly_dividend'], 'partner')
             end
 
             Utils::MAAT::OtherIncomePaymentCalculator.new(

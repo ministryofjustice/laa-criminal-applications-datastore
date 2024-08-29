@@ -1147,7 +1147,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                      'ownership_type' => 'partner'
                     }
                   ],
-                  'capital_attributes' => {
+                  'dividends' => {
                     'trust_fund_yearly_dividend' => 12_550,
                     'partner_trust_fund_yearly_dividend' => 10_000
                   },

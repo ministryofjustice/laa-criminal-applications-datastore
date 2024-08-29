@@ -12,17 +12,23 @@ module Datastore
           private
 
           def income_details
+            # Dividends are considered as income payments. To calculate the total 'Other Income', 2 capital_details
+            # attributes 'trust_fund_yearly_dividend' and 'partner_trust_fund_yearly_dividend'
+            # needs to be passed to income_details object and added to the total value of 'Other Income' in MAAT
+
             if object['capital_details'].present?
-              object['income_details'].merge!('capital_attributes' => capital_attributes)
+              object['income_details'].merge!('dividends' => dividends)
             else
               object['income_details']
             end
           end
 
-          def capital_attributes
+          def dividends
             {
-              'trust_fund_yearly_dividend' => object['capital_details']['trust_fund_yearly_dividend'],
-              'partner_trust_fund_yearly_dividend' => object['capital_details']['partner_trust_fund_yearly_dividend']
+              'trust_fund_yearly_dividend' => object.dig('capital_details',
+                                                         'trust_fund_yearly_dividend'),
+              'partner_trust_fund_yearly_dividend' => object.dig('capital_details',
+                                                                 'partner_trust_fund_yearly_dividend')
             }
           end
         end
