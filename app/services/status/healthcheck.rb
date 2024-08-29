@@ -21,7 +21,7 @@ module Status
       end
 
       def database_connected?
-        ActiveRecord::Base.connection.active?
+        ActiveRecord::Base.connection.execute('SELECT 1').present?
       rescue StandardError => e
         Rails.logger.error(e)
         Sentry.capture_exception(e)
