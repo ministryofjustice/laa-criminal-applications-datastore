@@ -14,8 +14,7 @@ module Utils
       ].freeze
 
       DIVIDENDS = %w[
-        trust_fund_yearly_dividend
-        partner_trust_fund_yearly_dividend
+        trust_fund_dividend
       ].freeze
 
       def payment_types

@@ -1178,7 +1178,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 {
                   'details' => <<~HEREDOC
                     Details of the other applicant payment
-                    Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund yearly dividend:£125.50/annual
+                    Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual
                   HEREDOC
                 },
               'frequency' => 'annual',
@@ -1186,7 +1186,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'ownership_type' => 'applicant',
               'details' => <<~HEREDOC
                 Details of the other applicant payment
-                Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund yearly dividend:£125.50/annual
+                Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual
               HEREDOC
             },
             {
@@ -1206,12 +1206,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             {
               'amount' => 322_000,
               'metadata' => {
-                'details' => 'Partner: From friends relatives:£60.00/week, Trust fund yearly dividend:£100.00/annual'
+                'details' => 'Partner: From friends relatives:£60.00/week, Trust fund dividend:£100.00/annual'
               },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
-              'details' => 'Partner: From friends relatives:£60.00/week, Trust fund yearly dividend:£100.00/annual'
+              'details' => 'Partner: From friends relatives:£60.00/week, Trust fund dividend:£100.00/annual'
             }
           )
         end

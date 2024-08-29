@@ -37,7 +37,7 @@ module Datastore
               'amount' => amount,
               'frequency' =>	'annual',
               'metadata' =>	{},
-              'payment_type' =>	'trust_fund_yearly_dividend',
+              'payment_type' =>	'trust_fund_dividend',
               'ownership_type' =>	ownership_type,
             }
           end
