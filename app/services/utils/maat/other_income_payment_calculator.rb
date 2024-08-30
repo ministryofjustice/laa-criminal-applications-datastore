@@ -13,8 +13,10 @@ module Utils
         other
       ].freeze
 
+      DIVIDEND = 'trust_fund_dividend'.freeze
+
       def payment_types
-        OTHER_INCOME_PAYMENT_TYPES
+        OTHER_INCOME_PAYMENT_TYPES + [DIVIDEND]
       end
     end
   end
