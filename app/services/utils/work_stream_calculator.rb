@@ -37,7 +37,7 @@ module Utils
     end
 
     def cat_2_case?
-      self_employed? || self_assessment_tax_bill? || restraint_or_freezing_order? || rental_income?
+      self_employed? || self_assessment_tax_bill? || restraint_or_freezing_order? || rental_income? || in_armed_forces?
     end
 
     def self_employed?
@@ -72,6 +72,12 @@ module Utils
       return false unless income_details
 
       income_details.income_payments.find { |p| p.payment_type == 'rent' }
+    end
+
+    def in_armed_forces?
+      return false unless income_details
+
+      income_details.client_in_armed_forces == 'yes' || income_details.partner_in_armed_forces == 'yes'
     end
 
     delegate :case_details, :means_details, :is_means_tested, to: :application

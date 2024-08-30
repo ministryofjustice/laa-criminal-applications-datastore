@@ -191,6 +191,26 @@ describe Utils::WorkStreamCalculator do
 
         it { is_expected.to be false }
       end
+
+      context 'when the client is in the armed forces' do
+        let(:income_details) do
+          LaaCrimeSchemas::Structs::IncomeDetails.new(
+            client_in_armed_forces: 'yes'
+          )
+        end
+
+        it { is_expected.to be true }
+      end
+
+      context 'when the partner is in the armed forces' do
+        let(:income_details) do
+          LaaCrimeSchemas::Structs::IncomeDetails.new(
+            partner_in_armed_forces: 'yes'
+          )
+        end
+
+        it { is_expected.to be true }
+      end
     end
 
     describe 'Non-means tested determination' do
