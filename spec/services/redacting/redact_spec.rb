@@ -63,9 +63,11 @@ describe Redacting::Redact do
           'benefit_check_result' => false,
           'confirm_details' => 'yes',
           'confirm_dwp_result' => 'no',
+          'has_arc' => nil,
           'has_benefit_evidence' => 'no',
           'has_nino' => 'yes',
           'will_enter_nino' => nil,
+          'arc' => nil
         })
       end
     end
