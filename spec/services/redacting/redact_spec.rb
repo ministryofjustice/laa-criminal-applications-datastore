@@ -66,7 +66,8 @@ describe Redacting::Redact do
           'has_arc' => nil,
           'has_benefit_evidence' => 'no',
           'has_nino' => 'yes',
-          'will_enter_nino' => nil
+          'will_enter_nino' => nil,
+          'arc' => nil
         })
       end
     end
