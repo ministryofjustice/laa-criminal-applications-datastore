@@ -195,7 +195,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     context 'when correspondence_address_type is not given' do
       let(:submitted_application) do
         LaaCrimeSchemas.fixture(1.0) do |json|
-          json.deep_merge('client_details' => { 'applicant' => {'correspondence_address_type' => nil} })
+          json.deep_merge('client_details' => { 'applicant' => { 'correspondence_address_type' => nil } })
         end
       end
 
