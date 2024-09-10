@@ -204,6 +204,18 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       end
     end
 
+    context 'when case_details hearing_date is not given' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge('case_details' => { 'hearing_date' => nil })
+        end
+      end
+
+      it 'is valid' do
+        expect(validator).to be_valid, -> { validator.fully_validate }
+      end
+    end
+
     context 'when means details are not given' do
       let(:submitted_application) do
         LaaCrimeSchemas.fixture(1.0) do |json|
