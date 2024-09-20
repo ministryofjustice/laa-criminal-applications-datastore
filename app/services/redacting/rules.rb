@@ -32,7 +32,7 @@ module Redacting
         type: :string
       },
       'date_stamp_context' => {
-        redact: %w[first_name last_name date_of_birth]
+        redact: %w[first_name last_name]
       },
     }.freeze
 

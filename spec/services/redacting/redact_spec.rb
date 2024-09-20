@@ -132,7 +132,6 @@ describe Redacting::Redact do
         expect(redacted_application['date_stamp_context']).to include(
           'first_name' => '__redacted__',
           'last_name' => '__redacted__',
-          'date_of_birth' => '__redacted__',
         )
       end
     end
