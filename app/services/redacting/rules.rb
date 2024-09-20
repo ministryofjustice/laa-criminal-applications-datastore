@@ -30,7 +30,10 @@ module Redacting
       'additional_information' => {
         redact: :value,
         type: :string
-      }
+      },
+      'date_stamp_context' => {
+        redact: %w[first_name last_name date_of_birth]
+      },
     }.freeze
 
     def self.pii_attributes
