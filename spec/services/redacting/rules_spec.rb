@@ -16,6 +16,7 @@ describe Redacting::Rules do
           interests_of_justice
           supporting_evidence
           additional_information
+          date_stamp_context
         ]
       )
     end
