@@ -37,6 +37,10 @@ module Datastore
           submitted_value('date_stamp')
         end
 
+        def date_stamp_context
+          submitted_value('date_stamp_context')
+        end
+
         # created_at is the date when the application was started on
         # crime apply and therefore we take the value from the application
         # json rather than the table

@@ -126,6 +126,15 @@ describe Redacting::Redact do
         expect(additional_information).to eq('__redacted__')
       end
     end
+
+    context 'with date_stamp_context' do
+      it 'redacts the expected attributes' do
+        expect(redacted_application['date_stamp_context']).to include(
+          'first_name' => '__redacted__',
+          'last_name' => '__redacted__',
+        )
+      end
+    end
   end
 
   describe 'metadata attributes' do
