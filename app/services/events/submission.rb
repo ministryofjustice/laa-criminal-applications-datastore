@@ -10,7 +10,8 @@ module Events
         submitted_at: crime_application.submitted_at,
         parent_id: crime_application.submitted_application['parent_id'],
         work_stream: crime_application.work_stream,
-        application_type: crime_application.application_type
+        application_type: crime_application.application_type,
+        reference: crime_application.reference
       }
     end
   end
