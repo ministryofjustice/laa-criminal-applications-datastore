@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_26_131332) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_02_110620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -50,6 +50,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_131332) do
     t.index ["work_stream"], name: "index_crime_applications_on_work_stream"
   end
 
+  create_table "decisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "crime_application_id"
+    t.integer "reference"
+    t.integer "maat_id"
+    t.jsonb "interests_of_justice"
+    t.jsonb "means"
+    t.string "funding_decision", null: false
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crime_application_id"], name: "index_decisions_on_crime_application_id", unique: true
+  end
+
   create_table "redacted_crime_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "crime_application_id"
     t.jsonb "submitted_application", default: {}, null: false
@@ -59,5 +72,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_131332) do
     t.index ["status"], name: "index_redacted_crime_applications_on_status"
   end
 
+  add_foreign_key "decisions", "crime_applications"
   add_foreign_key "redacted_crime_applications", "crime_applications"
 end
