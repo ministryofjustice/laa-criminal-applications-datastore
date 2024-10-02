@@ -21,6 +21,8 @@ module Datastore
 
         expose :returned_at, expose_nil: false
         expose :return_details, expose_nil: false
+
+        expose :decisions, expose_nil: false
       end
     end
   end
