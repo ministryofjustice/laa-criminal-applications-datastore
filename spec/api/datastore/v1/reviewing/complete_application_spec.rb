@@ -30,6 +30,53 @@ RSpec.describe 'complete application' do
       end
     end
 
+    context 'with a submitted application that has decisions' do
+      subject(:api_request) do
+        put("/api/v1/applications/#{application.id}/complete", params: { decisions: })
+      end
+
+      let(:decisions) do
+        [
+          {
+            'reference' => 1234,
+            'maat_id' => nil,
+            'interests_of_justice' => interests_of_justice,
+            'means' => nil,
+            'funding_decision' => 'granted',
+            'comment' => 'test comment'
+          }
+        ].to_json
+      end
+
+      let(:interests_of_justice) do
+        {
+          'result' => 'pass',
+          'details' => 'decision details',
+          'assessed_by' => 'Grace Nolan',
+          'assessed_on' => '2024-10-01 00:00:00'
+        }
+      end
+
+      it 'marks the application as complete' do
+        expect { api_request }.to change { application.reload.review_status }
+          .from('application_received').to('assessment_completed')
+      end
+
+      it 'records reviewed_at' do
+        expect { api_request }.to change { application.reload.reviewed_at }
+          .from(nil)
+      end
+
+      it 'persists the decisions' do
+        api_request
+        decisions = application.reload.decisions
+        expect(decisions.size).to eq(1)
+        expect(decisions.first.interests_of_justice).to eq(interests_of_justice)
+        expect(decisions.first.funding_decision).to eq('granted')
+        expect(decisions.first.comment).to eq('test comment')
+      end
+    end
+
     context 'with a completed application' do
       before do
         application.update!(review_status: :assessment_completed, reviewed_at: 1.week.ago)

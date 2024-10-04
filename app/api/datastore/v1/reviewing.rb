@@ -32,7 +32,7 @@ module Datastore
         desc 'Mark an application as complete.'
         params do
           requires :application_id, type: String, desc: 'Crime Application UUID'
-          requires :decisions, type: [JSON] do
+          optional :decisions, type: [JSON] do
             requires :interests_of_justice, type: JSON
             requires :funding_decision, type: String
             requires :comment, type: String

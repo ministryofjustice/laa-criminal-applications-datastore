@@ -5,7 +5,7 @@ module Operations
       @decisions = decisions
     end
 
-    def call
+    def call # rubocop:disable Metrics/AbcSize
       raise Errors::AlreadyCompleted if application.assessment_completed?
       raise Errors::AlreadyReturned if application.returned?
 
@@ -13,7 +13,7 @@ module Operations
         application.update!(
           review_status: Types::ReviewApplicationStatus['assessment_completed'],
           reviewed_at: Time.zone.now,
-          decisions: decisions.map{|d| Decision.new(d)}
+          decisions: decisions.map { |d| Decision.new(d) }
         )
       end
 
