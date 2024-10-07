@@ -51,7 +51,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_02_110620) do
   end
 
   create_table "decisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "crime_application_id"
+    t.uuid "crime_application_id", null: false
     t.integer "reference"
     t.integer "maat_id"
     t.jsonb "interests_of_justice"

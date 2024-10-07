@@ -35,7 +35,7 @@ module Datastore
           optional :decisions, type: [JSON] do
             requires :interests_of_justice, type: JSON
             requires :funding_decision, type: String
-            requires :comment, type: String
+            optional :comment, type: String
           end
         end
 
