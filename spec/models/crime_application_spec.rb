@@ -9,6 +9,8 @@ describe CrimeApplication do
     JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
   end
 
+  it { is_expected.to respond_to :decisions }
+
   describe '#create' do
     subject(:create) do
       described_class.create!(valid_attributes)

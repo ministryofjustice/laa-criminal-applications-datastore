@@ -18,7 +18,8 @@ module Datastore
                  :pre_cifc_maat_id,
                  :pre_cifc_usn,
                  :pre_cifc_reason,
-                 :date_stamp_context
+                 :date_stamp_context,
+                 :decisions
 
         expose :client_details do
           expose :applicant do
