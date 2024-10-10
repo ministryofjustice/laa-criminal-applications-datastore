@@ -17,18 +17,19 @@ module Datastore
 
           private
 
+          # TODO: Consider converting `properties` into a Grape::Entity like `payment`
           def properties
-            if object['properties'].present? && object['properties'].respond_to?(:each)
-              object['properties'].each do |property|
-                property['property_owners'].each do |property_owner|
-                  ::Transformers::MAAT.chop!(property_owner, ::Transformers::MAAT::PROPERTY_OWNER_RULES)
-                end
+            return unless object['properties'].respond_to?(:each)
 
-                ::Transformers::MAAT.chop!(property['address'], ::Transformers::MAAT::ADDRESS_RULES)
+            object['properties'].each do |property|
+              next unless property['property_owners'].respond_to?(:each)
+
+              property['property_owners'].each do |property_owner|
+                Transformer::MAAT.chop!(property_owner, Transformer::MAAT::PROPERTY_OWNER_RULES)
               end
-            end
 
-            object
+              Transformer::MAAT.chop!(property['address'], Transformer::MAAT::ADDRESS_RULES)
+            end
           end
         end
       end

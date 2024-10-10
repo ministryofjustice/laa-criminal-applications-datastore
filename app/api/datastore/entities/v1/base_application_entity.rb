@@ -117,7 +117,7 @@ module Datastore
         end
 
         def chop!(hash, rules = nil)
-          ::Transformers::MAAT.chop!(hash, rules)
+          Transformer::MAAT.chop!(hash, rules)
         end
       end
     end

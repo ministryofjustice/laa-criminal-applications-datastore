@@ -27,22 +27,22 @@ module Datastore
           end
 
           def case_details
-            chop!(super, ::Transformers::MAAT::URN_RULES)
+            chop!(super, Transformer::MAAT::URN_RULES)
           end
 
           def client_details
             client_details = super
 
-            chop!(client_details['applicant'], ::Transformers::MAAT::PERSON_RULES)
-            chop!(client_details['partner'], ::Transformers::MAAT::PERSON_RULES)
-            chop!(client_details.dig('applicant', 'home_address'), ::Transformers::MAAT::ADDRESS_RULES)
-            chop!(client_details.dig('applicant', 'correspondence_address'), ::Transformers::MAAT::ADDRESS_RULES)
+            chop!(client_details['applicant'], Transformer::MAAT::PERSON_RULES)
+            chop!(client_details['partner'], Transformer::MAAT::PERSON_RULES)
+            chop!(client_details.dig('applicant', 'home_address'), Transformer::MAAT::ADDRESS_RULES)
+            chop!(client_details.dig('applicant', 'correspondence_address'), Transformer::MAAT::ADDRESS_RULES)
 
             client_details
           end
 
           def provider_details
-            chop!(super, ::Transformers::MAAT::PROVIDER_DETAILS_RULES)
+            chop!(super, Transformer::MAAT::PROVIDER_DETAILS_RULES)
           end
         end # rubocop:enable Metrics/ClassLength
       end

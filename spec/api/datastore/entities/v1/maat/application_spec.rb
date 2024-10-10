@@ -1585,8 +1585,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         end
       end
 
-      # TODO: No idea why the deep_merge causes the `properties` key to replicate the whole `capital_details` hash!
-      let(:property) { representation.dig('means_details', 'capital_details', 'properties', 'properties')[0] }
+      let(:property) { representation.dig('means_details', 'capital_details', 'properties')[0] }
 
       it 'truncates property address' do
         details = property['address'].slice('address_line_one', 'address_line_two', 'city', 'country', 'postcode')
