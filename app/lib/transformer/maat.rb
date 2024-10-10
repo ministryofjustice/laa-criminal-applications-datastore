@@ -29,7 +29,7 @@ module Transformer
 
         # Maintain last name as much as possible
         if full_name.size > 40
-          hash['legal_rep_last_name'] = hash['legal_rep_last_name'].truncate(38, omission: '...')
+          hash['legal_rep_last_name'] = truncate!(hash['legal_rep_last_name'], 38)
           hash['legal_rep_first_name'] = hash['legal_rep_first_name'][0]
         end
 
@@ -60,20 +60,19 @@ module Transformer
       def chop!(obj, criteria = nil)
         return obj if obj.nil? || criteria.nil?
 
-        if obj.is_a?(String)
+        case obj
+        when String
           obj = truncate!(obj, criteria)
-        elsif obj.is_a?(Hash)
+        when Hash
           obj.each do |k, v|
             next if v.blank?
             next unless v.is_a?(String)
             next if criteria.is_a?(Hash) && !criteria.key?(k)
 
             length = criteria.is_a?(Hash) ? criteria[k] : criteria
-
-            obj[k] = v.to_s.truncate(length, omission: '...')
+            obj[k] = truncate!(v, length)
           end
 
-          # Run through any calculations (lambda)
           obj = calculate!(obj, criteria)
         end
 
@@ -82,7 +81,7 @@ module Transformer
       # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
 
       def truncate!(str, length)
-        str.truncate(length, omission: '...')
+        str.to_s.truncate(length, omission: '...')
       end
 
       def calculate!(obj, criteria)
