@@ -1369,4 +1369,254 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       end
     end
   end
+
+  # rubocop:disable Layout/LineLength
+  describe '#chop!' do
+    context 'with excessive provider details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'provider_details' => {
+              'office_code' => '1A123BXYZ123',
+              'provider_email' => 'provider@example.com' * 15,
+              'legal_rep_last_name' => 'This-Person-Has-A-Tripled-Barrelled Surname',
+              'legal_rep_telephone' => '08828882990',
+              'legal_rep_first_name' => 'Michael Angelo',
+            }
+          )
+        end
+      end
+
+      let(:provider_details) { representation['provider_details'] }
+
+      it 'truncates legal rep name to initial and last name' do
+        expect(provider_details['legal_rep_first_name']).to eq 'M'
+        expect(provider_details['legal_rep_last_name']).to eq 'This-Person-Has-A-Tripled-Barrelled...'
+      end
+
+      it 'truncates legal rep email address and office code' do
+        expect(provider_details['office_code']).to eq '1A1...' # TODO: Not sure if office code should have ...
+        expect(provider_details['provider_email']).to eq 'provider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@exa...'
+      end
+    end
+
+    context 'with excessive applicant and partner details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'client_details' => {
+              'applicant' => {
+                'first_name' => 'First Name' * 5,
+                'last_name' => 'Last Name' * 5,
+                'other_names' => 'Other Names' * 5,
+                'telephone_number' => '123456789012345678901234',
+                'nino' => 'NC123457ANC123457ANC123457A',
+                'home_address' => {
+                  'lookup_id' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                  'address_line_one' => '89 Derby Road' * 10,
+                  'address_line_two' => 'Trenttown' * 20,
+                  'city' => 'Nottingham' * 15,
+                  'postcode' => 'NG1 7HD XXXXX',
+                },
+                'correspondence_address' => {
+                  'lookup_id' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                  'address_line_one' => '11 Manchester Road' * 10,
+                  'address_line_two' => 'Merseytown' * 20,
+                  'city' => 'Liverpool' * 15,
+                  'postcode' => 'L31 7HD XXXXX',
+                },
+              },
+              'partner' => {
+                'first_name' => 'Partner Name' * 5,
+                'last_name' => 'Partner Last Name' * 5,
+                'other_names' => 'Partner Other Names' * 5,
+                'nino' => 'NC123457ANC123457ANC123457A',
+              },
+            }
+          )
+        end
+      end
+
+      it 'truncates applicant details', :aggregate_failures do
+        applicant = representation.dig('client_details', 'applicant')
+        details = applicant.slice('first_name', 'last_name', 'other_names', 'telephone_number', 'nino')
+
+        expect(details).to eq(
+          {
+            'first_name' => 'First NameFirst NameFirst NameFirst N...',
+            'last_name' => 'Last NameLast NameLast NameLast NameL...',
+            'other_names' => 'Other NamesOther NamesOther NamesOthe...',
+            'telephone_number' => '12345678901234567...',
+            'nino' => 'NC12345...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [40, 40, 40, 20, 10]
+      end
+
+      it 'truncates partner details' do
+        partner = representation.dig('client_details', 'partner')
+        details = partner.slice('first_name', 'last_name', 'other_names', 'nino')
+
+        expect(details).to eq(
+          {
+            'first_name' => 'Partner NamePartner NamePartner NameP...',
+            'last_name' => 'Partner Last NamePartner Last NamePar...',
+            'other_names' => 'Partner Other NamesPartner Other Name...',
+            'nino' => 'NC12345...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [40, 40, 40, 10]
+      end
+
+      it 'truncates home addresses' do
+        home_address = representation.dig('client_details', 'applicant', 'home_address')
+        details = home_address.slice('lookup_id', 'address_line_one', 'address_line_two', 'city', 'postcode')
+
+        expect(details).to eq(
+          {
+            'lookup_id' => 'ABCDEFG...',
+            'address_line_one' => '89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Der...',
+            'address_line_two' => 'TrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrentto...',
+            'city' => 'NottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNotting...',
+            'postcode' => 'NG1 7HD...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [10, 100, 100, 100, 10]
+      end
+
+      it 'truncates correspondence address' do
+        correspondence_address = representation.dig('client_details', 'applicant', 'correspondence_address')
+        details = correspondence_address.slice('lookup_id', 'address_line_one', 'address_line_two', 'city', 'postcode')
+
+        expect(details).to eq(
+          {
+            'lookup_id' => 'ABCDEFG...',
+            'address_line_one' => '11 Manchester Road11 Manchester Road11 Manchester Road11 Manchester Road11 Manchester Road11 Manc...',
+            'address_line_two' => 'MerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseyt...',
+            'city' => 'LiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpo...',
+            'postcode' => 'L31 7HD...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [10, 100, 100, 100, 10]
+      end
+    end
+
+    context 'with excessive case details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'case_details' => {
+              'urn' => 'ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABC',
+            }
+          )
+        end
+      end
+
+      it 'truncates case details' do
+        urn = representation.dig('case_details', 'urn')
+
+        expect(urn).to eq 'ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCAB...'
+        expect(urn.length).to eq 50
+      end
+    end
+
+    context 'with excessive payments details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.merge(
+            'means_details' => {
+              'income_details' => {
+                'income_payments' => [
+                  {
+                    'payment_type' => 'other',
+                    'amount' => 250,
+                    'frequency' => 'month',
+                    'ownership_type' => 'applicant',
+                    'metadata' => {
+                      'details' => 'I accidentally pasted an essay into this field' * 25,
+                    }
+                  }
+                ]
+              }
+            }
+          )
+        end
+      end
+
+      it 'truncates payment details' do
+        details = representation.dig('means_details', 'income_details', 'income_payments')[0]
+
+        expect(details['details'].size).to eq 1000
+      end
+    end
+
+    context 'with excessive properties' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'capital_details' => {
+                'properties' => [
+                  {
+                    'property_type' => 'residential',
+                    'address' => {
+                      'address_line_one' => '50 Regent Street' * 15,
+                      'address_line_two' => 'Westminster' * 15,
+                      'city' => 'London' * 20,
+                      'country' => 'United Kingom' * 20,
+                      'postcode' => 'SW7 7ABXXXXXXXX',
+                    },
+                    'property_owners' => [
+                      {
+                        'name' => 'Flats R Us' * 30,
+                        'other_relationship' => 'Godfather' * 100,
+                        'percentage_owned' => 100.0,
+                      },
+                    ]
+                  }
+                ]
+              },
+            }
+          )
+        end
+      end
+
+      # TODO: No idea why the deep_merge causes the `properties` key to replicate the whole `capital_details` hash!
+      let(:property) { representation.dig('means_details', 'capital_details', 'properties', 'properties')[0] }
+
+      it 'truncates property address' do
+        details = property['address'].slice('address_line_one', 'address_line_two', 'city', 'country', 'postcode')
+
+        expect(details).to eq(
+          {
+            'address_line_one' => '50 Regent Street50 Regent Street50 Regent Street50 Regent Street50 Regent Street50 Regent Street5...',
+            'address_line_two' => 'WestminsterWestminsterWestminsterWestminsterWestminsterWestminsterWestminsterWestminsterWestminst...',
+            'city' => 'LondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonL...',
+            'country' => 'United KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnit...',
+            'postcode' => 'SW7 7AB...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [100, 100, 100, 150, 10]
+      end
+
+      it 'truncates property owners' do
+        details = property['property_owners'][0].slice('name', 'other_relationship')
+
+        expect(details).to eq(
+          {
+            'name' => 'Flats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFl...',
+            'other_relationship' => 'GodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfather...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [255, 255]
+      end
+    end
+  end
+  # rubocop:enable Layout/LineLength
 end

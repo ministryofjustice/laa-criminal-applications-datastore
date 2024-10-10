@@ -14,6 +14,22 @@ module Datastore
           expose :national_savings_certificates, expose_nil: false
           expose :investments, expose_nil: false
           expose :properties, expose_nil: false
+
+          private
+
+          def properties
+            if object['properties'].present? && object['properties'].respond_to?(:each)
+              object['properties'].each do |property|
+                property['property_owners'].each do |property_owner|
+                  ::Transformers::MAAT.chop!(property_owner, ::Transformers::MAAT::PROPERTY_OWNER_RULES)
+                end
+
+                ::Transformers::MAAT.chop!(property['address'], ::Transformers::MAAT::ADDRESS_RULES)
+              end
+            end
+
+            object
+          end
         end
       end
     end

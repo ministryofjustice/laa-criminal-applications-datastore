@@ -13,7 +13,7 @@ module Datastore
           expose :metadata_details, as: :details, if: ->(instance) { instance.dig('metadata', 'details') }
 
           def metadata_details
-            object['details'] || object.dig('metadata', 'details')
+            ::Transformers::MAAT.truncate!(object['details'] || object.dig('metadata', 'details'), 1000)
           end
         end
       end

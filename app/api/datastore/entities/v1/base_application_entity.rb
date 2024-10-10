@@ -115,6 +115,10 @@ module Datastore
         def pre_cifc_reason
           submitted_value('pre_cifc_reason')
         end
+
+        def chop!(hash, rules = nil)
+          ::Transformers::MAAT.chop!(hash, rules)
+        end
       end
     end
   end

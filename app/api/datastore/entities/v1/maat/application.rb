@@ -25,7 +25,26 @@ module Datastore
           def ioj_bypass
             interests_of_justice.blank?
           end
-        end
+
+          def case_details
+            chop!(super, ::Transformers::MAAT::URN_RULES)
+          end
+
+          def client_details
+            client_details = super
+
+            chop!(client_details['applicant'], ::Transformers::MAAT::PERSON_RULES)
+            chop!(client_details['partner'], ::Transformers::MAAT::PERSON_RULES)
+            chop!(client_details.dig('applicant', 'home_address'), ::Transformers::MAAT::ADDRESS_RULES)
+            chop!(client_details.dig('applicant', 'correspondence_address'), ::Transformers::MAAT::ADDRESS_RULES)
+
+            client_details
+          end
+
+          def provider_details
+            chop!(super, ::Transformers::MAAT::PROVIDER_DETAILS_RULES)
+          end
+        end # rubocop:enable Metrics/ClassLength
       end
     end
   end
