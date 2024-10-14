@@ -1,5 +1,5 @@
 module Transformer
-  class MAAT
+  module MAAT
     PERSON_RULES = {
       'first_name' => 40,
       'last_name' => 40,
@@ -15,10 +15,6 @@ module Transformer
       'city' => 100,
       'postcode' => 10,
       'country' => 150,
-    }.freeze
-
-    URN_RULES = {
-      'urn' => 50,
     }.freeze
 
     PROVIDER_DETAILS_RULES = {
@@ -37,12 +33,51 @@ module Transformer
       end
     }.freeze
 
-    PROPERTY_OWNER_RULES = {
-      'name' => 255,
-      'other_relationship' => 255,
+    # Key should match name of Grape Entity or key name
+    RULES = {
+      'client_details' => {
+        'applicant' => {
+          'home_address' => ADDRESS_RULES,
+          'correspondence_address' => ADDRESS_RULES,
+        }.merge(PERSON_RULES),
+        'partner' => PERSON_RULES,
+      },
+      'property' => {
+        'address' => ADDRESS_RULES,
+      },
+      'property_owner' => {
+        'name' => 255,
+        'other_relationship' => 255,
+      },
+      'case_details' => {
+        'urn' => 50,
+      },
+      'provider_details' => PROVIDER_DETAILS_RULES,
+      'payment' => {
+        'details' => 1000,
+      },
     }.freeze
 
-    PAYMENT_DETAILS_RULES = 1000
+    # Assumes module is being used by a Grape::Entity or a Hash.
+    # Offers a consistent way of truncating an Application via localised
+    # Grape::Entity objects or from top-level Application.
+    #
+    # @param obj [Hash|String] the key name of the Grape::Entity to extract or a Hash of key/values
+    # @param criteria [Hash|Integer] the set of limits with keys corresponding to obj or a single integer
+    # @return [Hash|String] the original object will be changed!
+    def transform!(obj, fallback: nil, rule: [])
+      return nil if obj.nil?
+
+      rule_path = obj.is_a?(Hash) ? [rule] : [*rule, obj].compact
+      rules = RULES.dig(*rule_path.flatten)
+
+      if obj.is_a?(Hash)
+        Transformer::MAAT.chop!(obj, rules)
+      else
+        str = object[obj] || object.dig(*[fallback].flatten)
+        Transformer::MAAT.chop!(str, rules)
+      end
+    end
 
     class << self
       # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
@@ -62,7 +97,9 @@ module Transformer
 
         case obj
         when String
-          obj = truncate!(obj, criteria)
+          length = criteria.is_a?(Hash) ? criteria[obj] : criteria
+
+          obj = truncate!(obj, length)
         when Hash
           obj.each do |k, v|
             next if v.blank?
@@ -81,6 +118,8 @@ module Transformer
       # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
 
       def truncate!(str, length)
+        return str if length.blank?
+
         str.to_s.truncate(length, omission: '...')
       end
 

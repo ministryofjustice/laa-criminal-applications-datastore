@@ -3,6 +3,8 @@ module Datastore
     module V1
       module MAAT
         class Application < BaseApplicationEntity
+          include Transformer::MAAT
+
           unexpose(
             :created_at,
             :parent_id,
@@ -27,22 +29,25 @@ module Datastore
           end
 
           def case_details
-            chop!(super, Transformer::MAAT::URN_RULES)
+            transform!(super, rule: 'case_details')
           end
 
           def client_details
             client_details = super
+            applicant = client_details['applicant']
+            applicant_rule = %w[client_details applicant]
 
-            chop!(client_details['applicant'], Transformer::MAAT::PERSON_RULES)
-            chop!(client_details['partner'], Transformer::MAAT::PERSON_RULES)
-            chop!(client_details.dig('applicant', 'home_address'), Transformer::MAAT::ADDRESS_RULES)
-            chop!(client_details.dig('applicant', 'correspondence_address'), Transformer::MAAT::ADDRESS_RULES)
+            transform!(client_details['partner'], rule: %w[client_details partner])
+
+            transform!(applicant, rule: applicant_rule)
+            transform!(applicant['home_address'], rule: [*applicant_rule, 'home_address'])
+            transform!(applicant['correspondence_address'], rule: [*applicant_rule, 'correspondence_address'])
 
             client_details
           end
 
           def provider_details
-            chop!(super, Transformer::MAAT::PROVIDER_DETAILS_RULES)
+            transform!(super, rule: 'provider_details')
           end
         end # rubocop:enable Metrics/ClassLength
       end
