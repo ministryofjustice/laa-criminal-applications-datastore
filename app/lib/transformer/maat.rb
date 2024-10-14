@@ -61,9 +61,12 @@ module Transformer
     # Assumes module is being used by a Grape::Entity or a Hash.
     # Offers a consistent way of truncating an Application via localised
     # Grape::Entity objects or from top-level Application.
+    # TODO: Make method recursively chop! data in key/value pairs by (pattern) matching
+    # against RULES
     #
     # @param obj [Hash|String] the key name of the Grape::Entity to extract or a Hash of key/values
-    # @param criteria [Hash|Integer] the set of limits with keys corresponding to obj or a single integer
+    # @param fallback [String|Array] if Grape::Entity key value is nil, use the fallback instead
+    # @param rule [String|Array] the hash key name from RULES to use (or list of key names if nested RULE)
     # @return [Hash|String] the original object will be changed!
     def transform!(obj, fallback: nil, rule: [])
       return nil if obj.nil?
