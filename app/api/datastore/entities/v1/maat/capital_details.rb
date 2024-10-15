@@ -13,7 +13,7 @@ module Datastore
           expose :savings, expose_nil: false
           expose :national_savings_certificates, expose_nil: false
           expose :investments, expose_nil: false
-          expose :properties, expose_nil: false
+          expose :properties, using: Property, expose_nil: false
         end
       end
     end

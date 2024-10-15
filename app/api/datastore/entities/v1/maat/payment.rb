@@ -3,6 +3,8 @@ module Datastore
     module V1
       module MAAT
         class Payment < Grape::Entity
+          include Transformer::MAAT
+
           self.hash_access = :to_s
 
           expose :amount
@@ -13,7 +15,11 @@ module Datastore
           expose :metadata_details, as: :details, if: ->(instance) { instance.dig('metadata', 'details') }
 
           def metadata_details
-            object['details'] || object.dig('metadata', 'details')
+            transform!(
+              'details',
+              fallback: %w[metadata details],
+              rule: 'payment'
+            )
           end
         end
       end
