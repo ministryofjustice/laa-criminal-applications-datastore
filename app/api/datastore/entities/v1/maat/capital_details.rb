@@ -10,9 +10,9 @@ module Datastore
           expose :trust_fund_yearly_dividend
           expose :partner_trust_fund_amount_held
           expose :partner_trust_fund_yearly_dividend
-          expose :savings, expose_nil: false
+          expose :savings, using: Saving, expose_nil: false
           expose :national_savings_certificates, expose_nil: false
-          expose :investments, expose_nil: false
+          expose :investments, using: Investment, expose_nil: false
           expose :properties, using: Property, expose_nil: false
         end
       end

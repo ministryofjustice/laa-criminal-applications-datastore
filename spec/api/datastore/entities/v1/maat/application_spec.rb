@@ -1616,6 +1616,68 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(details.values.map(&:length)).to eq [255, 255]
       end
     end
+
+    context 'with excessive investment details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'capital_details' => {
+                'investments' => [
+                  {
+                    'investment_type' => 'other',
+                    'description' => 'Inheritance from grandma' * 50,
+                    'value' => 999,
+                    'ownership_type' => 'partner',
+                  }
+                ]
+              },
+            }
+          )
+        end
+      end
+
+      let(:investment) { representation.dig('means_details', 'capital_details', 'investments')[0] }
+
+      it 'truncates investment description' do
+        expect(investment['description']).to eq('Inheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInherit...')
+        expect(investment['description'].length).to eq 250
+      end
+    end
+
+    context 'with excessive savings details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'capital_details' => {
+                'savings' => [
+                  {
+                    'provider_name' => 'National Eastminster Bank PLC' * 10,
+                    'sort_code' => '01-02-03' * 10,
+                  }
+                ]
+              },
+            }
+          )
+        end
+      end
+
+      let(:savings) { representation.dig('means_details', 'capital_details', 'savings')[0] }
+
+      it 'truncates savings description' do
+        details = savings.slice('provider_name', 'sort_code')
+
+        expect(details).to eq(
+          {
+            'provider_name' => 'National Eastminster Bank PLCNational Eastminst...',
+            'sort_code' => '01-02-0301-02-0301-02-0301-...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [50, 30]
+      end
+    end
   end
   # rubocop:enable Layout/LineLength
 end
