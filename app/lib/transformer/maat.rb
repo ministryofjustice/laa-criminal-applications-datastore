@@ -56,6 +56,13 @@ module Transformer
       'payment' => {
         'details' => 1000,
       },
+      'investment' => {
+        'description' => 250,
+      },
+      'saving' => {
+        'provider_name' => 50,
+        'sort_code' => 30,
+      },
     }.freeze
 
     # Assumes module is being used by a Grape::Entity or a Hash.
