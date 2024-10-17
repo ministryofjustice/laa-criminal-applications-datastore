@@ -475,6 +475,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             expect(validator).to be_valid, -> { validator.fully_validate }
           end
 
+          # rubocop:disable Layout/LineLength
           it 'adds `student_loan_grant` amount to `other` payment amount' do
             income_payments = representation.dig('means_details', 'income_details', 'income_payments')
             expect(income_payments).to contain_exactly(
@@ -505,15 +506,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {
-                  'details' => <<~HEREDOC
-                    Details of the other partner payment
-                    Partner: Student loan grant:£250.00/annual, Other:£100.00/month
-                  HEREDOC
+                  'details' => "Partner: Student loan grant:£250.00/annual, Other:£100.00/month\nDetails of the other partner payment",
                 },
-                'details' => <<~HEREDOC
-                  Details of the other partner payment
-                  Partner: Student loan grant:£250.00/annual, Other:£100.00/month
-                HEREDOC
+                'details' => "Partner: Student loan grant:£250.00/annual, Other:£100.00/month\nDetails of the other partner payment",
               },
               {
                 'payment_type' => 'other',
@@ -521,19 +516,13 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'frequency' => 'annual',
                   'ownership_type' => 'applicant',
                   'metadata' => {
-                    'details' => <<~HEREDOC
-                      Details of the other payment
-                      Applicant: Student loan grant:£500.00/month, Other:£2.50/month
-                    HEREDOC
+                    'details' => "Applicant: Student loan grant:£500.00/month, Other:£2.50/month\nDetails of the other payment",
                   },
-                  'details' => <<~HEREDOC
-                    Details of the other payment
-                    Applicant: Student loan grant:£500.00/month, Other:£2.50/month
-                  HEREDOC
-
+                  'details' => "Applicant: Student loan grant:£500.00/month, Other:£2.50/month\nDetails of the other payment",
               }
             )
           end
+          # rubocop:enable Layout/LineLength
         end
 
         context 'when income_payment of type `other` is missing' do
@@ -857,15 +846,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
                 'metadata' => {
-                  'details' => <<~HEREDOC
-                    Details of the other partner benefit
-                    Partner: Jsa:£15.00/annual, Other:£5.50/month
-                  HEREDOC
+                  'details' => "Partner: Jsa:£15.00/annual, Other:£5.50/month\nDetails of the other partner benefit",
                 },
-                'details' => <<~HEREDOC
-                  Details of the other partner benefit
-                  Partner: Jsa:£15.00/annual, Other:£5.50/month
-                HEREDOC
+                'details' => "Partner: Jsa:£15.00/annual, Other:£5.50/month\nDetails of the other partner benefit",
               },
               {
                 'payment_type' => 'other',
@@ -873,15 +856,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
                 'metadata' => {
-                  'details' => <<~HEREDOC
-                    Details of the other benefit
-                    Applicant: Jsa:£7.00/month, Other:£7.50/month
-                  HEREDOC
+                  'details' => "Applicant: Jsa:£7.00/month, Other:£7.50/month\nDetails of the other benefit"
                 },
-                'details' => <<~HEREDOC
-                  Details of the other benefit
-                  Applicant: Jsa:£7.00/month, Other:£7.50/month
-                HEREDOC
+                'details' => "Applicant: Jsa:£7.00/month, Other:£7.50/month\nDetails of the other benefit"
               }
             )
           end
@@ -1185,6 +1162,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
+        # rubocop:disable Layout/LineLength
         it 'return updated income_payments' do
           income_payments = representation.dig('means_details', 'income_details', 'income_payments')
 
@@ -1200,18 +1178,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'amount' => 662_550,
               'metadata' =>
                 {
-                  'details' => <<~HEREDOC
-                    Details of the other applicant payment
-                    Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual
-                  HEREDOC
+                  'details' => "Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual\nDetails of the other applicant payment",
                 },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'applicant',
-              'details' => <<~HEREDOC
-                Details of the other applicant payment
-                Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual
-              HEREDOC
+              'details' => "Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual\nDetails of the other applicant payment",
             },
             {
               'amount' => 40_000,
@@ -1239,7 +1211,9 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             }
           )
         end
+        # rubocop:enable Layout/LineLength
 
+        # rubocop:disable Layout/LineLength
         it 'return updated income_benefits' do
           income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
 
@@ -1248,18 +1222,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'amount' => 2_140_000,
               'metadata' =>
                 {
-                  'details' =>  <<~HEREDOC
-                    Details of the other income benefit
-                    Applicant: Jsa:£500.00/fortnight, Other:£700.00/month
-                  HEREDOC
+                  'details' =>  "Applicant: Jsa:£500.00/fortnight, Other:£700.00/month\nDetails of the other income benefit",
                 },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'applicant',
-              'details' => <<~HEREDOC
-                Details of the other income benefit
-                Applicant: Jsa:£500.00/fortnight, Other:£700.00/month
-              HEREDOC
+              'details' => "Applicant: Jsa:£500.00/fortnight, Other:£700.00/month\nDetails of the other income benefit",
             },
             {
               'amount' => 5000,
@@ -1272,21 +1240,16 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               'amount' => 960_000,
               'metadata' =>
                 {
-                  'details' => <<~HEREDOC
-                    Details of the other income benefit
-                    Partner: Other:£800.00/month
-                  HEREDOC
+                  'details' => "Partner: Other:£800.00/month\nDetails of the other income benefit",
                 },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
-              'details' => <<~HEREDOC
-                Details of the other income benefit
-                Partner: Other:£800.00/month
-              HEREDOC
+              'details' => "Partner: Other:£800.00/month\nDetails of the other income benefit",
             }
           )
         end
+        # rubocop:enable Layout/LineLength
       end
     end
     # rubocop:enable RSpec/ExampleLength
@@ -1371,7 +1334,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
   end
 
   # rubocop:disable Layout/LineLength
-  describe '#chop!' do
+  describe '#transform!' do
     context 'with excessive provider details' do
       let(:submitted_application) do
         LaaCrimeSchemas.fixture(1.0) do |json|
@@ -1557,6 +1520,15 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'frequency' => 'month',
                   'payment_type' => 'other',
                   'ownership_type' => 'applicant'
+                  },
+                  {
+                    'amount' => 1000,
+                    'metadata' => {
+                      'details' => 'PARTNER METADATA DETAILS' * 50
+                    },
+                  'frequency' => 'month',
+                  'payment_type' => 'other',
+                  'ownership_type' => 'partner'
                   },
                 ],
               }
