@@ -1540,7 +1540,25 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                       'details' => 'I accidentally pasted an essay into this field' * 25,
                     }
                   }
-                ]
+                ],
+                'income_benefits' => [
+                  {
+                    'amount' => 50_000,
+                    'metadata' => {},
+                    'frequency' => 'fortnight',
+                    'payment_type' => 'jsa',
+                    'ownership_type' => 'applicant'
+                  },
+                  {
+                    'amount' => 70_000,
+                    'metadata' => {
+                      'details' => 'Details of the other income benefit' * 50
+                    },
+                  'frequency' => 'month',
+                  'payment_type' => 'other',
+                  'ownership_type' => 'applicant'
+                  },
+                ],
               }
             }
           )
@@ -1548,9 +1566,11 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       end
 
       it 'truncates payment details' do
-        details = representation.dig('means_details', 'income_details', 'income_payments')[0]
+        income_payment = representation.dig('means_details', 'income_details', 'income_payments')[0]
+        income_benefit = representation.dig('means_details', 'income_details', 'income_benefits')[0]
 
-        expect(details['details'].size).to eq 1000
+        expect(income_payment['details'].size).to eq 1000
+        expect(income_benefit['details'].size).to eq 1000
       end
     end
 
