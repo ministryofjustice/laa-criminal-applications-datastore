@@ -47,6 +47,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
       ]
     end
 
+    # rubocop:disable Layout/LineLength
     it 'returns annualized `other benefits` for both applicant and partner' do
       expect(subject.call).to contain_exactly(
         {
@@ -69,10 +70,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => <<~HEREDOC
-              Details of the other applicant benefit
-              Applicant: Jsa:£15.00/fortnight, Other:£8.00/four_weeks
-            HEREDOC
+            'details' => "Applicant: Jsa:£15.00/fortnight, Other:£8.00/four_weeks\nDetails of the other applicant benefit"
           }
         },
         {
@@ -86,6 +84,7 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
         }
       )
     end
+    # rubocop:enable Layout/LineLength
   end
 
   context 'when `income_benefits` are present without `other` payment_type' do
