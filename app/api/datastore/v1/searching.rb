@@ -3,7 +3,7 @@ module Datastore
     class Searching < Base
       version 'v1', using: :path
 
-      route_setting :authorised_consumers, %w[crime-review]
+      route_setting :authorised_consumers, %w[crime-review crime-apply]
 
       resource :searches do
         desc 'Search the Datastore.'
@@ -25,6 +25,9 @@ module Datastore
 
             optional :reviewed_after, type: DateTime
             optional :reviewed_before, type: DateTime
+
+            # Apply search spike
+            optional :office_code, type: String
           end
 
           optional :sorting, type: JSON, desc: 'Sorting JSON.', default: Sorting.new.attributes do
