@@ -481,33 +481,27 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             expect(income_payments).to contain_exactly(
               {
                 'payment_type' => 'state_pension',
-                  'amount' => 10_000,
-                  'frequency' => 'week',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
-                  'amount' => 30_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
                 'amount' => 145_000, # other(10_000 * 12) + student_loan_grant(25_000)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => "Partner: Student loan grant:£250.00/annual, Other:£100.00/month\nDetails of the other partner payment",
-                },
                 'details' => "Partner: Student loan grant:£250.00/annual, Other:£100.00/month\nDetails of the other partner payment",
               },
               {
@@ -515,9 +509,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                   'amount' => 603_000, # other(250 * 12) + student_loan_grant(50_000 * 12)
                   'frequency' => 'annual',
                   'ownership_type' => 'applicant',
-                  'metadata' => {
-                    'details' => "Applicant: Student loan grant:£500.00/month, Other:£2.50/month\nDetails of the other payment",
-                  },
                   'details' => "Applicant: Student loan grant:£500.00/month, Other:£2.50/month\nDetails of the other payment",
               }
             )
@@ -598,43 +589,34 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             expect(income_payments).to contain_exactly(
               {
                 'payment_type' => 'state_pension',
-                  'amount' => 10_000,
-                  'frequency' => 'week',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
-                  'amount' => 30_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
-                  'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
-                  'frequency' => 'annual',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {
-                    'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
-                  },
-                  'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
+                'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
+                'frequency' => 'annual',
+                'ownership_type' => 'applicant',
+                'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
               },
               {
                 'payment_type' => 'other',
                 'amount' => 25_000, # student_loan_grant(25_000)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => 'Partner: Student loan grant:£250.00/annual'
-                },
                 'details' => 'Partner: Student loan grant:£250.00/annual'
               },
             )
@@ -696,21 +678,18 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 10_000,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 30_000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               }
             )
           end
@@ -824,30 +803,24 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 500,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'incapacity',
                 'amount' => 1000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
                 'amount' => 8100, # other(550 * 12) + jsa(1500)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => "Partner: Jsa:£15.00/annual, Other:£5.50/month\nDetails of the other partner benefit",
-                },
                 'details' => "Partner: Jsa:£15.00/annual, Other:£5.50/month\nDetails of the other partner benefit",
               },
               {
@@ -855,9 +828,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 17_400, # other(750 * 12) + jsa(700 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
-                'metadata' => {
-                  'details' => "Applicant: Jsa:£7.00/month, Other:£7.50/month\nDetails of the other benefit"
-                },
                 'details' => "Applicant: Jsa:£7.00/month, Other:£7.50/month\nDetails of the other benefit"
               }
             )
@@ -926,30 +896,24 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 500,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'incapacity',
                 'amount' => 1000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
                 'amount' => 8400, # jsa(700 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
-                'metadata' => {
-                  'details' => 'Applicant: Jsa:£7.00/month'
-                },
                 'details' => 'Applicant: Jsa:£7.00/month'
               },
               {
@@ -957,9 +921,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 1500, # jsa(1500)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => 'Partner: Jsa:£15.00/annual'
-                },
                 'details' => 'Partner: Jsa:£15.00/annual'
               }
             )
@@ -1007,14 +968,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 500,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'incapacity',
                 'amount' => 1000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               }
             )
           end
@@ -1169,17 +1128,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(income_payments).to contain_exactly(
             {
               'amount' => 100_000,
-              'metadata' => {},
               'frequency' => 'annual',
               'payment_type' => 'state_pension',
               'ownership_type' => 'applicant'
             },
             {
               'amount' => 662_550,
-              'metadata' =>
-                {
-                  'details' => "Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual\nDetails of the other applicant payment",
-                },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'applicant',
@@ -1187,23 +1141,18 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'amount' => 40_000,
-              'metadata' => {},
               'frequency' => 'fortnight',
               'payment_type' => 'state_pension',
               'ownership_type' => 'partner'
             },
             {
               'amount' => 10_000,
-              'metadata' => {},
               'frequency' => 'week',
               'payment_type' => 'interest_investment',
               'ownership_type' => 'partner'
             },
             {
               'amount' => 322_000,
-              'metadata' => {
-                'details' => 'Partner: From friends relatives:£60.00/week, Trust fund dividend:£100.00/annual'
-              },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
@@ -1213,17 +1162,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         end
         # rubocop:enable Layout/LineLength
 
-        # rubocop:disable Layout/LineLength
         it 'return updated income_benefits' do
           income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
 
           expect(income_benefits).to contain_exactly(
             {
               'amount' => 2_140_000,
-              'metadata' =>
-                {
-                  'details' =>  "Applicant: Jsa:£500.00/fortnight, Other:£700.00/month\nDetails of the other income benefit",
-                },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'applicant',
@@ -1231,17 +1175,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             },
             {
               'amount' => 5000,
-              'metadata' => {},
               'frequency' => 'fortnight',
               'payment_type' => 'child',
               'ownership_type' => 'partner'
             },
             {
               'amount' => 960_000,
-              'metadata' =>
-                {
-                  'details' => "Partner: Other:£800.00/month\nDetails of the other income benefit",
-                },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
@@ -1249,7 +1188,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             }
           )
         end
-        # rubocop:enable Layout/LineLength
       end
     end
     # rubocop:enable RSpec/ExampleLength
@@ -1322,7 +1260,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       it 'exposes details not metadata for income_benefits' do
         expected_income_benefits = maat_means_schema.dig(
           'properties', 'income_details', 'properties', 'income_benefits', 'items', 'properties'
-        ).keys
+        ).keys - ['metadata']
 
         income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
         other_income_benefit = income_benefits.find { |income_benefit| income_benefit['payment_type'] == 'other' }
@@ -1517,18 +1455,18 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                     'metadata' => {
                       'details' => 'Details of the other income benefit' * 50
                     },
-                  'frequency' => 'month',
-                  'payment_type' => 'other',
-                  'ownership_type' => 'applicant'
+                    'frequency' => 'month',
+                    'payment_type' => 'other',
+                    'ownership_type' => 'applicant'
                   },
                   {
                     'amount' => 1000,
                     'metadata' => {
                       'details' => 'PARTNER METADATA DETAILS' * 50
                     },
-                  'frequency' => 'month',
-                  'payment_type' => 'other',
-                  'ownership_type' => 'partner'
+                    'frequency' => 'month',
+                    'payment_type' => 'other',
+                    'ownership_type' => 'partner'
                   },
                 ],
               }
