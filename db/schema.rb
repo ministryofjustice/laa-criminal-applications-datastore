@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_02_110620) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_22_160814) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -60,7 +60,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_02_110620) do
     t.string "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["crime_application_id"], name: "index_decisions_on_crime_application_id", unique: true
+    t.index ["crime_application_id"], name: "index_decisions_on_crime_application_id"
   end
 
   create_table "redacted_crime_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
