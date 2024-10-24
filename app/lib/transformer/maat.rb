@@ -42,6 +42,11 @@ module Transformer
         }.merge(PERSON_RULES),
         'partner' => PERSON_RULES,
       },
+      'means_details' => {
+        'income_details' => {
+          'manage_other_details' => 1000,
+        }
+      },
       'property' => {
         'address' => ADDRESS_RULES,
       },

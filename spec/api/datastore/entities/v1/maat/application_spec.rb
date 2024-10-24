@@ -1670,6 +1670,26 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
         expect(details.values.map(&:length)).to eq [50, 30]
       end
     end
+
+    context 'with excessive manage_other_details details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.merge(
+            'means_details' => {
+              'income_details' => {
+                'manage_other_details' => 'I accidentally pasted an essay into this field' * 25
+              }
+            }
+          )
+        end
+      end
+
+      it 'truncates manage_other_details' do
+        manage_other_details = representation.dig('means_details', 'income_details', 'manage_other_details')
+
+        expect(manage_other_details.size).to eq 1000
+      end
+    end
   end
   # rubocop:enable Layout/LineLength
 end
