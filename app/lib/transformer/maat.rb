@@ -1,5 +1,5 @@
 module Transformer
-  module MAAT
+  module MAAT # rubocop:disable Metrics/ModuleLength
     PERSON_RULES = {
       'first_name' => 40,
       'last_name' => 40,
