@@ -1,5 +1,5 @@
 module Transformer
-  module MAAT
+  module MAAT # rubocop:disable Metrics/ModuleLength
     PERSON_RULES = {
       'first_name' => 40,
       'last_name' => 40,
@@ -41,6 +41,11 @@ module Transformer
           'correspondence_address' => ADDRESS_RULES,
         }.merge(PERSON_RULES),
         'partner' => PERSON_RULES,
+      },
+      'means_details' => {
+        'income_details' => {
+          'manage_other_details' => 1000,
+        }
       },
       'property' => {
         'address' => ADDRESS_RULES,
