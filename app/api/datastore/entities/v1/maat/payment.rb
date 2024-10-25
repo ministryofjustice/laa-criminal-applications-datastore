@@ -9,7 +9,6 @@ module Datastore
 
           expose :amount
           expose :frequency
-          expose :metadata
           expose :payment_type
           expose :ownership_type
           expose :metadata_details, as: :details, if: ->(instance) { instance.dig('metadata', 'details') }
