@@ -43,10 +43,10 @@ end
 
 group :test do
   gem 'brakeman'
-  gem 'rubocop', require: false
+  gem 'rubocop', '>= 1.66.0', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec', '>= 3.0.0', require: false
   gem 'simplecov', require: false
   gem 'webmock', '>= 3.23.1'
 end
