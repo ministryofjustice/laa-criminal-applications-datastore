@@ -3,6 +3,8 @@ module Datastore
     module V1
       module MAAT
         class IncomeDetails < Grape::Entity
+          include Transformer::MAAT
+
           self.hash_access = :to_s
 
           expose :income_payments, using: Payment, expose_nil: false
@@ -15,6 +17,10 @@ module Datastore
           expose :dividends, expose_nil: false
 
           private
+
+          def manage_other_details
+            transform!('manage_other_details', rule: %w[means_details income_details])
+          end
 
           # rubocop:disable Metrics/AbcSize
           def income_payments

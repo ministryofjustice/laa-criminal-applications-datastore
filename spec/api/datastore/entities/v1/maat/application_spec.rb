@@ -475,65 +475,45 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             expect(validator).to be_valid, -> { validator.fully_validate }
           end
 
+          # rubocop:disable Layout/LineLength
           it 'adds `student_loan_grant` amount to `other` payment amount' do
             income_payments = representation.dig('means_details', 'income_details', 'income_payments')
             expect(income_payments).to contain_exactly(
               {
                 'payment_type' => 'state_pension',
-                  'amount' => 10_000,
-                  'frequency' => 'week',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
-                  'amount' => 30_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
                 'amount' => 145_000, # other(10_000 * 12) + student_loan_grant(25_000)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => <<~HEREDOC
-                    Details of the other partner payment
-                    Partner: Student loan grant:£250.00/annual, Other:£100.00/month
-                  HEREDOC
-                },
-                'details' => <<~HEREDOC
-                  Details of the other partner payment
-                  Partner: Student loan grant:£250.00/annual, Other:£100.00/month
-                HEREDOC
+                'details' => "Partner: Student loan grant:£250.00/annual, Other:£100.00/month\nDetails of the other partner payment",
               },
               {
                 'payment_type' => 'other',
                   'amount' => 603_000, # other(250 * 12) + student_loan_grant(50_000 * 12)
                   'frequency' => 'annual',
                   'ownership_type' => 'applicant',
-                  'metadata' => {
-                    'details' => <<~HEREDOC
-                      Details of the other payment
-                      Applicant: Student loan grant:£500.00/month, Other:£2.50/month
-                    HEREDOC
-                  },
-                  'details' => <<~HEREDOC
-                    Details of the other payment
-                    Applicant: Student loan grant:£500.00/month, Other:£2.50/month
-                  HEREDOC
-
+                  'details' => "Applicant: Student loan grant:£500.00/month, Other:£2.50/month\nDetails of the other payment",
               }
             )
           end
+          # rubocop:enable Layout/LineLength
         end
 
         context 'when income_payment of type `other` is missing' do
@@ -609,43 +589,34 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             expect(income_payments).to contain_exactly(
               {
                 'payment_type' => 'state_pension',
-                  'amount' => 10_000,
-                  'frequency' => 'week',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 10_000,
+                'frequency' => 'week',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
-                  'amount' => 30_000,
-                  'frequency' => 'month',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {}
+                'amount' => 30_000,
+                'frequency' => 'month',
+                'ownership_type' => 'applicant',
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
-                  'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
-                  'frequency' => 'annual',
-                  'ownership_type' => 'applicant',
-                  'metadata' => {
-                    'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
-                  },
-                  'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
+                'amount' => 631_200, # rent(600 * 52) + student_loan_grant(50000 * 12)
+                'frequency' => 'annual',
+                'ownership_type' => 'applicant',
+                'details' => 'Applicant: Rent:£6.00/week, Student loan grant:£500.00/month'
               },
               {
                 'payment_type' => 'other',
                 'amount' => 25_000, # student_loan_grant(25_000)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => 'Partner: Student loan grant:£250.00/annual'
-                },
                 'details' => 'Partner: Student loan grant:£250.00/annual'
               },
             )
@@ -707,21 +678,18 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 10_000,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 30_000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'maintenance',
                 'amount' => 15_000,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               }
             )
           end
@@ -835,53 +803,32 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 500,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'incapacity',
                 'amount' => 1000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
                 'amount' => 8100, # other(550 * 12) + jsa(1500)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => <<~HEREDOC
-                    Details of the other partner benefit
-                    Partner: Jsa:£15.00/annual, Other:£5.50/month
-                  HEREDOC
-                },
-                'details' => <<~HEREDOC
-                  Details of the other partner benefit
-                  Partner: Jsa:£15.00/annual, Other:£5.50/month
-                HEREDOC
+                'details' => "Partner: Jsa:£15.00/annual, Other:£5.50/month\nDetails of the other partner benefit",
               },
               {
                 'payment_type' => 'other',
                 'amount' => 17_400, # other(750 * 12) + jsa(700 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
-                'metadata' => {
-                  'details' => <<~HEREDOC
-                    Details of the other benefit
-                    Applicant: Jsa:£7.00/month, Other:£7.50/month
-                  HEREDOC
-                },
-                'details' => <<~HEREDOC
-                  Details of the other benefit
-                  Applicant: Jsa:£7.00/month, Other:£7.50/month
-                HEREDOC
+                'details' => "Applicant: Jsa:£7.00/month, Other:£7.50/month\nDetails of the other benefit"
               }
             )
           end
@@ -949,30 +896,24 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 500,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'incapacity',
                 'amount' => 1000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'industrial_injuries_disablement',
                 'amount' => 1500,
                 'frequency' => 'month',
                 'ownership_type' => 'partner',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'other',
                 'amount' => 8400, # jsa(700 * 12)
                 'frequency' => 'annual',
                 'ownership_type' => 'applicant',
-                'metadata' => {
-                  'details' => 'Applicant: Jsa:£7.00/month'
-                },
                 'details' => 'Applicant: Jsa:£7.00/month'
               },
               {
@@ -980,9 +921,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 1500, # jsa(1500)
                 'frequency' => 'annual',
                 'ownership_type' => 'partner',
-                'metadata' => {
-                  'details' => 'Partner: Jsa:£15.00/annual'
-                },
                 'details' => 'Partner: Jsa:£15.00/annual'
               }
             )
@@ -1030,14 +968,12 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
                 'amount' => 500,
                 'frequency' => 'week',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               },
               {
                 'payment_type' => 'incapacity',
                 'amount' => 1000,
                 'frequency' => 'month',
                 'ownership_type' => 'applicant',
-                'metadata' => {}
               }
             )
           end
@@ -1185,53 +1121,38 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
+        # rubocop:disable Layout/LineLength
         it 'return updated income_payments' do
           income_payments = representation.dig('means_details', 'income_details', 'income_payments')
 
           expect(income_payments).to contain_exactly(
             {
               'amount' => 100_000,
-              'metadata' => {},
               'frequency' => 'annual',
               'payment_type' => 'state_pension',
               'ownership_type' => 'applicant'
             },
             {
               'amount' => 662_550,
-              'metadata' =>
-                {
-                  'details' => <<~HEREDOC
-                    Details of the other applicant payment
-                    Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual
-                  HEREDOC
-                },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'applicant',
-              'details' => <<~HEREDOC
-                Details of the other applicant payment
-                Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual
-              HEREDOC
+              'details' => "Applicant: Student loan grant:£100.00/fortnight, Board from family:£100.00/four_weeks, Other:£50.00/week, Trust fund dividend:£125.50/annual\nDetails of the other applicant payment",
             },
             {
               'amount' => 40_000,
-              'metadata' => {},
               'frequency' => 'fortnight',
               'payment_type' => 'state_pension',
               'ownership_type' => 'partner'
             },
             {
               'amount' => 10_000,
-              'metadata' => {},
               'frequency' => 'week',
               'payment_type' => 'interest_investment',
               'ownership_type' => 'partner'
             },
             {
               'amount' => 322_000,
-              'metadata' => {
-                'details' => 'Partner: From friends relatives:£60.00/week, Trust fund dividend:£100.00/annual'
-              },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
@@ -1239,6 +1160,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             }
           )
         end
+        # rubocop:enable Layout/LineLength
 
         it 'return updated income_benefits' do
           income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
@@ -1246,44 +1168,23 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(income_benefits).to contain_exactly(
             {
               'amount' => 2_140_000,
-              'metadata' =>
-                {
-                  'details' =>  <<~HEREDOC
-                    Details of the other income benefit
-                    Applicant: Jsa:£500.00/fortnight, Other:£700.00/month
-                  HEREDOC
-                },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'applicant',
-              'details' => <<~HEREDOC
-                Details of the other income benefit
-                Applicant: Jsa:£500.00/fortnight, Other:£700.00/month
-              HEREDOC
+              'details' => "Applicant: Jsa:£500.00/fortnight, Other:£700.00/month\nDetails of the other income benefit",
             },
             {
               'amount' => 5000,
-              'metadata' => {},
               'frequency' => 'fortnight',
               'payment_type' => 'child',
               'ownership_type' => 'partner'
             },
             {
               'amount' => 960_000,
-              'metadata' =>
-                {
-                  'details' => <<~HEREDOC
-                    Details of the other income benefit
-                    Partner: Other:£800.00/month
-                  HEREDOC
-                },
               'frequency' => 'annual',
               'payment_type' => 'other',
               'ownership_type' => 'partner',
-              'details' => <<~HEREDOC
-                Details of the other income benefit
-                Partner: Other:£800.00/month
-              HEREDOC
+              'details' => "Partner: Other:£800.00/month\nDetails of the other income benefit",
             }
           )
         end
@@ -1359,7 +1260,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       it 'exposes details not metadata for income_benefits' do
         expected_income_benefits = maat_means_schema.dig(
           'properties', 'income_details', 'properties', 'income_benefits', 'items', 'properties'
-        ).keys
+        ).keys - ['metadata']
 
         income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
         other_income_benefit = income_benefits.find { |income_benefit| income_benefit['payment_type'] == 'other' }
@@ -1369,4 +1270,364 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       end
     end
   end
+
+  # rubocop:disable Layout/LineLength
+  describe '#transform!' do
+    context 'with excessive provider details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'provider_details' => {
+              'office_code' => '1A123BXYZ123',
+              'provider_email' => 'provider@example.com' * 15,
+              'legal_rep_last_name' => 'This-Person-Has-A-Tripled-Barrelled Surname',
+              'legal_rep_telephone' => '08828882990',
+              'legal_rep_first_name' => 'Michael Angelo',
+            }
+          )
+        end
+      end
+
+      let(:provider_details) { representation['provider_details'] }
+
+      it 'truncates legal rep name to initial and last name' do
+        expect(provider_details['legal_rep_first_name']).to eq 'M'
+        expect(provider_details['legal_rep_last_name']).to eq 'This-Person-Has-A-Tripled-Barrelled...'
+      end
+
+      it 'truncates legal rep email address and office code' do
+        expect(provider_details['office_code']).to eq '1A1...' # TODO: Not sure if office code should have ...
+        expect(provider_details['provider_email']).to eq 'provider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@example.comprovider@exa...'
+      end
+    end
+
+    context 'with excessive applicant and partner details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'client_details' => {
+              'applicant' => {
+                'first_name' => 'First Name' * 5,
+                'last_name' => 'Last Name' * 5,
+                'other_names' => 'Other Names' * 5,
+                'telephone_number' => '123456789012345678901234',
+                'nino' => 'NC123457ANC123457ANC123457A',
+                'home_address' => {
+                  'lookup_id' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                  'address_line_one' => '89 Derby Road' * 10,
+                  'address_line_two' => 'Trenttown' * 20,
+                  'city' => 'Nottingham' * 15,
+                  'postcode' => 'NG1 7HD XXXXX',
+                },
+                'correspondence_address' => {
+                  'lookup_id' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                  'address_line_one' => '11 Manchester Road' * 10,
+                  'address_line_two' => 'Merseytown' * 20,
+                  'city' => 'Liverpool' * 15,
+                  'postcode' => 'L31 7HD XXXXX',
+                },
+              },
+              'partner' => {
+                'first_name' => 'Partner Name' * 5,
+                'last_name' => 'Partner Last Name' * 5,
+                'other_names' => 'Partner Other Names' * 5,
+                'nino' => 'NC123457ANC123457ANC123457A',
+              },
+            }
+          )
+        end
+      end
+
+      it 'truncates applicant details', :aggregate_failures do
+        applicant = representation.dig('client_details', 'applicant')
+        details = applicant.slice('first_name', 'last_name', 'other_names', 'telephone_number', 'nino')
+
+        expect(details).to eq(
+          {
+            'first_name' => 'First NameFirst NameFirst NameFirst N...',
+            'last_name' => 'Last NameLast NameLast NameLast NameL...',
+            'other_names' => 'Other NamesOther NamesOther NamesOthe...',
+            'telephone_number' => '12345678901234567...',
+            'nino' => 'NC12345...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [40, 40, 40, 20, 10]
+      end
+
+      it 'truncates partner details' do
+        partner = representation.dig('client_details', 'partner')
+        details = partner.slice('first_name', 'last_name', 'other_names', 'nino')
+
+        expect(details).to eq(
+          {
+            'first_name' => 'Partner NamePartner NamePartner NameP...',
+            'last_name' => 'Partner Last NamePartner Last NamePar...',
+            'other_names' => 'Partner Other NamesPartner Other Name...',
+            'nino' => 'NC12345...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [40, 40, 40, 10]
+      end
+
+      it 'truncates home addresses' do
+        home_address = representation.dig('client_details', 'applicant', 'home_address')
+        details = home_address.slice('lookup_id', 'address_line_one', 'address_line_two', 'city', 'postcode')
+
+        expect(details).to eq(
+          {
+            'lookup_id' => 'ABCDEFG...',
+            'address_line_one' => '89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Derby Road89 Der...',
+            'address_line_two' => 'TrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrenttownTrentto...',
+            'city' => 'NottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNottinghamNotting...',
+            'postcode' => 'NG1 7HD...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [10, 100, 100, 100, 10]
+      end
+
+      it 'truncates correspondence address' do
+        correspondence_address = representation.dig('client_details', 'applicant', 'correspondence_address')
+        details = correspondence_address.slice('lookup_id', 'address_line_one', 'address_line_two', 'city', 'postcode')
+
+        expect(details).to eq(
+          {
+            'lookup_id' => 'ABCDEFG...',
+            'address_line_one' => '11 Manchester Road11 Manchester Road11 Manchester Road11 Manchester Road11 Manchester Road11 Manc...',
+            'address_line_two' => 'MerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseytownMerseyt...',
+            'city' => 'LiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpoolLiverpo...',
+            'postcode' => 'L31 7HD...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [10, 100, 100, 100, 10]
+      end
+    end
+
+    context 'with excessive case details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'case_details' => {
+              'urn' => 'ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCABC',
+            }
+          )
+        end
+      end
+
+      it 'truncates case details' do
+        urn = representation.dig('case_details', 'urn')
+
+        expect(urn).to eq 'ABCABCABCABCABCABCABCABCABCABCABCABCABCABCABCAB...'
+        expect(urn.length).to eq 50
+      end
+    end
+
+    context 'with excessive payments details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.merge(
+            'means_details' => {
+              'income_details' => {
+                'income_payments' => [
+                  {
+                    'payment_type' => 'other',
+                    'amount' => 250,
+                    'frequency' => 'month',
+                    'ownership_type' => 'applicant',
+                    'metadata' => {
+                      'details' => 'I accidentally pasted an essay into this field' * 25,
+                    }
+                  }
+                ],
+                'income_benefits' => [
+                  {
+                    'amount' => 50_000,
+                    'metadata' => {},
+                    'frequency' => 'fortnight',
+                    'payment_type' => 'jsa',
+                    'ownership_type' => 'applicant'
+                  },
+                  {
+                    'amount' => 70_000,
+                    'metadata' => {
+                      'details' => 'Details of the other income benefit' * 50
+                    },
+                    'frequency' => 'month',
+                    'payment_type' => 'other',
+                    'ownership_type' => 'applicant'
+                  },
+                  {
+                    'amount' => 1000,
+                    'metadata' => {
+                      'details' => 'PARTNER METADATA DETAILS' * 50
+                    },
+                    'frequency' => 'month',
+                    'payment_type' => 'other',
+                    'ownership_type' => 'partner'
+                  },
+                ],
+              }
+            }
+          )
+        end
+      end
+
+      it 'truncates payment details' do
+        income_payment = representation.dig('means_details', 'income_details', 'income_payments')[0]
+        income_benefit = representation.dig('means_details', 'income_details', 'income_benefits')[0]
+
+        expect(income_payment['details'].size).to eq 1000
+        expect(income_benefit['details'].size).to eq 1000
+      end
+    end
+
+    context 'with excessive properties' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'capital_details' => {
+                'properties' => [
+                  {
+                    'property_type' => 'residential',
+                    'address' => {
+                      'address_line_one' => '50 Regent Street' * 15,
+                      'address_line_two' => 'Westminster' * 15,
+                      'city' => 'London' * 20,
+                      'country' => 'United Kingom' * 20,
+                      'postcode' => 'SW7 7ABXXXXXXXX',
+                    },
+                    'property_owners' => [
+                      {
+                        'name' => 'Flats R Us' * 30,
+                        'other_relationship' => 'Godfather' * 100,
+                        'percentage_owned' => 100.0,
+                      },
+                    ]
+                  }
+                ]
+              },
+            }
+          )
+        end
+      end
+
+      let(:property) { representation.dig('means_details', 'capital_details', 'properties')[0] }
+
+      it 'truncates property address' do
+        details = property['address'].slice('address_line_one', 'address_line_two', 'city', 'country', 'postcode')
+
+        expect(details).to eq(
+          {
+            'address_line_one' => '50 Regent Street50 Regent Street50 Regent Street50 Regent Street50 Regent Street50 Regent Street5...',
+            'address_line_two' => 'WestminsterWestminsterWestminsterWestminsterWestminsterWestminsterWestminsterWestminsterWestminst...',
+            'city' => 'LondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonLondonL...',
+            'country' => 'United KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnited KingomUnit...',
+            'postcode' => 'SW7 7AB...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [100, 100, 100, 150, 10]
+      end
+
+      it 'truncates property owners' do
+        details = property['property_owners'][0].slice('name', 'other_relationship')
+
+        expect(details).to eq(
+          {
+            'name' => 'Flats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFlats R UsFl...',
+            'other_relationship' => 'GodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfatherGodfather...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [255, 255]
+      end
+    end
+
+    context 'with excessive investment details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'capital_details' => {
+                'investments' => [
+                  {
+                    'investment_type' => 'other',
+                    'description' => 'Inheritance from grandma' * 50,
+                    'value' => 999,
+                    'ownership_type' => 'partner',
+                  }
+                ]
+              },
+            }
+          )
+        end
+      end
+
+      let(:investment) { representation.dig('means_details', 'capital_details', 'investments')[0] }
+
+      it 'truncates investment description' do
+        expect(investment['description']).to eq('Inheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInheritance from grandmaInherit...')
+        expect(investment['description'].length).to eq 250
+      end
+    end
+
+    context 'with excessive savings details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.deep_merge(
+            'means_details' => {
+              'capital_details' => {
+                'savings' => [
+                  {
+                    'provider_name' => 'National Eastminster Bank PLC' * 10,
+                    'sort_code' => '01-02-03' * 10,
+                  }
+                ]
+              },
+            }
+          )
+        end
+      end
+
+      let(:savings) { representation.dig('means_details', 'capital_details', 'savings')[0] }
+
+      it 'truncates savings description' do
+        details = savings.slice('provider_name', 'sort_code')
+
+        expect(details).to eq(
+          {
+            'provider_name' => 'National Eastminster Bank PLCNational Eastminst...',
+            'sort_code' => '01-02-0301-02-0301-02-0301-...',
+          }
+        )
+
+        expect(details.values.map(&:length)).to eq [50, 30]
+      end
+    end
+
+    context 'with excessive manage_other_details details' do
+      let(:submitted_application) do
+        LaaCrimeSchemas.fixture(1.0) do |json|
+          json.merge(
+            'means_details' => {
+              'income_details' => {
+                'manage_other_details' => 'I accidentally pasted an essay into this field' * 25
+              }
+            }
+          )
+        end
+      end
+
+      it 'truncates manage_other_details' do
+        manage_other_details = representation.dig('means_details', 'income_details', 'manage_other_details')
+
+        expect(manage_other_details.size).to eq 1000
+      end
+    end
+  end
+  # rubocop:enable Layout/LineLength
 end

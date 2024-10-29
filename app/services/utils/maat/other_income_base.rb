@@ -37,6 +37,7 @@ module Utils
         end
       end
 
+      # rubocop:disable Metrics/AbcSize
       def update_other_payment(ownership_type)
         other_payment = payments.find { |p| p['ownership_type'] == ownership_type && p['payment_type'] == OTHER }
         return unless other_payment
@@ -45,8 +46,15 @@ module Utils
 
         other_payment['amount'] = total_other_payments_by_ownership(ownership_type)
         other_payment['frequency'] = Utils::AnnualizedAmountCalculator::PAYMENT_FREQUENCY_TYPE[:annual]
-        other_payment['metadata']['details'] += "\n#{income_payment_notes}\n"
+
+        return unless other_payment.key?('metadata')
+
+        other_payment['metadata']['details'] = [
+          income_payment_notes,
+          other_payment['metadata']['details']
+        ].compact.join("\n")
       end
+      # rubocop:enable Metrics/AbcSize
 
       def create_other_payment(ownership_type)
         payments.push(

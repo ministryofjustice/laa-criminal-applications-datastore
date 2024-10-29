@@ -3,6 +3,8 @@ module Datastore
     module V1
       module MAAT
         class Application < BaseApplicationEntity
+          include Transformer::MAAT
+
           unexpose(
             :created_at,
             :parent_id,
@@ -25,7 +27,29 @@ module Datastore
           def ioj_bypass
             interests_of_justice.blank?
           end
-        end
+
+          def case_details
+            transform!(super, rule: 'case_details')
+          end
+
+          def client_details
+            client_details = super
+            applicant = client_details['applicant']
+            applicant_rule = %w[client_details applicant]
+
+            transform!(client_details['partner'], rule: %w[client_details partner])
+
+            transform!(applicant, rule: applicant_rule)
+            transform!(applicant['home_address'], rule: [*applicant_rule, 'home_address'])
+            transform!(applicant['correspondence_address'], rule: [*applicant_rule, 'correspondence_address'])
+
+            client_details
+          end
+
+          def provider_details
+            transform!(super, rule: 'provider_details')
+          end
+        end # rubocop:enable Metrics/ClassLength
       end
     end
   end

@@ -70,6 +70,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
       ]
     end
 
+    # rubocop:disable Layout/LineLength
     it 'returns annualized `other income` for both applicant and partner' do
       expect(subject.call).to contain_exactly(
         {
@@ -85,10 +86,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'partner',
           'metadata' => {
-            'details' => <<~HEREDOC
-              Details of the other partner payment
-              Partner: Rent:£15.00/fortnight, Student loan grant:£150.00/annual, Other:£7.00/month
-            HEREDOC
+            'details' => "Partner: Rent:£15.00/fortnight, Student loan grant:£150.00/annual, Other:£7.00/month\nDetails of the other partner payment",
           },
         },
         {
@@ -97,14 +95,12 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
           'frequency' => 'annual',
           'ownership_type' => 'applicant',
           'metadata' => {
-            'details' => <<~HEREDOC
-              Details of the other applicant payment
-              Applicant: Student loan grant:£10.00/four_weeks, From friends relatives:£10.00/annual, Other:£8.00/month
-            HEREDOC
+            'details' => "Applicant: Student loan grant:£10.00/four_weeks, From friends relatives:£10.00/annual, Other:£8.00/month\nDetails of the other applicant payment",
           }
         }
       )
     end
+    # rubocop:enable Layout/LineLength
   end
 
   context 'when `income_payments` are present without `other` payment_type' do
