@@ -15,6 +15,7 @@ class SearchFilter
   attribute :work_stream, array: true, default: -> { [] }
   attribute :case_type, array: true, default: -> { [] }
   attribute :application_type, array: true, default: -> { [] }
+  attribute :office_code, :string
 
   def active_filters
     attributes.compact_blank.keys
@@ -83,5 +84,9 @@ class SearchFilter
 
   def filter_application_type(scope)
     scope.where(application_type:)
+  end
+
+  def filter_office_code(scope)
+    scope.where(office_code:)
   end
 end

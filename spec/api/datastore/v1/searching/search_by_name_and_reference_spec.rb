@@ -26,7 +26,7 @@ RSpec.describe 'search with text' do
     api_request
   end
 
-  it_behaves_like 'an authorisable endpoint', %w[crime-review]
+  it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-review]
 
   it 'defaults to showing all applications' do
     expect(records.count).to be 3
