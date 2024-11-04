@@ -33,7 +33,11 @@ module Datastore
         params do
           requires :application_id, type: String, desc: 'Crime Application UUID'
           optional :decisions, type: [JSON] do
+            optional :reference, type: Integer
+            optional :maat_id, type: Integer
+            optional :case_id, type: String
             requires :interests_of_justice, type: JSON
+            optional :means, type: JSON
             requires :funding_decision, type: String
             optional :comment, type: String
           end
