@@ -3,7 +3,8 @@ module Operations
     def initialize(application_id:, decisions:)
       @application = CrimeApplication.find(application_id)
       @decisions = decisions
-      validate!
+      # TODO: revert after user research
+      # validate!
     end
 
     def call # rubocop:disable Metrics/AbcSize
