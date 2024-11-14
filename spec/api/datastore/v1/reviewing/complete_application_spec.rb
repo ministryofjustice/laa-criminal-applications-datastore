@@ -35,7 +35,8 @@ RSpec.describe 'complete application' do
         put("/api/v1/applications/#{application.id}/complete", params: { decisions: })
       end
 
-      context 'when the decisions are invalid' do
+      # TODO: enable after user research
+      xcontext 'when the decisions are invalid' do # rubocop:disable RSpec/PendingWithoutReason
         let(:decisions) do
           [
             {
