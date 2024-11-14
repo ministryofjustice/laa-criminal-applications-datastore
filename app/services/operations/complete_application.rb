@@ -24,13 +24,14 @@ module Operations
 
     private
 
-    def validate!
-      schema_validator = LaaCrimeSchemas::Validator.new(@decisions, version: 1.0, schema_name: 'general/decision',
-list: true)
-      return if schema_validator.valid?
-
-      raise LaaCrimeSchemas::Errors::ValidationError, schema_validator.fully_validate
-    end
+    # TODO: revert after user research
+    # def validate!
+    #  schema_validator = LaaCrimeSchemas::Validator.new(@decisions, version: 1.0, schema_name: 'general/decision',
+    # list: true)
+    #  return if schema_validator.valid?
+    #
+    #  raise LaaCrimeSchemas::Errors::ValidationError, schema_validator.fully_validate
+    # end
 
     attr_reader :application, :decisions
   end
