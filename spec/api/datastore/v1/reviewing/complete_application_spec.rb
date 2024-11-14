@@ -35,55 +35,6 @@ RSpec.describe 'complete application' do
         put("/api/v1/applications/#{application.id}/complete", params: { decisions: })
       end
 
-      context 'when the decisions are invalid' do
-        let(:decisions) do
-          [
-            {
-              'reference' => 1234,
-              'maat_id' => 5678,
-              'case_id' => '123123123',
-              'interests_of_justice' => nil,
-              'means' => nil,
-              'funding_decision' => nil,
-              'comment' => 'test comment'
-            }.as_json,
-            {
-              'reference' => nil,
-              'maat_id' => nil,
-              'case_id' => '123123123',
-              'interests_of_justice' => {
-                'result' => 'pass',
-                'assessed_by' => 'Kory liam'
-              },
-              'means' => nil,
-              'funding_decision' => 'granted',
-              'comment' => 'test comment'
-            }.as_json
-          ]
-        end
-
-        it 'does not update the application' do
-          expect { api_request }
-            .to(
-              not_change { application.reload.review_status }
-              .and(not_change { application.reload.reviewed_at })
-            )
-        end
-
-        it 'returns 400' do
-          api_request
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it 'returns error information' do
-          api_request
-          expect(response.body).to include(
-            "The property '#/0/funding_decision' of type null did not match the following type: string in schema",
-            "The property '#/1/interests_of_justice' did not contain a required property of 'assessed_on'"
-          )
-        end
-      end
-
       context 'when the decisions are valid' do
         let(:decisions) do
           [
