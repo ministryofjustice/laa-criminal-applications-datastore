@@ -12,6 +12,8 @@ module Datastore
     end
 
     rescue_from LaaCrimeSchemas::Errors::ValidationError do |ex|
+      Rails.error.report(ex, handled: true)
+
       error!({ status: 400, error: ex.message }, 400)
     end
 

@@ -35,8 +35,7 @@ RSpec.describe 'complete application' do
         put("/api/v1/applications/#{application.id}/complete", params: { decisions: })
       end
 
-      # TODO: enable after user research
-      xcontext 'when the decisions are invalid' do # rubocop:disable RSpec/PendingWithoutReason
+      context 'when the decisions are invalid' do
         let(:decisions) do
           [
             {
@@ -47,7 +46,7 @@ RSpec.describe 'complete application' do
               'means' => nil,
               'funding_decision' => nil,
               'comment' => 'test comment'
-            }.as_json,
+            },
             {
               'reference' => nil,
               'maat_id' => nil,
@@ -59,8 +58,8 @@ RSpec.describe 'complete application' do
               'means' => nil,
               'funding_decision' => 'granted',
               'comment' => 'test comment'
-            }.as_json
-          ]
+            }
+          ].to_json
         end
 
         it 'does not update the application' do
