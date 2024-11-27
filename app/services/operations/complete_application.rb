@@ -3,8 +3,8 @@ module Operations
     def initialize(application_id:, decisions:)
       @application = CrimeApplication.find(application_id)
       @decisions = decisions
-      # TODO: revert after user research
-      # validate!
+
+      validate!
     end
 
     def call # rubocop:disable Metrics/AbcSize
@@ -24,14 +24,26 @@ module Operations
 
     private
 
-    # TODO: revert after user research
-    # def validate!
-    #  schema_validator = LaaCrimeSchemas::Validator.new(@decisions, version: 1.0, schema_name: 'general/decision',
-    # list: true)
-    #  return if schema_validator.valid?
-    #
-    #  raise LaaCrimeSchemas::Errors::ValidationError, schema_validator.fully_validate
-    # end
+    def validate!
+      errors = JSON::Validator.validate(
+        schema, decisions, validate_schema: true,
+        fragment: '#/properties/decisions',
+        record_errors: true,
+        errors_as_objects: true
+      )
+
+      return true if errors.empty?
+
+      raise LaaCrimeSchemas::Errors::ValidationError, errors
+    end
+
+    def schema_version
+      application.submitted_application['schema_version'].to_s
+    end
+
+    def schema
+      File.join(LaaCrimeSchemas.root, 'schemas', schema_version, 'application.json')
+    end
 
     attr_reader :application, :decisions
   end
