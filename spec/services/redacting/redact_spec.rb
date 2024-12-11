@@ -153,8 +153,9 @@ describe Redacting::Redact do
         'offence_class' => nil,
         'return_reason' => nil,
         'application_type' => 'initial',
-        'created_at' => '2024-12-11T12:10:33.302Z',
-        'office_code' => '1A123B',
+        'created_at' => nil,
+        'office_code' => nil,
+        'submitted_at' => nil,
       })
     end
   end
