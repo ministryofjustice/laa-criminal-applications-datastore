@@ -8,6 +8,9 @@ module Redacting
         review_status:,
         offence_class:,
         return_reason:,
+        created_at:,
+        office_code:,
+        application_type:,
       }.stringify_keys
     end
 

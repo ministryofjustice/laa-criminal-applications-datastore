@@ -152,6 +152,9 @@ describe Redacting::Redact do
         'review_status' => 'application_received',
         'offence_class' => nil,
         'return_reason' => nil,
+        'application_type' => 'initial',
+        'created_at' => '2024-12-11T12:10:33.302Z',
+        'office_code' => '1A123B',
       })
     end
   end
