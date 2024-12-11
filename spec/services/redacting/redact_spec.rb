@@ -152,6 +152,10 @@ describe Redacting::Redact do
         'review_status' => 'application_received',
         'offence_class' => nil,
         'return_reason' => nil,
+        'application_type' => 'initial',
+        'created_at' => nil,
+        'office_code' => nil,
+        'submitted_at' => nil,
       })
     end
   end

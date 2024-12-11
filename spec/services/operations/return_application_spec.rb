@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Operations::ReturnApplication do
   before do
     CrimeApplication.create(
+      created_at: DateTime.new(2024, 12, 11),
       submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
@@ -90,6 +91,10 @@ describe Operations::ReturnApplication do
               'reviewed_at' => application.reviewed_at.to_time.utc.iso8601(3),
               'review_status' => 'returned_to_provider',
               'status' => 'returned',
+              'application_type' => 'initial',
+              'created_at' => '2024-12-11T00:00:00.000Z',
+              'submitted_at' => '2022-10-24T09:50:04.019Z',
+              'office_code' => '1A123B',
             }
           )
         end
