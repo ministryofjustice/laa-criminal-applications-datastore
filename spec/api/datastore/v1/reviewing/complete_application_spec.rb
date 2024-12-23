@@ -52,7 +52,7 @@ RSpec.describe 'complete application' do
               'maat_id' => nil,
               'case_id' => '123123123',
               'interests_of_justice' => {
-                'result' => 'pass',
+                'result' => 'passed',
                 'assessed_by' => 'Kory liam'
               },
               'means' => nil,
@@ -101,7 +101,7 @@ RSpec.describe 'complete application' do
 
         let(:interests_of_justice) do
           {
-            'result' => 'pass',
+            'result' => 'passed',
             'details' => 'decision details',
             'assessed_by' => 'Grace Nolan',
             'assessed_on' => '2024-10-01 00:00:00'
@@ -110,7 +110,7 @@ RSpec.describe 'complete application' do
 
         let(:means) do
           {
-            'result' => 'fail',
+            'result' => 'failed',
             'details' => 'means details',
             'assessed_by' => 'Kory Liam',
             'assessed_on' => '2024-11-01 00:00:00'
