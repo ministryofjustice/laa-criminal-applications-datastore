@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/ministryofjustice/laa-criminal-legal-aid-schemas.git
-  revision: 35163d1b4b46a921fb997f1b158fa1debc622f5b
-  tag: v1.5.1
+  revision: 99982c0576a5fe9defeaccab89e16f6e3c11fd93
+  tag: v1.5.2
   specs:
-    laa-criminal-legal-aid-schemas (1.5.0)
+    laa-criminal-legal-aid-schemas (1.5.2)
       dry-schema (~> 1.13)
       dry-struct (~> 1.6.0)
       json-schema (~> 4.0.0)
@@ -112,13 +112,13 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
     benchmark (0.4.0)
-    bigdecimal (3.1.8)
+    bigdecimal (3.1.9)
     brakeman (6.1.2)
       racc
     builder (3.3.0)
     byebug (11.1.3)
     coderay (1.1.3)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.5)
     connection_pool (2.4.1)
     crack (1.0.0)
       bigdecimal
@@ -135,32 +135,34 @@ GEM
       dotenv (= 2.8.1)
       railties (>= 3.2)
     drb (2.2.1)
-    dry-configurable (1.2.0)
-      dry-core (~> 1.0, < 2)
+    dry-configurable (1.3.0)
+      dry-core (~> 1.1)
       zeitwerk (~> 2.6)
-    dry-core (1.0.1)
+    dry-core (1.1.0)
       concurrent-ruby (~> 1.0)
+      logger
       zeitwerk (~> 2.6)
-    dry-inflector (1.1.0)
-    dry-initializer (3.1.1)
-    dry-logic (1.5.0)
+    dry-inflector (1.2.0)
+    dry-initializer (3.2.0)
+    dry-logic (1.6.0)
+      bigdecimal
       concurrent-ruby (~> 1.0)
-      dry-core (~> 1.0, < 2)
+      dry-core (~> 1.1)
       zeitwerk (~> 2.6)
-    dry-schema (1.13.4)
+    dry-schema (1.14.0)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 1.0, >= 1.0.1)
-      dry-core (~> 1.0, < 2)
-      dry-initializer (~> 3.0)
-      dry-logic (>= 1.4, < 2)
-      dry-types (>= 1.7, < 2)
+      dry-core (~> 1.1)
+      dry-initializer (~> 3.2)
+      dry-logic (~> 1.5)
+      dry-types (~> 1.8)
       zeitwerk (~> 2.6)
     dry-struct (1.6.0)
       dry-core (~> 1.0, < 2)
       dry-types (>= 1.7, < 2)
       ice_nine (~> 0.11)
       zeitwerk (~> 2.6)
-    dry-types (1.7.2)
+    dry-types (1.8.0)
       bigdecimal (~> 3.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0)
@@ -374,7 +376,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.18)
+    zeitwerk (2.7.1)
 
 PLATFORMS
   ruby

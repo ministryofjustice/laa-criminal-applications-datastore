@@ -94,7 +94,9 @@ RSpec.describe 'complete application' do
               'interests_of_justice' => interests_of_justice,
               'means' => means,
               'funding_decision' => 'granted',
-              'comment' => 'test comment'
+              'comment' => 'test comment',
+              'court_type' => 'crown',
+              'overall_result' => 'Granted - failed means'
             }.as_json
           ]
         end
@@ -138,6 +140,8 @@ RSpec.describe 'complete application' do
           expect(decisions.first.means).to eq(means)
           expect(decisions.first.funding_decision).to eq('granted')
           expect(decisions.first.comment).to eq('test comment')
+          expect(decisions.first.court_type).to eq('crown')
+          expect(decisions.first.overall_result).to eq('Granted - failed means')
         end
       end
     end
