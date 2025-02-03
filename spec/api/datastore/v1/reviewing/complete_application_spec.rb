@@ -96,7 +96,7 @@ RSpec.describe 'complete application' do
               'funding_decision' => 'granted',
               'comment' => 'test comment',
               'court_type' => 'crown',
-              'overall_result' => 'Granted - failed means'
+              'overall_result' => 'granted_failed_means'
             }.as_json
           ]
         end
@@ -141,7 +141,7 @@ RSpec.describe 'complete application' do
           expect(decisions.first.funding_decision).to eq('granted')
           expect(decisions.first.comment).to eq('test comment')
           expect(decisions.first.court_type).to eq('crown')
-          expect(decisions.first.overall_result).to eq('Granted - failed means')
+          expect(decisions.first.overall_result).to eq(Types::OverallResult['granted_failed_means'])
         end
       end
     end
