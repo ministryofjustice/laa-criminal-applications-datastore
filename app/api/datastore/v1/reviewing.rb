@@ -40,7 +40,7 @@ module Datastore
             optional :means, type: JSON
             requires :funding_decision, type: String
             optional :comment, type: String
-            optional :court_type, type: String
+            optional :assessment_rules, type: String
             optional :overall_result, type: String
           end
         end
