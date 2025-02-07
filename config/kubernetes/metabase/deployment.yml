@@ -53,7 +53,7 @@ spec:
           - configMapRef:
               name: configmap
           - secretRef:
-              name: secrets
+              name: laa-criminal-applications-metabase-secrets
         env:
           # secrets created by terraform
           - name: MB_DB_CONNECTION_URI
