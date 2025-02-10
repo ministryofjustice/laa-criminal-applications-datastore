@@ -70,7 +70,7 @@ spec:
           - configMapRef:
               name: configmap-production
           - secretRef:
-              name: secrets-production
+              name: laa-criminal-applications-datastore-secrets
         env:
           # secrets created by terraform
           - name: DATABASE_URL
