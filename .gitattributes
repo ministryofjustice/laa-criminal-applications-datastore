@@ -1,8 +1,2 @@
-# See https://git-scm.com/docs/gitattributes for more about git attribute files.
-*secrets* filter=git-crypt diff=git-crypt
-
-# This is a Rails file, not to be encrypted
-config/secrets.yml !filter !diff
-
 # Mark any vendored files as having been vendored.
 vendor/* linguist-vendored
