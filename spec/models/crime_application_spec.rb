@@ -165,7 +165,6 @@ describe CrimeApplication do
     end
   end
 
-  # TODO: determine if application_type needs be cached on the model.
   describe '#application_type' do
     subject(:application_type) { described_class.new(valid_attributes).application_type }
 
