@@ -84,15 +84,18 @@ RSpec.describe 'list applications' do
       [
         {
           submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
-          status: 'submitted', submitted_at: 1.day.ago, returned_at: nil
+          status: 'submitted', submitted_at: 1.day.ago, returned_at: nil,
+          archived: false, archived_at: nil
         },
         {
-          submitted_application: {},
-          status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now
+          submitted_application: { reference: 6_000_002 },
+          status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now,
+          archived: true, archived_at: Time.zone.now
         },
         {
-          submitted_application: {},
-          status: 'superseded', submitted_at: 1.month.ago, returned_at: 1.week.ago
+          submitted_application: { reference: 6_000_003 },
+          status: 'superseded', submitted_at: 1.month.ago, returned_at: 1.week.ago,
+          archived: false, archived_at: nil
         }
       ]
     end
@@ -161,6 +164,22 @@ RSpec.describe 'list applications' do
 
         it 'does not return applications' do
           expect(records.size).to be(0)
+        end
+      end
+    end
+
+    describe 'exclude_archived filter' do
+      it 'defaults to include archived applications' do
+        expect(records.size).to be(3)
+        expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_002, 6_000_003)
+      end
+
+      context 'when exclude_archived is true' do
+        let(:query) { '?exclude_archived=true' }
+
+        it 'returns only unarchived applications' do
+          expect(records.size).to be(2)
+          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
         end
       end
     end

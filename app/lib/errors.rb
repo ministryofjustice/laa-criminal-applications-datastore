@@ -16,4 +16,10 @@ module Errors
 
   class NotValidForMAAT < StandardError
   end
+
+  class AlreadyArchived < StandardError
+  end
+
+  class CannotArchive < StandardError
+  end
 end

@@ -53,6 +53,13 @@ module Datastore
             default: nil,
             desc: 'The office account number handling the application.'
           )
+
+          optional(
+            :exclude_archived,
+            type: Boolean,
+            default: false,
+            desc: 'Whether archived applications should be excluded.'
+          )
         end
 
         get do
@@ -62,6 +69,19 @@ module Datastore
 
           present :records, collection, with: Datastore::Entities::V1::PrunedApplication
           present :pagination, collection, with: Datastore::Entities::V1::Pagination
+        end
+
+        desc 'Archive an application.'
+        params do
+          requires :application_id, type: String, desc: 'Application UUID.'
+        end
+        route_param :application_id do
+          resource :archive do
+            route_setting :authorised_consumers, %w[crime-apply]
+            put do
+              Operations::ArchiveApplication.new(application_id: params[:application_id]).call
+            end
+          end
         end
       end
     end

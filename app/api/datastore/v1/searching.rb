@@ -26,8 +26,8 @@ module Datastore
             optional :reviewed_after, type: DateTime
             optional :reviewed_before, type: DateTime
 
-            # Apply search spike
             optional :office_code, type: String
+            optional :exclude_archived, type: Boolean, default: false
           end
 
           optional :sorting, type: JSON, desc: 'Sorting JSON.', default: Sorting.new.attributes do
