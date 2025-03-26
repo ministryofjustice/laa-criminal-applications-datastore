@@ -1,27 +1,27 @@
-FROM ruby:3.3.5-alpine3.20
+FROM ruby:3.4.2-alpine3.21
 MAINTAINER LAA Crime Apply Team
 
-RUN apk --no-cache add --virtual build-deps build-base postgresql15-dev git bash curl \
- && apk --no-cache add postgresql15-client tzdata gcompat
+RUN apk --no-cache add --virtual build-deps build-base postgresql15-dev yaml-dev git bash curl \
+  && apk --no-cache add postgresql15-client tzdata gcompat
 
 # add non-root user and group with alpine first available uid, 1000
 RUN addgroup -g 1000 -S appgroup && \
-    adduser -u 1000 -S appuser -G appgroup
+  adduser -u 1000 -S appuser -G appgroup
 
 # create some required directories
 RUN mkdir -p /usr/src/app && \
-    mkdir -p /usr/src/app/log && \
-    mkdir -p /usr/src/app/tmp && \
-    mkdir -p /usr/src/app/tmp/pids
+  mkdir -p /usr/src/app/log && \
+  mkdir -p /usr/src/app/tmp && \
+  mkdir -p /usr/src/app/tmp/pids
 
 WORKDIR /usr/src/app
 
 COPY Gemfile* .ruby-version ./
 
 RUN gem install bundler && \
-    bundle config set frozen 'true' && \
-    bundle config without test:development && \
-    bundle install --jobs 2 --retry 3
+  bundle config set frozen 'true' && \
+  bundle config without test:development && \
+  bundle install --jobs 2 --retry 3
 
 COPY . .
 

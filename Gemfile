@@ -5,13 +5,13 @@ ruby File.read('.ruby-version').chomp
 
 gem 'pg', '~> 1.5.6'
 gem 'puma'
-gem 'rails', '~> 7.1.4', '>= 7.1.4.1'
 
-gem 'grape', '~> 2.1.3'
-gem 'grape-entity', '~> 1.0.1'
+gem 'grape'
+gem 'grape-entity'
 gem 'grape_logging'
 gem 'grape-swagger'
 gem 'kaminari-activerecord'
+gem 'rails', '~> 7.2'
 
 # Monitoring
 gem 'prometheus_exporter'
@@ -39,7 +39,7 @@ group :development, :test do
   # Issue with freezing ENV with dotenv-rails v3 https://github.com/bkeepers/dotenv/issues/482
   gem 'dotenv-rails', '~> 2.8.1'
   gem 'pry'
-  gem 'rspec-rails', '>= 6.1.1'
+  gem 'rspec-rails', '>= 7.1.1'
 end
 
 group :test do
@@ -51,3 +51,7 @@ group :test do
   gem 'simplecov', require: false
   gem 'webmock', '>= 3.23.1'
 end
+
+gem 'ostruct', '~> 0.6.1'
+
+gem 'benchmark', '~> 0.4.0'

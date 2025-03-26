@@ -1,18 +1,18 @@
-require:
+plugins:
   - rubocop-rails
   - rubocop-performance
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.1
+  TargetRubyVersion: 3.4
   SuggestExtensions: false
   NewCops: enable
   Exclude:
-    - 'db/**/*'
-    - 'bin/**/*'
-    - 'config/**/*'
-    - 'lib/tasks/**/*'
-    - 'vendor/**/*'
+    - "db/**/*"
+    - "bin/**/*"
+    - "config/**/*"
+    - "lib/tasks/**/*"
+    - "vendor/**/*"
 
 ####################################
 ## Customization for this project ##
@@ -90,9 +90,9 @@ RSpec/ExampleLength:
 
 RSpec/DescribeClass:
   Exclude:
-    - '**/spec/api/**/*'
+    - "**/spec/api/**/*"
 
 Rails/SkipsModelValidations:
   Exclude:
-    - '**/spec/api/datastore/*/applications/list_applications_spec.rb'
-    - '**/spec/api/datastore/*/searching/*'
+    - "**/spec/api/datastore/*/applications/list_applications_spec.rb"
+    - "**/spec/api/datastore/*/searching/*"
