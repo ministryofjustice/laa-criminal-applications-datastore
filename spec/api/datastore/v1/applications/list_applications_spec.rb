@@ -74,6 +74,8 @@ RSpec.describe 'list applications' do
       JSON.parse(response.body).fetch('records')
     end
 
+    include_context 'with a consumer'
+
     before do
       CrimeApplication.insert_all(applications)
 
@@ -103,6 +105,7 @@ RSpec.describe 'list applications' do
     let(:returned_statuses) { records.pluck('status').uniq }
 
     let(:query) { nil }
+    let(:consumer) { nil }
 
     it 'is an array of valid crime application details' do
       validator = LaaCrimeSchemas::Validator.new(records.first, version: 1.0, schema_name: 'pruned_application')
@@ -164,22 +167,6 @@ RSpec.describe 'list applications' do
 
         it 'does not return applications' do
           expect(records.size).to be(0)
-        end
-      end
-    end
-
-    describe 'exclude_archived filter' do
-      it 'defaults to include archived applications' do
-        expect(records.size).to be(3)
-        expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_002, 6_000_003)
-      end
-
-      context 'when exclude_archived is true' do
-        let(:query) { '?exclude_archived=true' }
-
-        it 'returns only unarchived applications' do
-          expect(records.size).to be(2)
-          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
         end
       end
     end
@@ -315,6 +302,26 @@ RSpec.describe 'list applications' do
               expect(records.first['submitted_at']).to be > records.second['submitted_at']
             end
           end
+        end
+      end
+    end
+
+    describe 'scoping by consumer' do
+      context 'when the consumer is crime-apply' do
+        let(:consumer) { 'crime-apply' }
+
+        it 'excludes archived applications' do
+          expect(records.size).to be(2)
+          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
+        end
+      end
+
+      context 'when the consumer is not crime-apply' do
+        let(:consumer) { 'crime-review' }
+
+        it 'includes all applications' do
+          expect(records.size).to be(3)
+          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_002, 6_000_003)
         end
       end
     end

@@ -45,6 +45,9 @@ Layout/HashAlignment:
 RSpec/NamedSubject:
   Enabled: false
 
+RSpec/AnyInstance:
+  Enabled: false
+
 # Enabled but tweaked cops
 ##########################
 

@@ -7,6 +7,12 @@ module Datastore
     helpers Helpers::SortingParams
     helpers Helpers::PaginationParams
 
+    helpers do
+      def current_consumer
+        env.fetch('grape_jwt.payload', {})['iss']
+      end
+    end
+
     rescue_from ActiveRecord::RecordNotFound do
       error!({ status: 404, error: 'Record not found' }, 404)
     end

@@ -27,7 +27,6 @@ module Datastore
             optional :reviewed_before, type: DateTime
 
             optional :office_code, type: String
-            optional :exclude_archived, type: Boolean, default: false
           end
 
           optional :sorting, type: JSON, desc: 'Sorting JSON.', default: Sorting.new.attributes do
@@ -41,7 +40,7 @@ module Datastore
 
         post do
           search_params = declared(params).symbolize_keys
-          search = Operations::Search.new(**search_params)
+          search = Operations::Search.new(**search_params, consumer: current_consumer)
           records = search.call
 
           present :pagination, records, with: Datastore::Entities::V1::Pagination

@@ -16,7 +16,6 @@ class SearchFilter
   attribute :case_type, array: true, default: -> { [] }
   attribute :application_type, array: true, default: -> { [] }
   attribute :office_code, :string
-  attribute :exclude_archived, :boolean
 
   def active_filters
     attributes.compact_blank.keys
@@ -89,9 +88,5 @@ class SearchFilter
 
   def filter_office_code(scope)
     scope.where(office_code:)
-  end
-
-  def filter_exclude_archived(scope)
-    exclude_archived ? scope.where(archived: false) : scope
   end
 end

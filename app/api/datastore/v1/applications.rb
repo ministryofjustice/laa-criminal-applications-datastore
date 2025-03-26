@@ -53,18 +53,11 @@ module Datastore
             default: nil,
             desc: 'The office account number handling the application.'
           )
-
-          optional(
-            :exclude_archived,
-            type: Boolean,
-            default: false,
-            desc: 'Whether archived applications should be excluded.'
-          )
         end
 
         get do
           collection = Operations::ListApplications.new(
-            **declared(params).symbolize_keys
+            **declared(params).symbolize_keys, consumer: current_consumer
           ).call
 
           present :records, collection, with: Datastore::Entities::V1::PrunedApplication
