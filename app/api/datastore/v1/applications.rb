@@ -57,11 +57,24 @@ module Datastore
 
         get do
           collection = Operations::ListApplications.new(
-            **declared(params).symbolize_keys
+            **declared(params).symbolize_keys, consumer: current_consumer
           ).call
 
           present :records, collection, with: Datastore::Entities::V1::PrunedApplication
           present :pagination, collection, with: Datastore::Entities::V1::Pagination
+        end
+
+        desc 'Archive an application.'
+        params do
+          requires :application_id, type: String, desc: 'Application UUID.'
+        end
+        route_param :application_id do
+          resource :archive do
+            route_setting :authorised_consumers, %w[crime-apply]
+            put do
+              Operations::ArchiveApplication.new(application_id: params[:application_id]).call
+            end
+          end
         end
       end
     end

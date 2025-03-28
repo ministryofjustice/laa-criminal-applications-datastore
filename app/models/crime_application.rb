@@ -11,8 +11,21 @@ class CrimeApplication < ApplicationRecord
 
   has_many :decisions, dependent: :destroy
 
+  scope :consumer_scope, lambda { |consumer|
+    case consumer
+    when 'crime-apply'
+      where(archived_at: nil)
+    else
+      all
+    end
+  }
+
   def application_type
     submitted_application.fetch('application_type')
+  end
+
+  def archived?
+    archived_at.present?
   end
 
   private
