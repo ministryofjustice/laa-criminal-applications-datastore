@@ -25,13 +25,13 @@ RSpec.describe 'Archive application' do
 
       it 'persists archived and archived_at timestamp' do
         expect { api_request }.to change { application.reload.archived_at }
-          .from(nil).and(change { application.reload.archived }.from(false).to(true))
+          .from(nil)
       end
     end
 
     context 'with an archived application' do
       before do
-        application.update!(archived: true, archived_at: Time.zone.now)
+        application.update!(archived_at: Time.zone.now)
       end
 
       it_behaves_like 'an error that raises a 409 status code'

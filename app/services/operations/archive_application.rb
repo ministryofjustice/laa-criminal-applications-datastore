@@ -8,7 +8,7 @@ module Operations
       raise Errors::AlreadyArchived if application.archived?
       raise Errors::CannotArchive unless application.returned?
 
-      application.update!(archived: true, archived_at: Time.zone.now)
+      application.update!(archived_at: Time.zone.now)
     end
 
     private

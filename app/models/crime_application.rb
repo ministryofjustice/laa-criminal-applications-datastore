@@ -14,7 +14,7 @@ class CrimeApplication < ApplicationRecord
   scope :consumer_scope, lambda { |consumer|
     case consumer
     when 'crime-apply'
-      where(archived: false)
+      where(archived_at: nil)
     else
       all
     end
@@ -22,6 +22,10 @@ class CrimeApplication < ApplicationRecord
 
   def application_type
     submitted_application.fetch('application_type')
+  end
+
+  def archived?
+    archived_at.present?
   end
 
   private

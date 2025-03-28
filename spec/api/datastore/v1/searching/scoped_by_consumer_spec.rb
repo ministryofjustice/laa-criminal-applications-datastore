@@ -16,17 +16,17 @@ RSpec.describe 'scope search by consumer' do
         {
           submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
           status: 'submitted', submitted_at: 1.day.ago, returned_at: nil,
-          archived: false, archived_at: nil
+          archived_at: nil
         },
         {
           submitted_application: { reference: 6_000_002 },
           status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now,
-          archived: true, archived_at: Time.zone.now
+          archived_at: Time.zone.now
         },
         {
           submitted_application: { reference: 6_000_003 },
           status: 'superseded', submitted_at: 1.month.ago, returned_at: 1.week.ago,
-          archived: false, archived_at: nil
+          archived_at: nil
         }
       ]
     )
