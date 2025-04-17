@@ -43,9 +43,21 @@ module Redacting
         redact: %w[first_name last_name]
       },
       'means_details' => {
-        redact: %w[income_details.income_payments.amount income_details.income_benefits.amount
-                   income_details.employment_type income_details.partner_employment_type capital_details.premium_bonds_total_value capital_details.partner_premium_bonds_total_value capital_details.trust_fund_amount_held capital_details.trust_fund_yearly_dividend capital_details.partner_trust_fund_amount_held capital_details.partner_trust_fund_yearly_dividend outgoings_details.outgoings.amount]
+        redact: %w[
+          income_details.income_payments.amount
+          income_details.income_benefits.amount
+          income_details.employment_type
+          income_details.partner_employment_type
+          capital_details.premium_bonds_total_value
+          capital_details.partner_premium_bonds_total_value
+          capital_details.trust_fund_amount_held
+          capital_details.trust_fund_yearly_dividend
+          capital_details.partner_trust_fund_amount_held
+          capital_details.partner_trust_fund_yearly_dividend
+          outgoings_details.outgoings.amount
+        ]
       }
+
     }.freeze
 
     def self.pii_attributes
