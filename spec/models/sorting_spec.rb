@@ -38,5 +38,39 @@ describe Sorting do
         )
       end
     end
+
+    context 'with a custom sql sort' do
+      let(:params) { { sort_by: :application_status, sort_direction: sort_direction } }
+
+      context 'when ascending' do
+        let(:sort_direction) { 'descending' }
+
+        it 'orders custom sql' do
+          expect(scope).to have_received(:order).with(
+            'CASE review_status ' \
+            "WHEN 'application_received' THEN 30 " \
+            "WHEN 'ready_for_assessment' THEN 30 " \
+            "WHEN 'returned_to_provider' THEN 20 " \
+            "WHEN 'assessment_completed' THEN 10 " \
+            'ELSE 0 END DESC'
+          )
+        end
+      end
+
+      context 'when descending' do
+        let(:sort_direction) { 'ascending' }
+
+        it 'orders custom sql' do
+          expect(scope).to have_received(:order).with(
+            'CASE review_status ' \
+            "WHEN 'application_received' THEN 30 " \
+            "WHEN 'ready_for_assessment' THEN 30 " \
+            "WHEN 'returned_to_provider' THEN 20 " \
+            "WHEN 'assessment_completed' THEN 10 " \
+            'ELSE 0 END ASC'
+          )
+        end
+      end
+    end
   end
 end

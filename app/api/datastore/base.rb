@@ -7,6 +7,12 @@ module Datastore
     helpers Helpers::SortingParams
     helpers Helpers::PaginationParams
 
+    helpers do
+      def current_consumer
+        env.fetch('grape_jwt.payload', {})['iss']
+      end
+    end
+
     rescue_from ActiveRecord::RecordNotFound do
       error!({ status: 404, error: 'Record not found' }, 404)
     end
@@ -41,6 +47,14 @@ module Datastore
       Rails.error.report(ex, handled: true)
 
       error!({ status: 404, error: 'Record not found' }, 404)
+    end
+
+    rescue_from Errors::AlreadyArchived do
+      error!({ status: 409, error: 'Application already archived' }, 409)
+    end
+
+    rescue_from Errors::CannotArchive do
+      error!({ status: 409, error: 'Application cannot be archived' }, 409)
     end
   end
 end

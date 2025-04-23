@@ -2,8 +2,8 @@ class CrimeApplication < ApplicationRecord
   include Redactable
 
   attr_readonly :submitted_application, :submitted_at, :id
-  enum status: Types::ApplicationStatus.mapping
-  enum review_status: Types::ReviewApplicationStatus.mapping
+  enum :status, Types::ApplicationStatus.mapping
+  enum :review_status, Types::ReviewApplicationStatus.mapping
 
   before_validation :shift_payload_attributes, on: :create
   before_validation :set_overall_offence_class, :set_work_stream, on: :create
@@ -11,8 +11,21 @@ class CrimeApplication < ApplicationRecord
 
   has_many :decisions, dependent: :destroy
 
+  scope :consumer_scope, lambda { |consumer|
+    case consumer
+    when 'crime-apply'
+      where(archived_at: nil)
+    else
+      all
+    end
+  }
+
   def application_type
     submitted_application.fetch('application_type')
+  end
+
+  def archived?
+    archived_at.present?
   end
 
   private

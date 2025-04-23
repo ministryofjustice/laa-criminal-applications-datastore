@@ -9,8 +9,9 @@ module Datastore
             :created_at,
             :parent_id,
             :work_stream,
+            :review_status,
             :reviewed_at,
-            :status
+            :status,
           )
 
           expose :case_details, using: CaseDetails

@@ -165,7 +165,6 @@ describe CrimeApplication do
     end
   end
 
-  # TODO: determine if application_type needs be cached on the model.
   describe '#application_type' do
     subject(:application_type) { described_class.new(valid_attributes).application_type }
 
@@ -279,6 +278,22 @@ describe CrimeApplication do
           'first_court_hearing_name' => 'Cardiff Magistrates\' Court'
         )
       end
+    end
+  end
+
+  describe '#archived?' do
+    subject(:archived?) { described_class.new(valid_attributes).archived? }
+
+    context 'when the application is archived' do
+      let(:valid_attributes) { super().merge(archived_at: Time.zone.now) }
+
+      it { is_expected.to be(true) }
+    end
+
+    context 'when the application is not archived' do
+      let(:valid_attributes) { super().merge(archived_at: nil) }
+
+      it { is_expected.to be(false) }
     end
   end
 end

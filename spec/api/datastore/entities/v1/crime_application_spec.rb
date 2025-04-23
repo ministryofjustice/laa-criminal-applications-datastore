@@ -13,6 +13,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       submitted_at: 3.days.ago,
       reviewed_at: nil,
       returned_at: 3.days.ago - 1.hour,
+      review_status: Types::ReviewApplicationStatus['application_received'],
       return_details: { reason: nil, details: nil, returned_at: nil },
       offence_class: Types::OffenceClass['C'],
       work_stream: Types::WorkStreamType['criminal_applications_team'],
@@ -106,6 +107,10 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
 
     it 'represents the status' do
       expect(representation.fetch('status')).to eq crime_application.status
+    end
+
+    it 'represents the review_status' do
+      expect(representation.fetch('review_status')).to eq crime_application.review_status
     end
 
     it 'represents the return_details' do
