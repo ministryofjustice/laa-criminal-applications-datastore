@@ -4,20 +4,23 @@ module Redacting
 
     PII_ATTRIBUTES = {
       'provider_details' => {
-        redact: %w[legal_rep_telephone]
+        redact: %w[legal_rep_telephone legal_rep_last_name legal_rep_first_name provider_email]
       },
       'client_details.applicant' => {
         redact: %w[first_name last_name other_names nino arc telephone_number date_of_birth]
       },
       'client_details.applicant.home_address' => {
-        redact: %w[lookup_id address_line_one address_line_two]
+        redact: %w[lookup_id address_line_one address_line_two city country postcode]
       },
       'client_details.applicant.correspondence_address' => {
-        redact: %w[lookup_id address_line_one address_line_two]
+        redact: %w[lookup_id address_line_one address_line_two country city postcode]
       },
       'client_details.partner' => {
         redact: %w[first_name last_name other_names date_of_birth nino],
         type: :object
+      },
+      'client_details.partner.home_address' => {
+        redact: %w[lookup_id address_line_one address_line_two city country postcode]
       },
       'case_details.codefendants' => {
         redact: %w[first_name last_name],
@@ -42,22 +45,21 @@ module Redacting
       'date_stamp_context' => {
         redact: %w[first_name last_name]
       },
-      'means_details' => {
+      'means_details.capital_details' => {
         redact: %w[
-          income_details.income_payments.amount
-          income_details.income_benefits.amount
-          income_details.employment_type
-          income_details.partner_employment_type
-          capital_details.premium_bonds_total_value
-          capital_details.partner_premium_bonds_total_value
-          capital_details.trust_fund_amount_held
-          capital_details.trust_fund_yearly_dividend
-          capital_details.partner_trust_fund_amount_held
-          capital_details.partner_trust_fund_yearly_dividend
-          outgoings_details.outgoings.amount
-        ]
+          premium_bonds_total_value
+          partner_premium_bonds_total_value
+          trust_fund_amount_held
+          trust_fund_yearly_dividend
+          partner_trust_fund_amount_held
+          partner_trust_fund_yearly_dividend
+        ],
+        type: :object
+      },
+      'means_details.capital_details.properties' => {
+        type: :array,
+        redact: %w[address property_owners]
       }
-
     }.freeze
 
     def self.pii_attributes

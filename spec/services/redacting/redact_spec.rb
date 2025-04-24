@@ -5,70 +5,121 @@ describe Redacting::Redact do
 
   let(:crime_application) { CrimeApplication.new(submitted_application:) }
   let(:submitted_application) { JSON.parse(LaaCrimeSchemas.fixture(1.0).read) }
-
   let(:redacted_application) { crime_application.redacted_crime_application.submitted_application }
 
   # rubocop:disable Layout/FirstHashElementIndentation, RSpec/ExampleLength
   describe 'redacting of a submitted application' do
-    before do
-      subject.process!
-    end
+    before { subject.process! }
 
     context 'with provider details' do
       let(:provider_details) { redacted_application['provider_details'] }
 
       it 'redacts the expected attributes' do
         expect(provider_details).to eq({
-          'office_code' => '1A123B',
-          'provider_email' => 'provider@example.com',
-          'legal_rep_first_name' => 'John',
-          'legal_rep_has_partner_declaration' => 'no',
-          'legal_rep_last_name' => 'Doe',
-          'legal_rep_no_partner_declaration_reason' => 'A reason',
-          'legal_rep_telephone' => '__redacted__',
-        })
+                                         'office_code' => '1A123B',
+                                         'provider_email' => '__redacted__',
+                                         'legal_rep_first_name' => '__redacted__',
+                                         'legal_rep_has_partner_declaration' => 'no',
+                                         'legal_rep_last_name' => '__redacted__',
+                                         'legal_rep_no_partner_declaration_reason' => 'A reason',
+                                         'legal_rep_telephone' => '__redacted__'
+                                       })
       end
     end
 
     context 'with client details' do
       let(:client_details) { redacted_application['client_details'] }
 
-      it 'redacts the expected attributes' do
+      it 'redacts the expected applicant attributes' do
         expect(client_details['applicant']).to eq({
-          'first_name' => '__redacted__',
-          'last_name' => '__redacted__',
-          'other_names' => '',
-          'nino' => '__redacted__',
-          'date_of_birth' => '2001-06-09',
-          'telephone_number' => '__redacted__',
-          'correspondence_address_type' => 'home_address',
-          'home_address' => {
-            'lookup_id' => nil,
-            'address_line_one' => '__redacted__',
-            'address_line_two' => '__redacted__',
-            'city' => 'Some nice city',
-            'country' => 'United Kingdom',
-            'postcode' => 'SW1A 2AA',
-          },
-          'benefit_type' => 'universal_credit',
-          'last_jsa_appointment_date' => nil,
-          'correspondence_address' => nil,
-          'residence_type' => nil,
-          'relationship_to_owner_of_usual_home_address' => nil,
-          'has_partner' => 'yes',
-          'relationship_status' => nil,
-          'relationship_to_partner' => 'living_together',
-          'separation_date' => nil,
-          'benefit_check_status' => 'no_record_found',
-          'benefit_check_result' => false,
-          'confirm_details' => 'yes',
-          'confirm_dwp_result' => 'no',
-          'has_arc' => nil,
-          'has_benefit_evidence' => 'no',
-          'has_nino' => 'yes',
-          'will_enter_nino' => nil,
-          'arc' => nil
-        })
+                                                    'first_name' => '__redacted__',
+                                                    'last_name' => '__redacted__',
+                                                    'other_names' => '',
+                                                    'nino' => '__redacted__',
+                                                    'date_of_birth' => '__redacted__',
+                                                    'telephone_number' => '__redacted__',
+                                                    'correspondence_address_type' => 'home_address',
+                                                    'home_address' => {
+                                                      'lookup_id' => nil,
+                                                      'address_line_one' => '__redacted__',
+                                                      'address_line_two' => '__redacted__',
+                                                      'city' => '__redacted__',
+                                                      'country' => '__redacted__',
+                                                      'postcode' => '__redacted__'
+                                                    },
+                                                    'benefit_type' => 'universal_credit',
+                                                    'last_jsa_appointment_date' => nil,
+                                                    'correspondence_address' => nil,
+                                                    'residence_type' => nil,
+                                                    'relationship_to_owner_of_usual_home_address' => nil,
+                                                    'has_partner' => 'yes',
+                                                    'relationship_status' => nil,
+                                                    'relationship_to_partner' => 'living_together',
+                                                    'separation_date' => nil,
+                                                    'benefit_check_status' => 'no_record_found',
+                                                    'benefit_check_result' => false,
+                                                    'confirm_details' => 'yes',
+                                                    'confirm_dwp_result' => 'no',
+                                                    'has_arc' => nil,
+                                                    'has_benefit_evidence' => 'no',
+                                                    'has_nino' => 'yes',
+                                                    'will_enter_nino' => nil,
+                                                    'arc' => nil
+                                                  })
+      end
+
+      it 'redacts the expected partner attributes' do
+        expect(client_details['partner']).to eq({
+                                                  "first_name" => "__redacted__",
+                                                  "last_name" => "__redacted__",
+                                                  "other_names" => "__redacted__",
+                                                  "has_nino" => "yes",
+                                                  "nino" => "__redacted__",
+                                                  "has_arc" => nil,
+                                                  "arc" => nil,
+                                                  "date_of_birth" => "__redacted__",
+                                                  "involvement_in_case" => "codefendant",
+                                                  "conflict_of_interest" => "no",
+                                                  "has_same_address_as_client" => "no",
+                                                  "is_included_in_means_assessment" => false,
+                                                  "benefit_check_result" => nil,
+                                                  "benefit_check_status" => nil,
+                                                  "benefit_type" => nil,
+                                                  "confirm_details" => nil,
+                                                  "confirm_dwp_result" => nil,
+                                                  "has_benefit_evidence" => nil,
+                                                  "will_enter_nino" => nil,
+                                                  "last_jsa_appointment_date" => nil,
+                                                  'home_address' => {
+                                                    'lookup_id' => nil,
+                                                    'address_line_one' => '__redacted__',
+                                                    'address_line_two' => '__redacted__',
+                                                    'city' => '__redacted__',
+                                                    'country' => '__redacted__',
+                                                    'postcode' => '__redacted__'
+                                                  },
+                                                })
+      end
+    end
+
+    context 'with means details' do
+      let(:means_details) { redacted_application['means_details'] }
+
+      it 'redacts the expected capital attributes' do
+        expect(means_details['capital_details']).to include(
+                                                      'premium_bonds_total_value' => '__redacted__',
+                                                      'partner_premium_bonds_total_value' => nil,
+                                                      'trust_fund_amount_held' => '__redacted__',
+                                                      'trust_fund_yearly_dividend' => '__redacted__',
+                                                      'partner_trust_fund_amount_held' => nil,
+                                                      'partner_trust_fund_yearly_dividend' => nil
+                                                    )
+      end
+
+      it 'redacts the expected property address and owners attributes' do
+        property = means_details['capital_details']['properties'].first
+        expect(property['address']).to eq('__redacted__')
+        expect(property['property_owners']).to eq('__redacted__')
       end
     end
 
@@ -78,10 +129,10 @@ describe Redacting::Redact do
       it 'redacts the expected attributes' do
         expect(case_details['codefendants']).to eq(
           [{
-            'first_name' => '__redacted__',
-            'last_name' => '__redacted__',
-            'conflict_of_interest' => 'yes'
-          }]
+             'first_name' => '__redacted__',
+             'last_name' => '__redacted__',
+             'conflict_of_interest' => 'yes'
+           }]
         )
       end
     end
@@ -92,9 +143,9 @@ describe Redacting::Redact do
       it 'redacts the expected attributes' do
         expect(interests_of_justice).to eq(
           [{
-            'type' => 'loss_of_liberty',
-            'reason' => '__redacted__',
-          }]
+             'type' => 'loss_of_liberty',
+             'reason' => '__redacted__'
+           }]
         )
       end
     end
@@ -105,12 +156,12 @@ describe Redacting::Redact do
       it 'redacts the expected attributes' do
         expect(supporting_evidence).to eq(
           [{
-            's3_object_key' => '__redacted__',
-            'filename' => '__redacted__',
-            'file_size' => 12,
-            'content_type' => 'application/pdf',
-            'scan_at' => '2023-10-01 12:34:56',
-          }]
+             's3_object_key' => '__redacted__',
+             'filename' => '__redacted__',
+             'file_size' => 12,
+             'content_type' => 'application/pdf',
+             'scan_at' => '2023-10-01 12:34:56'
+           }]
         )
       end
     end
@@ -131,7 +182,7 @@ describe Redacting::Redact do
       it 'redacts the expected attributes' do
         expect(redacted_application['date_stamp_context']).to include(
           'first_name' => '__redacted__',
-          'last_name' => '__redacted__',
+          'last_name' => '__redacted__'
         )
       end
     end
@@ -140,23 +191,21 @@ describe Redacting::Redact do
   describe 'metadata attributes' do
     let(:metadata) { crime_application.redacted_crime_application.metadata }
 
-    before do
-      subject.process!
-    end
+    before { subject.process! }
 
     it 'contains the expected metadata json' do
       expect(metadata).to eq({
-        'status' => 'submitted',
-        'reviewed_at' => nil,
-        'returned_at' => nil,
-        'review_status' => 'application_received',
-        'offence_class' => nil,
-        'return_reason' => nil,
-        'application_type' => 'initial',
-        'created_at' => nil,
-        'office_code' => nil,
-        'submitted_at' => nil,
-      })
+                               'status' => 'submitted',
+                               'reviewed_at' => nil,
+                               'returned_at' => nil,
+                               'review_status' => 'application_received',
+                               'offence_class' => nil,
+                               'return_reason' => nil,
+                               'application_type' => 'initial',
+                               'created_at' => nil,
+                               'office_code' => nil,
+                               'submitted_at' => nil
+                             })
     end
   end
 
@@ -174,10 +223,10 @@ describe Redacting::Redact do
 
       expect(redacted_application['client_details']['applicant']).to match(
         a_hash_including({
-          'other_names' => '',
-          'nino' => nil,
-          'telephone_number' => '__redacted__',
-        })
+                           'other_names' => '',
+                           'nino' => nil,
+                           'telephone_number' => '__redacted__'
+                         })
       )
     end
   end
@@ -189,9 +238,7 @@ describe Redacting::Redact do
     end
 
     context 'when `redact` information is not found' do
-      let(:rules) do
-        { 'provider_details' => {} }
-      end
+      let(:rules) { { 'provider_details' => {} } }
 
       it 'raises a key not found error' do
         expect { subject.process! }.to raise_error(KeyError, /key not found: :redact/)
@@ -199,9 +246,7 @@ describe Redacting::Redact do
     end
 
     context 'when the `type` is unrecognised' do
-      let(:rules) do
-        { 'provider_details' => { redact: %w[], type: :date } }
-      end
+      let(:rules) { { 'provider_details' => { redact: %w[], type: :date } } }
 
       it 'raises a key not found error' do
         expect { subject.process! }.to raise_error(RuntimeError, /unknown rule path type: date/)
