@@ -17,8 +17,14 @@ describe Redacting::Rules do
         supporting_evidence
         additional_information
         date_stamp_context
+        means_details.income_details.employments
+        means_details.income_details.businesses
+        means_details.outgoings_details.outgoings
         means_details.capital_details
         means_details.capital_details.properties
+        means_details.capital_details.savings
+        means_details.capital_details.national_savings_certificates
+        means_details.capital_details.investments
       ]
     end
 

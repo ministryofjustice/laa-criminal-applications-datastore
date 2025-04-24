@@ -4,7 +4,10 @@ describe Redacting::Redact do
   subject { described_class.new(crime_application) }
 
   let(:crime_application) { CrimeApplication.new(submitted_application:) }
-  let(:submitted_application) { JSON.parse(LaaCrimeSchemas.fixture(1.0).read) }
+  let(:means_details) { JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'means').read) }
+  let(:submitted_application) do
+    JSON.parse(LaaCrimeSchemas.fixture(1.0).read).deep_merge('means_details' => means_details)
+  end
   let(:redacted_application) { crime_application.redacted_crime_application.submitted_application }
 
   # rubocop:disable Layout/FirstHashElementIndentation, RSpec/ExampleLength
@@ -103,23 +106,96 @@ describe Redacting::Redact do
     end
 
     context 'with means details' do
-      let(:means_details) { redacted_application['means_details'] }
+      let(:redacted_means_details) { redacted_application['means_details'] }
+
+      let(:self_employed_business) do
+        {
+          'ownership_type' => 'applicant',
+          'business_type' => 'self_employed',
+          'trading_name' => 'Self employed business 1',
+          'address' => {
+            'address_line_one' => 'address_line_one_x',
+            'address_line_two' => 'address_line_two_x',
+            'city' => 'city_x',
+            'postcode' => 'postcode_x',
+            'country' => 'country_x'
+          },
+          'description' => 'A cafe',
+          'trading_start_date' => 'Sat, 12 Jun 2021',
+          'has_additional_owners' => 'yes',
+          'additional_owners' => 'Owner 1',
+          'has_employees' => 'no',
+          'number_of_employees' => nil,
+        }
+      end
+
+      let(:submitted_application) do
+        super().deep_merge('means_details' => { 'income_details' => { 'businesses' => [self_employed_business] } })
+      end
+
+      it 'redacts the expected business attributes' do
+        business = redacted_means_details['income_details']['businesses'].first
+        expect(business).to include(
+          'trading_name' => '__redacted__',
+          'trading_start_date' => '__redacted__',
+          'address' => '__redacted__',
+          'additional_owners' => '__redacted__'
+        )
+      end
+
+      it 'redacts the expected employment attributes' do
+        employment = redacted_means_details['income_details']['employments'].first
+        expect(employment).to include(
+          'employer_name' => '__redacted__',
+          'job_title' => 'Supervisor',
+          'address' => '__redacted__',
+        )
+      end
+
+      it 'redacts the expected outgoings attributes' do
+        outgoing = redacted_means_details['outgoings_details']['outgoings'].last
+        expect(outgoing).to include(
+          'payment_type' => 'board_and_lodging',
+          'metadata' => '__redacted__'
+        )
+      end
 
       it 'redacts the expected capital attributes' do
-        expect(means_details['capital_details']).to include(
-          'premium_bonds_total_value' => '__redacted__',
-          'partner_premium_bonds_total_value' => nil,
-          'trust_fund_amount_held' => '__redacted__',
-          'trust_fund_yearly_dividend' => '__redacted__',
-          'partner_trust_fund_amount_held' => nil,
-          'partner_trust_fund_yearly_dividend' => nil
+        expect(redacted_means_details['capital_details']).to include(
+          'premium_bonds_holder_number' => '__redacted__',
+          'premium_bonds_total_value' => 100_000,
+          'partner_premium_bonds_holder_number' => nil,
+          'partner_premium_bonds_total_value' => nil
         )
       end
 
       it 'redacts the expected property address and owners attributes' do
-        property = means_details['capital_details']['properties'].first
-        expect(property['address']).to eq('__redacted__')
-        expect(property['property_owners']).to eq('__redacted__')
+        property = redacted_means_details['capital_details']['properties'].first
+        expect(property).to include(
+          'address' => '__redacted__',
+          'property_owners' => '__redacted__'
+        )
+      end
+
+      it 'redacts the expected savings attributes' do
+        saving = redacted_means_details['capital_details']['savings'].first
+        expect(saving).to include(
+          'sort_code' => '__redacted__',
+          'account_number' => '__redacted__'
+        )
+      end
+
+      it 'redacts the expected national savings certificate attributes' do
+        national_savings_certificate = redacted_means_details['capital_details']['national_savings_certificates'].first
+        expect(national_savings_certificate).to include(
+          'holder_number' => '__redacted__',
+          'certificate_number' => '__redacted__'
+        )
+      end
+
+      it 'redacts the expected investments attributes' do
+        investment = redacted_means_details['capital_details']['investments'].first
+        expect(investment).to include('description' => '__redacted__')
       end
     end
 

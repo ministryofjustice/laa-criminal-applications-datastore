@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 describe Redacting::Unredact do
-  let(:submitted_application) { JSON.parse(LaaCrimeSchemas.fixture(1.0).read) }
+  let(:means_details) { JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'means').read) }
+  let(:submitted_application) do
+    JSON.parse(LaaCrimeSchemas.fixture(1.0).read).deep_merge('means_details' => means_details)
+  end
 
   let(:crime_application) { CrimeApplication.new(submitted_application:) }
   let(:redacted_application) { crime_application.redacted_crime_application }
