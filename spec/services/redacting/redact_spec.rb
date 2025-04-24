@@ -70,26 +70,26 @@ describe Redacting::Redact do
 
       it 'redacts the expected partner attributes' do
         expect(client_details['partner']).to eq({
-                                                  "first_name" => "__redacted__",
-                                                  "last_name" => "__redacted__",
-                                                  "other_names" => "__redacted__",
-                                                  "has_nino" => "yes",
-                                                  "nino" => "__redacted__",
-                                                  "has_arc" => nil,
-                                                  "arc" => nil,
-                                                  "date_of_birth" => "__redacted__",
-                                                  "involvement_in_case" => "codefendant",
-                                                  "conflict_of_interest" => "no",
-                                                  "has_same_address_as_client" => "no",
-                                                  "is_included_in_means_assessment" => false,
-                                                  "benefit_check_result" => nil,
-                                                  "benefit_check_status" => nil,
-                                                  "benefit_type" => nil,
-                                                  "confirm_details" => nil,
-                                                  "confirm_dwp_result" => nil,
-                                                  "has_benefit_evidence" => nil,
-                                                  "will_enter_nino" => nil,
-                                                  "last_jsa_appointment_date" => nil,
+                                                  'first_name' => '__redacted__',
+                                                  'last_name' => '__redacted__',
+                                                  'other_names' => '__redacted__',
+                                                  'has_nino' => 'yes',
+                                                  'nino' => '__redacted__',
+                                                  'has_arc' => nil,
+                                                  'arc' => nil,
+                                                  'date_of_birth' => '__redacted__',
+                                                  'involvement_in_case' => 'codefendant',
+                                                  'conflict_of_interest' => 'no',
+                                                  'has_same_address_as_client' => 'no',
+                                                  'is_included_in_means_assessment' => false,
+                                                  'benefit_check_result' => nil,
+                                                  'benefit_check_status' => nil,
+                                                  'benefit_type' => nil,
+                                                  'confirm_details' => nil,
+                                                  'confirm_dwp_result' => nil,
+                                                  'has_benefit_evidence' => nil,
+                                                  'will_enter_nino' => nil,
+                                                  'last_jsa_appointment_date' => nil,
                                                   'home_address' => {
                                                     'lookup_id' => nil,
                                                     'address_line_one' => '__redacted__',
@@ -107,13 +107,13 @@ describe Redacting::Redact do
 
       it 'redacts the expected capital attributes' do
         expect(means_details['capital_details']).to include(
-                                                      'premium_bonds_total_value' => '__redacted__',
-                                                      'partner_premium_bonds_total_value' => nil,
-                                                      'trust_fund_amount_held' => '__redacted__',
-                                                      'trust_fund_yearly_dividend' => '__redacted__',
-                                                      'partner_trust_fund_amount_held' => nil,
-                                                      'partner_trust_fund_yearly_dividend' => nil
-                                                    )
+          'premium_bonds_total_value' => '__redacted__',
+          'partner_premium_bonds_total_value' => nil,
+          'trust_fund_amount_held' => '__redacted__',
+          'trust_fund_yearly_dividend' => '__redacted__',
+          'partner_trust_fund_amount_held' => nil,
+          'partner_trust_fund_yearly_dividend' => nil
+        )
       end
 
       it 'redacts the expected property address and owners attributes' do
