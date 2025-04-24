@@ -1,3 +1,5 @@
+require 'grape-swagger'
+
 module Datastore
   class Root < Base
     format :json
@@ -16,6 +18,13 @@ module Datastore
     mount V1::Searching
     mount V1::Reviewing
     mount V1::Healthcheck
+
+    add_swagger_documentation(
+      info: { title: 'Criminal Applications Datastore - v1' },
+      api_version: 'v1',
+      hide_documentation_path: true,
+      mount_path: '/documentation',
+    )
 
     desc 'Catch-all route.'
     route_setting :authorised_consumers, %w[*]

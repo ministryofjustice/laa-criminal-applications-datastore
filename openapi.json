@@ -1,0 +1,771 @@
+{
+  "info": {
+    "title": "Criminal Applications Datastore - v1",
+    "version": "0.0.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "localhost:3003",
+  "tags": [
+    {
+      "name": "maat",
+      "description": "Operations about maats"
+    },
+    {
+      "name": "applications",
+      "description": "Operations about applications"
+    },
+    {
+      "name": "documents",
+      "description": "Operations about documents"
+    },
+    {
+      "name": "searches",
+      "description": "Operations about searches"
+    },
+    {
+      "name": "health",
+      "description": "Operations about healths"
+    }
+  ],
+  "paths": {
+    "/api/v1/maat/applications/{usn}": {
+      "get": {
+        "description": "Return an application by USN.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usn",
+            "description": "Application USN.",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return an application by USN."
+          }
+        },
+        "tags": [
+          "maat"
+        ],
+        "operationId": "getApiV1MaatApplicationsUsn"
+      }
+    },
+    "/api/v1/applications": {
+      "post": {
+        "description": "Create an application.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postApiV1Applications",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postApiV1Applications"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create an application."
+          }
+        },
+        "tags": [
+          "applications"
+        ],
+        "operationId": "postApiV1Applications"
+      },
+      "get": {
+        "description": "Return a pruned version of the applications with pagination.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sort_by",
+            "description": "Column to sort by the records.",
+            "type": "string",
+            "default": "submitted_at",
+            "enum": [
+              "applicant_name",
+              "application_type",
+              "case_type",
+              "office_code",
+              "reference",
+              "return_reason",
+              "returned_at",
+              "reviewed_at",
+              "submitted_at"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort_direction",
+            "description": "Sorting direction for the records.",
+            "type": "string",
+            "default": "desc",
+            "enum": [
+              "desc",
+              "asc",
+              "descending",
+              "ascending"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Page to fetch.",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "description": "Number of results to return per page.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 1000,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "description": "The status of the application.",
+            "type": "string",
+            "default": null,
+            "enum": [
+              "submitted",
+              "returned",
+              "superseded"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "office_code",
+            "description": "The office account number handling the application.",
+            "type": "string",
+            "default": null,
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a pruned version of the applications with pagination."
+          }
+        },
+        "tags": [
+          "applications"
+        ],
+        "operationId": "getApiV1Applications"
+      }
+    },
+    "/api/v1/applications/{application_id}": {
+      "get": {
+        "description": "Return an application by ID.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "description": "Application UUID.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return an application by ID."
+          }
+        },
+        "tags": [
+          "applications"
+        ],
+        "operationId": "getApiV1ApplicationsApplicationId"
+      }
+    },
+    "/api/v1/applications/{application_id}/return": {
+      "put": {
+        "description": "Return an application to provider.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "description": "Crime Application UUID",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "putApiV1ApplicationsApplicationIdReturn",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putApiV1ApplicationsApplicationIdReturn"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return an application to provider."
+          }
+        },
+        "tags": [
+          "applications"
+        ],
+        "operationId": "putApiV1ApplicationsApplicationIdReturn"
+      }
+    },
+    "/api/v1/applications/{application_id}/complete": {
+      "put": {
+        "description": "Mark an application as complete.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "description": "Crime Application UUID",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "putApiV1ApplicationsApplicationIdComplete",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putApiV1ApplicationsApplicationIdComplete"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mark an application as complete."
+          }
+        },
+        "tags": [
+          "applications"
+        ],
+        "operationId": "putApiV1ApplicationsApplicationIdComplete"
+      }
+    },
+    "/api/v1/applications/{application_id}/mark_as_ready": {
+      "put": {
+        "description": "Mark an application as ready for assessment.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "description": "Crime Application UUID",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mark an application as ready for assessment."
+          }
+        },
+        "tags": [
+          "applications"
+        ],
+        "operationId": "putApiV1ApplicationsApplicationIdMarkAsReady"
+      }
+    },
+    "/api/v1/documents/presign_upload": {
+      "put": {
+        "description": "Get a presigned URL for uploading a file.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "putApiV1DocumentsPresignUpload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putApiV1DocumentsPresignUpload"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a presigned URL for uploading a file."
+          }
+        },
+        "tags": [
+          "documents"
+        ],
+        "operationId": "putApiV1DocumentsPresignUpload"
+      }
+    },
+    "/api/v1/documents/presign_download": {
+      "put": {
+        "description": "Get a presigned URL for downloading a file.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "putApiV1DocumentsPresignDownload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putApiV1DocumentsPresignDownload"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a presigned URL for downloading a file."
+          }
+        },
+        "tags": [
+          "documents"
+        ],
+        "operationId": "putApiV1DocumentsPresignDownload"
+      }
+    },
+    "/api/v1/documents/{usn}": {
+      "get": {
+        "description": "List all documents for an application USN.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usn",
+            "description": "Application USN.",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all documents for an application USN."
+          }
+        },
+        "tags": [
+          "documents"
+        ],
+        "operationId": "getApiV1DocumentsUsn"
+      }
+    },
+    "/api/v1/documents/{object_key}": {
+      "delete": {
+        "description": "Delete a document.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "object_key",
+            "description": "S3 object key to delete, Base64 encoded.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete a document."
+          }
+        },
+        "tags": [
+          "documents"
+        ],
+        "operationId": "deleteApiV1DocumentsObjectKey"
+      }
+    },
+    "/api/v1/searches": {
+      "post": {
+        "description": "Search the Datastore.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postApiV1Searches",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postApiV1Searches"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Search the Datastore."
+          }
+        },
+        "tags": [
+          "searches"
+        ],
+        "operationId": "postApiV1Searches"
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "description": "Performs a basic health check.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Performs a basic health check."
+          }
+        },
+        "tags": [
+          "health"
+        ],
+        "operationId": "getApiV1Health"
+      }
+    }
+  },
+  "definitions": {
+    "postApiV1Applications": {
+      "type": "object",
+      "properties": {
+        "application": {
+          "type": "json",
+          "description": "Application JSON payload."
+        }
+      },
+      "required": [
+        "application"
+      ],
+      "description": "Create an application."
+    },
+    "putApiV1ApplicationsApplicationIdReturn": {
+      "type": "object",
+      "properties": {
+        "return_details": {
+          "type": "object",
+          "properties": {
+            "reason": {
+              "type": "string",
+              "enum": [
+                "clarification_required",
+                "evidence_issue",
+                "duplicate_application",
+                "case_concluded",
+                "provider_request",
+                "split_case"
+              ]
+            },
+            "details": {
+              "type": "string",
+              "description": "Detailed reason for return"
+            }
+          },
+          "required": [
+            "reason",
+            "details"
+          ]
+        }
+      },
+      "required": [
+        "return_details"
+      ],
+      "description": "Return an application to provider."
+    },
+    "putApiV1ApplicationsApplicationIdComplete": {
+      "type": "object",
+      "properties": {
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "maat_id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "case_id": {
+                "type": "string"
+              },
+              "interests_of_justice": {
+                "type": "json"
+              },
+              "means": {
+                "type": "json"
+              },
+              "funding_decision": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string"
+              },
+              "assessment_rules": {
+                "type": "string"
+              },
+              "overall_result": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "interests_of_justice",
+              "funding_decision"
+            ]
+          }
+        }
+      },
+      "description": "Mark an application as complete."
+    },
+    "putApiV1DocumentsPresignUpload": {
+      "type": "object",
+      "properties": {
+        "object_key": {
+          "type": "string",
+          "description": "S3 object key."
+        },
+        "s3_opts": {
+          "type": "object",
+          "description": "Additional S3 options, like `expires_in`.",
+          "default": {}
+        }
+      },
+      "required": [
+        "object_key"
+      ],
+      "description": "Get a presigned URL for uploading a file."
+    },
+    "putApiV1DocumentsPresignDownload": {
+      "type": "object",
+      "properties": {
+        "object_key": {
+          "type": "string",
+          "description": "S3 object key."
+        },
+        "s3_opts": {
+          "type": "object",
+          "description": "Additional S3 options, like `expires_in`",
+          "default": {}
+        }
+      },
+      "required": [
+        "object_key"
+      ],
+      "description": "Get a presigned URL for downloading a file."
+    },
+    "postApiV1Searches": {
+      "type": "object",
+      "properties": {
+        "search": {
+          "type": "object",
+          "description": "Search JSON.",
+          "properties": {
+            "application_id_in": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "application_id_not_in": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "search_text": {
+              "type": "string"
+            },
+            "applicant_date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "status": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "returned",
+                  "superseded"
+                ]
+              }
+            },
+            "review_status": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "application_received",
+                  "returned_to_provider",
+                  "ready_for_assessment",
+                  "assessment_completed"
+                ]
+              }
+            },
+            "work_stream": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "criminal_applications_team",
+                  "criminal_applications_team_2",
+                  "extradition",
+                  "non_means_tested"
+                ]
+              }
+            },
+            "case_type": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "summary_only",
+                  "either_way",
+                  "indictable",
+                  "already_in_crown_court",
+                  "committal",
+                  "appeal_to_crown_court",
+                  "appeal_to_crown_court_with_changes"
+                ]
+              }
+            },
+            "application_type": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "initial",
+                  "post_submission_evidence",
+                  "change_in_financial_circumstances"
+                ]
+              }
+            },
+            "submitted_after": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "submitted_before": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "reviewed_after": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "reviewed_before": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "office_code": {
+              "type": "string"
+            }
+          }
+        },
+        "sorting": {
+          "type": "object",
+          "description": "Sorting JSON.",
+          "default": {
+            "sort_by": "submitted_at",
+            "sort_direction": "desc"
+          },
+          "properties": {
+            "sort_by": {
+              "type": "string",
+              "description": "Column to sort by the records.",
+              "enum": [
+                "applicant_name",
+                "application_type",
+                "case_type",
+                "office_code",
+                "reference",
+                "return_reason",
+                "returned_at",
+                "reviewed_at",
+                "submitted_at"
+              ],
+              "default": "submitted_at"
+            },
+            "sort_direction": {
+              "type": "string",
+              "description": "Sorting direction for the records.",
+              "enum": [
+                "desc",
+                "asc",
+                "descending",
+                "ascending"
+              ],
+              "default": "desc"
+            }
+          }
+        },
+        "pagination": {
+          "type": "object",
+          "description": "Pagination JSON.",
+          "properties": {
+            "page": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Page to fetch.",
+              "default": 1
+            },
+            "per_page": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Number of results to return per page.",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 20
+            }
+          }
+        }
+      },
+      "description": "Search the Datastore."
+    }
+  }
+}

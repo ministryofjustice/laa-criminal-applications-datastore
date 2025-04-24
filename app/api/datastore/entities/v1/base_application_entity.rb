@@ -8,6 +8,7 @@ module Datastore
         expose :application_type
         expose :submitted_at
         expose :status
+        expose :review_status
         expose :reviewed_at
         expose :parent_id
         expose :created_at

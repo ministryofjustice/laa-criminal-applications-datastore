@@ -1,11 +1,11 @@
 module Operations
   class ListApplications
-    def initialize(office_code:, status:, page:, per_page:, sort_by:, sort_direction:)
+    def initialize(office_code:, status:, page:, per_page:, sort_by:, sort_direction:, consumer:) # rubocop:disable Metrics/ParameterLists
       @office_code = office_code
       @status = status
       @pagination = Pagination.new(page:, per_page:)
       @sorting = Sorting.new(sort_by:, sort_direction:)
-      @scope = CrimeApplication
+      @scope = CrimeApplication.consumer_scope(consumer)
     end
 
     def call

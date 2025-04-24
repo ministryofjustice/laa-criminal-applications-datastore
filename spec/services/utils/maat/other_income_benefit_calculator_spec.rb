@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/ExampleLength Metrics/AbcSize
+# rubocop:disable RSpec/ExampleLength
 describe Utils::MAAT::OtherIncomeBenefitCalculator do
   subject { described_class.new(payments:) }
 
@@ -167,4 +167,4 @@ describe Utils::MAAT::OtherIncomeBenefitCalculator do
     end
   end
 end
-# rubocop:enable RSpec/ExampleLength Metrics/AbcSize
+# rubocop:enable RSpec/ExampleLength

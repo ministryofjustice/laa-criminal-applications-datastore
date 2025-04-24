@@ -26,7 +26,6 @@ module Datastore
             optional :reviewed_after, type: DateTime
             optional :reviewed_before, type: DateTime
 
-            # Apply search spike
             optional :office_code, type: String
           end
 
@@ -41,7 +40,7 @@ module Datastore
 
         post do
           search_params = declared(params).symbolize_keys
-          search = Operations::Search.new(**search_params)
+          search = Operations::Search.new(**search_params, consumer: current_consumer)
           records = search.call
 
           present :pagination, records, with: Datastore::Entities::V1::Pagination
