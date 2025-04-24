@@ -10,6 +10,7 @@ describe Redacting::Rules do
         client_details.applicant.correspondence_address
         client_details.applicant.home_address
         client_details.partner
+        client_details.partner.home_address
         case_details.codefendants
         case_details
         interests_of_justice
@@ -17,8 +18,7 @@ describe Redacting::Rules do
         additional_information
         date_stamp_context
         means_details.capital_details
-        means_details.capital_details.properties.address
-        means_details.capital_details.properties.property_owners
+        means_details.capital_details.properties
       ]
     end
 
