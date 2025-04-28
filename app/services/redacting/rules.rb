@@ -1,26 +1,27 @@
 module Redacting
   module Rules
     REDACTED_KEYWORD = '__redacted__'.freeze
+    ADDRESS_ATTRIBUTES = %w[lookup_id address_line_one address_line_two city country postcode].freeze
+    PERSON_ATTRIBUTES = %w[first_name last_name other_names nino arc telephone_number date_of_birth].freeze
 
     PII_ATTRIBUTES = {
       'provider_details' => {
         redact: %w[legal_rep_telephone legal_rep_last_name legal_rep_first_name provider_email]
       },
       'client_details.applicant' => {
-        redact: %w[first_name last_name other_names nino arc telephone_number date_of_birth]
+        redact: PERSON_ATTRIBUTES
       },
       'client_details.applicant.home_address' => {
-        redact: %w[lookup_id address_line_one address_line_two city country postcode]
+        redact: ADDRESS_ATTRIBUTES
       },
       'client_details.applicant.correspondence_address' => {
-        redact: %w[lookup_id address_line_one address_line_two country city postcode]
+        redact: ADDRESS_ATTRIBUTES
       },
       'client_details.partner' => {
-        redact: %w[first_name last_name other_names date_of_birth nino arc telephone_number],
-        type: :object
+        redact: PERSON_ATTRIBUTES
       },
       'client_details.partner.home_address' => {
-        redact: %w[lookup_id address_line_one address_line_two city country postcode]
+        redact: ADDRESS_ATTRIBUTES
       },
       'case_details.codefendants' => {
         redact: %w[first_name last_name],
