@@ -28,7 +28,15 @@ module Redacting
         type: :array
       },
       'case_details' => {
-        redact: %w[urn hearing_court_name hearing_date],
+        redact: %w[urn hearing_court_name hearing_date first_court_hearing_name],
+        type: :object
+      },
+      'case_details.client_other_charge' => {
+        redact: %w[hearing_court_name next_hearing_date],
+        type: :object
+      },
+      'case_details.partner_other_charge' => {
+        redact: %w[hearing_court_name next_hearing_date],
         type: :object
       },
       'interests_of_justice' => {
