@@ -8,11 +8,12 @@ module Redacting
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def process!
+    def process!(force: false)
       process_metadata!
 
       # The redacting of the payload is only needed once, on creation
-      return true if redacted_record.persisted?
+      # The `force` param can be used to perform the redaction adhoc if required
+      return true if redacted_record.persisted? && !force
 
       # First we create an exact copy of the original payload
       redacted_payload.merge!(
