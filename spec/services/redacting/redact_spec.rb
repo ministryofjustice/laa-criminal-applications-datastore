@@ -201,14 +201,43 @@ describe Redacting::Redact do
 
     context 'with case details' do
       let(:case_details) { redacted_application['case_details'] }
+      let(:submitted_application) do
+        super().deep_merge('case_details' => {
+          'client_other_charge' => {
+            'charge' => 'Theft',
+            'hearing_court_name' => "Cardiff Magistrates' Court",
+            'next_hearing_date' => '2025-01-15'
+          },
+          'partner_other_charge' => {
+            'charge' => 'Fraud',
+            'hearing_court_name' => "Barkingside Magistrates' Court",
+            'next_hearing_date' => '2025-02-09'
+          },
+          'urn' => '12AB3456789'
+        })
+      end
 
       it 'redacts the expected attributes' do
-        expect(case_details['codefendants']).to eq(
-          [{
+        expect(case_details).to include(
+          'urn' => '__redacted__',
+          'hearing_court_name' => '__redacted__',
+          'hearing_date' => '__redacted__',
+          'first_court_hearing_name' => '__redacted__',
+          'client_other_charge' => {
+            'charge' => 'Theft',
+            'hearing_court_name' => '__redacted__',
+            'next_hearing_date' => '__redacted__'
+          },
+          'partner_other_charge' => {
+            'charge' => 'Fraud',
+            'hearing_court_name' => '__redacted__',
+            'next_hearing_date' => '__redacted__'
+          },
+          'codefendants' => [{
              'first_name' => '__redacted__',
              'last_name' => '__redacted__',
              'conflict_of_interest' => 'yes'
-           }]
+          }]
         )
       end
     end

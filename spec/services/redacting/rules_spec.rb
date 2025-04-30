@@ -12,6 +12,8 @@ describe Redacting::Rules do
         client_details.partner
         client_details.partner.home_address
         case_details.codefendants
+        case_details.client_other_charge
+        case_details.partner_other_charge
         case_details
         interests_of_justice
         supporting_evidence
