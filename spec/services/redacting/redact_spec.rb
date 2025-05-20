@@ -309,6 +309,7 @@ describe Redacting::Redact do
                                'application_type' => 'initial',
                                'created_at' => nil,
                                'office_code' => nil,
+                               'work_stream' => 'criminal_applications_team',
                                'submitted_at' => nil
                              })
     end

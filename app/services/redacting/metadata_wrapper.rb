@@ -1,6 +1,6 @@
 module Redacting
   class MetadataWrapper < SimpleDelegator
-    def metadata
+    def metadata # rubocop:disable Metrics/MethodLength
       {
         status:,
         returned_at:,
@@ -11,6 +11,7 @@ module Redacting
         created_at:,
         submitted_at:,
         office_code:,
+        work_stream:,
         application_type:,
       }.stringify_keys
     end
