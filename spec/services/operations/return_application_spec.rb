@@ -80,7 +80,7 @@ describe Operations::ReturnApplication do
         let(:return_details) { { reason: Types::ReturnReason['clarification_required'], details: 'Some details' } }
         let(:redacted_metadata) { application.reload.redacted_crime_application.metadata }
 
-        it 'updates the metadata' do
+        it 'updates the metadata' do # rubocop:disable RSpec/ExampleLength
           expect(
             redacted_metadata
           ).to eq(
@@ -95,6 +95,7 @@ describe Operations::ReturnApplication do
               'created_at' => '2024-12-11T00:00:00.000Z',
               'submitted_at' => '2022-10-24T09:50:04.019Z',
               'office_code' => '1A123B',
+              'work_stream' => 'criminal_applications_team_2'
             }
           )
         end
