@@ -1,0 +1,46 @@
+# The purpose of this one-off job is to remove the read-only role 'metabase'
+# from the Datastore database, which was being used by Metabase.
+# As Metabase is being removed from prodution for the time being due to security concerns,
+# we want to ensure there is no unintended route to access the Datastore.
+#
+# This job should only be run once.
+#
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: drop-metabase-psql-job
+  namespace: laa-criminal-applications-datastore-production
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: psql-job
+        image: bitnami/postgresql:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - export DATABASE_NAME=${DATABASE_URL##*/} READONLY_USER=metabase;
+            psql -d ${DATABASE_URL} -e -c "REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM ${READONLY_USER}";
+            psql -d ${DATABASE_URL} -e -c "REVOKE USAGE ON SCHEMA public FROM ${READONLY_USER}";
+            psql -d ${DATABASE_URL} -e -c "REVOKE CONNECT ON DATABASE ${DATABASE_NAME} FROM ${READONLY_USER}";
+            psql -d ${DATABASE_URL} -e -c "DROP ROLE ${READONLY_USER}";
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsUser: 10000
+          runAsGroup: 10000
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          limits:
+            cpu: 50m
+            memory: 1Gi
+        env:
+        # secrets created by terraform
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: rds-instance
+              key: url
