@@ -32,8 +32,6 @@ module Operations
       end
 
       def representation
-        raise ActiveRecord::RecordNotFound if record && Rails.env.production?
-
         Datastore::Entities::V1::MAAT::Application.represent(record)
       end
 
