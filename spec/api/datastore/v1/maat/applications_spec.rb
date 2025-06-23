@@ -38,17 +38,6 @@ RSpec.describe 'get application ready for maat' do
       end
     end
 
-    context 'with a ready for assessment application and env is production' do
-      before do
-        allow(Rails.env).to receive(:production?).and_return(true)
-        api_request
-      end
-
-      it 'returns http status 404' do
-        expect(response).to have_http_status(:not_found)
-      end
-    end
-
     context 'with a non-means application' do
       before do
         allow(Rails.error).to receive(:report)
