@@ -31,7 +31,7 @@ services:
       AWS_DEFAULT_REGION: us-east-1 # only this region works for SNS in localstack
       S3_SKIP_SIGNATURE_VALIDATION: 0
       DOCKER_HOST: unix:///var/run/docker.sock
-      SERVICES: s3,sns
+      SERVICES: s3,sns,sqs
     volumes:
       - ./config/localstack/ready.sh:/etc/localstack/init/ready.d/ready.sh
       - ./config/localstack/shutdown.sh:/etc/localstack/init/shutdown.d/shutdown.sh
