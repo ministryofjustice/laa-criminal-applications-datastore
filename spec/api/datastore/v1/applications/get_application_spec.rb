@@ -16,7 +16,7 @@ RSpec.describe 'get application' do
   let(:validator) { LaaCrimeSchemas::Validator.new(response.body, version: 1.0) }
 
   describe 'GET /api/applications/:application_id' do
-    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-review] do
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod crime-review] do
       before { api_request }
     end
 

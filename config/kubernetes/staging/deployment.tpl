@@ -86,6 +86,11 @@ spec:
               secretKeyRef:
                 name: api-auth-secrets
                 key: crime_apply
+          - name: API_AUTH_SECRET_APPLY_PREPROD
+            valueFrom:
+              secretKeyRef:
+                name: api-auth-secrets
+                key: crime_apply_preprod
           - name: API_AUTH_SECRET_REVIEW
             valueFrom:
               secretKeyRef:

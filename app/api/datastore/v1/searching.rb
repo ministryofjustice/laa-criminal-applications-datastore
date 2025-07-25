@@ -3,7 +3,7 @@ module Datastore
     class Searching < Base
       version 'v1', using: :path
 
-      route_setting :authorised_consumers, %w[crime-review crime-apply]
+      route_setting :authorised_consumers, %w[crime-review crime-apply crime-apply-preprod]
 
       resource :searches do
         desc 'Search the Datastore.'

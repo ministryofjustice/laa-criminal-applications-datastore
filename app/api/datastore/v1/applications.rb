@@ -5,7 +5,7 @@ module Datastore
 
       resource :applications do
         desc 'Create an application.'
-        route_setting :authorised_consumers, %w[crime-apply]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           requires :application, type: JSON, desc: 'Application JSON payload.'
         end
@@ -16,7 +16,7 @@ module Datastore
         end
 
         desc 'Return an application by ID.'
-        route_setting :authorised_consumers, %w[crime-apply crime-review]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod crime-review]
         params do
           requires :application_id, type: String, desc: 'Application UUID.'
         end
@@ -34,7 +34,7 @@ module Datastore
         end
 
         desc 'Return a pruned version of the applications with pagination.'
-        route_setting :authorised_consumers, %w[crime-apply]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           use :sorting
           use :pagination
@@ -70,7 +70,7 @@ module Datastore
         end
         route_param :application_id do
           resource :archive do
-            route_setting :authorised_consumers, %w[crime-apply]
+            route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
             put do
               Operations::ArchiveApplication.new(application_id: params[:application_id]).call
             end

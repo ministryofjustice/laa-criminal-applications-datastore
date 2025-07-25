@@ -20,7 +20,7 @@ RSpec.describe 'presign a document download' do
 
     it_behaves_like 'a documents API endpoint'
 
-    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-review] do
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod crime-review] do
       before { api_request }
     end
   end

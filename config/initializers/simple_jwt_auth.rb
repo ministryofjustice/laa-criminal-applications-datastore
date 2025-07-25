@@ -13,6 +13,7 @@ Rails.application.config.to_prepare do
     # On kubernetes, secrets are created by terraform
     config.secrets_config = {
       'crime-apply' => ENV.fetch('API_AUTH_SECRET_APPLY', nil),
+      'crime-apply-preprod' => ENV.fetch('API_AUTH_SECRET_APPLY_PREPROD', nil),
       'crime-review' => ENV.fetch('API_AUTH_SECRET_REVIEW', nil),
       'maat-adapter' => ENV.fetch('API_AUTH_SECRET_MAAT_ADAPTER', nil),
       # MAAT has more non-prod environments than we have, but
