@@ -5,7 +5,7 @@ module Datastore
 
       resource :documents do
         desc 'Get a presigned URL for uploading a file.'
-        route_setting :authorised_consumers, %w[crime-apply]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           requires :object_key, type: String, desc: 'S3 object key.'
           optional :s3_opts, type: Hash, default: {}, desc: 'Additional S3 options, like `expires_in`.'
@@ -17,7 +17,7 @@ module Datastore
         end
 
         desc 'Get a presigned URL for downloading a file.'
-        route_setting :authorised_consumers, %w[crime-apply crime-review]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod crime-review]
         params do
           requires :object_key, type: String, desc: 'S3 object key.'
           optional :s3_opts, type: Hash, default: {}, desc: 'Additional S3 options, like `expires_in`'
@@ -29,7 +29,7 @@ module Datastore
         end
 
         desc 'List all documents for an application USN.'
-        route_setting :authorised_consumers, %w[crime-apply crime-review]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod crime-review]
         params do
           requires :usn, type: Integer, desc: 'Application USN.'
         end
@@ -42,7 +42,7 @@ module Datastore
         end
 
         desc 'Delete a document.'
-        route_setting :authorised_consumers, %w[crime-apply]
+        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           requires :object_key, type: String, desc: 'S3 object key to delete, Base64 encoded.'
         end
