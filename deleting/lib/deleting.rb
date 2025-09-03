@@ -21,14 +21,16 @@ module Deleting
     end
 
     def call(event)
-      stream_name = Delteting.stream_name(event.data.fetch(:business_reference))
+      stream_name = Deleting.stream_name(event.data.fetch(:business_reference))
       @event_store.link(event.event_id, stream_name:)
     end
   end
 
   class Configuration
-    def call(event_store)
-      event_store.subscribe(LinkToStream, to: EVENTS)
+    class << self
+      def call(event_store)
+        event_store.subscribe(LinkToStream, to: EVENTS)
+      end
     end
   end
 end
