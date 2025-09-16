@@ -9,6 +9,8 @@ Dir['./spec/support/**/*.rb'].each { |f| require f }
 Dir[File.expand_path('shared_examples/*.rb', __dir__)].each { |f| require f }
 
 RSpec.configure do |config|
+  config.include ActiveSupport::Testing::TimeHelpers
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [Rails.root.join('spec/fixtures')]
 
