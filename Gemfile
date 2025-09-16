@@ -55,3 +55,7 @@ end
 gem 'ostruct', '~> 0.6.1'
 
 gem 'benchmark', '~> 0.4.0'
+
+gem 'rails_event_store'
+
+gem 'aggregate_root'
