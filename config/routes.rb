@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  Rails.application.routes.draw { mount RailsEventStore::Browser => "/res" if Rails.env.development? }
   mount Datastore::Root => '/'
 
   root to: proc { [200, {}, ['']] }
