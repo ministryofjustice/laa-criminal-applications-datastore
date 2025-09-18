@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_16_115333) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_17_105253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -66,6 +66,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_115333) do
     t.string "assessment_rules"
     t.string "overall_result"
     t.index ["crime_application_id"], name: "index_decisions_on_crime_application_id"
+  end
+
+  create_table "deletable_entities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "business_reference"
+    t.datetime "review_deletion_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_reference"], name: "index_deletable_entities_on_business_reference", unique: true
   end
 
   create_table "event_store_events", force: :cascade do |t|

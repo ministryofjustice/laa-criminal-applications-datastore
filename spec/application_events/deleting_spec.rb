@@ -70,6 +70,11 @@ RSpec.describe Deleting do
       it 'is eligible for deletion' do
         expect(deletable.soft_deletable?).to be(true)
       end
+
+      it 'sets the `review_deletion_at` timestamp on the read model' do
+        expect(DeletableEntity.find_by(business_reference:).review_deletion_at).to eq(Time.zone.local(2023, 9,
+                                                                                                      4) + 2.years)
+      end
     end
 
     context 'when sent back 2 years ago and was injected into MAAT' do
@@ -121,6 +126,11 @@ RSpec.describe Deleting do
       it 'is not eligible for deletion' do
         expect(deletable.soft_deletable?).to be(false)
       end
+
+      it 'sets the `review_deletion_at` timestamp on the read model' do
+        expect(DeletableEntity.find_by(business_reference:).review_deletion_at).to eq(Time.zone.local(2023, 9,
+                                                                                                      4) + 2.years)
+      end
     end
 
     context 'when sent back 2 years ago and has active drafts' do
@@ -170,6 +180,11 @@ RSpec.describe Deleting do
 
       it 'is not eligible for deletion' do
         expect(deletable.soft_deletable?).to be(false)
+      end
+
+      it 'sets the `review_deletion_at` timestamp on the read model' do
+        expect(DeletableEntity.find_by(business_reference:).review_deletion_at).to eq(Time.zone.local(2023, 9,
+                                                                                                      5) + 2.years)
       end
     end
   end

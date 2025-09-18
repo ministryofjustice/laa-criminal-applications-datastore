@@ -1,0 +1,2 @@
+class DeletableEntity < ApplicationRecord
+end

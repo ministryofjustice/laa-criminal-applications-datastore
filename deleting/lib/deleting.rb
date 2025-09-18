@@ -35,8 +35,24 @@ module Deleting
     end
   end
 
+  class UpdateReadModel
+    def initialize(event_store: Rails.configuration.event_store)
+      @event_store = event_store
+    end
+
+    def call(event)
+      stream_name = Deleting.stream_name(event.data.fetch(:business_reference))
+      deletable = AggregateRoot::Repository.new(@event_store).load(Deleting::Deletable.new, stream_name)
+      DeletableEntity.upsert( # rubocop:disable Rails/SkipsModelValidations
+        { business_reference: deletable.business_reference, review_deletion_at: deletable.deletion_at },
+        unique_by: :business_reference
+      )
+    end
+  end
+
   SUBSCRIBERS = [
     LinkToStream,
+    UpdateReadModel
   ].freeze
 
   class Configuration
