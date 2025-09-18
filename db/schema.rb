@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_17_105253) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_18_095054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -74,6 +74,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_17_105253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["business_reference"], name: "index_deletable_entities_on_business_reference", unique: true
+  end
+
+  create_table "deletion_entries_tables", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "record_id", null: false
+    t.string "record_type", null: false
+    t.string "business_reference"
+    t.string "deleted_by", null: false
+    t.string "deleted_from"
+    t.string "reason", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "event_store_events", force: :cascade do |t|
