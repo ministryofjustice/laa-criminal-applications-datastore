@@ -81,7 +81,7 @@ module Datastore
         route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
-          requires :entity_type, type: String, desc: 'Draft application type.'
+          requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
           requires :business_reference, type: String, desc: 'Draft application reference number.'
         end
         post 'draft_created' do
@@ -92,7 +92,7 @@ module Datastore
         route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
-          requires :entity_type, type: String, desc: 'Draft application type.'
+          requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
           requires :business_reference, type: String, desc: 'Draft application reference number.'
         end
         post 'draft_updated' do
@@ -103,9 +103,9 @@ module Datastore
         route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
-          requires :entity_type, type: String, desc: 'Draft application type.'
+          requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
           requires :business_reference, type: String, desc: 'Draft application reference number.'
-          requires :reason, type: String, desc: 'Deletion reason.'
+          requires :reason, type: String, values: Types::DELETION_REASONS, desc: 'Deletion reason.'
           requires :deleted_by, type: String, desc: 'Who the application was deleted by.'
         end
         post 'draft_deleted' do

@@ -4,9 +4,9 @@ describe Operations::DraftDeleted do
   subject { described_class.new(entity_id:, entity_type:, business_reference:, reason:, deleted_by:) }
 
   let(:entity_id) { '696dd4fd-b619-4637-ab42-a5f4565bcf4a' }
-  let(:entity_type) { 'initial' }
+  let(:entity_type) { Types::ApplicationType['initial'] }
   let(:business_reference) { '7000001' }
-  let(:reason) { 'retention_rule' }
+  let(:reason) { Types::DeletionReason['retention_rule'] }
   let(:deleted_by) { '1' }
   let(:deleting_stream) { Rails.configuration.event_store.read.stream("Deleting$#{business_reference}") }
   let(:event) { Rails.configuration.event_store.read.stream("Deleting$#{business_reference}").first }
