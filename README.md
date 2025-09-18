@@ -99,6 +99,9 @@ At the moment these endpoints are:
 * `PUT /api/v1/applications/{id}/complete` marks an application as complete
 * `PUT /api/v1/applications/{id}/mark_as_ready` marks an application as ready for assessment
 * `PUT /api/v1/applications/{id}/archive` archives an application
+* `POST /api/v1/applications/draft_created` creates a DraftCreated event
+* `POST /api/v1/applications/draft_updated` creates a DraftUpdated event
+* `POST /api/v1/applications/draft_deleted` creates a DraftDeleted event
 * `GET /api/v1/health` checks connection to the database
 
 Endpoints used by MAAT adapter:
