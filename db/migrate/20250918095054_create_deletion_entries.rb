@@ -1,6 +1,6 @@
-class CreateDeletionEntriesTable < ActiveRecord::Migration[7.2]
+class CreateDeletionEntries < ActiveRecord::Migration[7.2]
   def change
-    create_table :deletion_entries_tables, id: :uuid do |t|
+    create_table :deletion_entries, id: :uuid do |t|
       t.string :record_id, null: false
       t.string :record_type, null: false
       t.string :business_reference
