@@ -76,7 +76,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_095054) do
     t.index ["business_reference"], name: "index_deletable_entities_on_business_reference", unique: true
   end
 
-  create_table "deletion_entries_tables", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "deletion_entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "record_id", null: false
     t.string "record_type", null: false
     t.string "business_reference"
