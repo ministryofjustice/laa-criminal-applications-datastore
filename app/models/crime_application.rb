@@ -20,6 +20,10 @@ class CrimeApplication < ApplicationRecord
     end
   }
 
+  scope :latest, lambda { |reference|
+    where(reference:).order(submitted_at: :desc).limit(1)
+  }
+
   def application_type
     submitted_application.fetch('application_type')
   end

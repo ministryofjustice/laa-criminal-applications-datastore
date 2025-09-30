@@ -7,6 +7,7 @@ require 'webmock/rspec'
 
 Dir['./spec/support/**/*.rb'].each { |f| require f }
 Dir[File.expand_path('shared_examples/*.rb', __dir__)].each { |f| require f }
+Dir[File.expand_path('shared_contexts/*.rb', __dir__)].each { |f| require f }
 
 RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
