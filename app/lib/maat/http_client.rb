@@ -1,4 +1,4 @@
-module Maat
+module MAAT
   class HttpClient
     def initialize(host: Rails.configuration.x.maat_api.api_url, raise_errors: true)
       @host = host

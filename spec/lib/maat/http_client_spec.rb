@@ -1,7 +1,6 @@
 require 'rails_helper'
-require 'maat/http_client'
 
-RSpec.describe Maat::HttpClient do
+RSpec.describe MAAT::HttpClient do
   subject(:http_client) { described_class.new(host:) }
 
   let(:host) { 'https://example.com/other' }

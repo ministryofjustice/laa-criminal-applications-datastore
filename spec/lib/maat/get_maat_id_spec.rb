@@ -1,11 +1,9 @@
 require 'rails_helper'
-require 'maat/get_maat_id'
-require 'maat/http_client'
 
-describe Maat::GetMaatId do
+describe MAAT::GetMAATId do
   subject(:get_maat_id) { described_class.new(http_client: http_client.call) }
 
-  let(:http_client) { instance_double(Maat::HttpClient, call: connection) }
+  let(:http_client) { instance_double(MAAT::HttpClient, call: connection) }
   let(:response) { instance_double(Faraday::Response, body:) }
   let(:connection) { instance_double(Faraday::Connection) }
   let(:usn) { 123_456 }
