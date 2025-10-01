@@ -13,7 +13,7 @@ module MAAT
     def by_usn!(usn)
       record = by_usn(usn)
 
-      raise Errors::MAATRecordNotFound if record.blank?
+      return nil if record.blank?
 
       record
     end
@@ -30,7 +30,7 @@ module MAAT
       # NOTE: The MAAT API returns a 200 status even if a decision has not been found.
       # The existence of the decision can only be determined by checking if
       # the response body includes a MAAT ID (maat_ref).
-      return false unless response.body.present? && response.body['maat_ref'].present?
+      return nil unless response.body.present? && response.body['maat_ref'].present?
 
       response.body['maat_ref']
     end

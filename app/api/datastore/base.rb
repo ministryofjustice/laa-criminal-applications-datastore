@@ -56,11 +56,5 @@ module Datastore
     rescue_from Errors::CannotArchive do
       error!({ status: 409, error: 'Application cannot be archived' }, 409)
     end
-
-    rescue_from Errors::MAATRecordNotFound do |ex|
-      Rails.error.report(ex, handled: true)
-
-      error!({ status: 404, error: 'MAAT Record not found' }, 404)
-    end
   end
 end

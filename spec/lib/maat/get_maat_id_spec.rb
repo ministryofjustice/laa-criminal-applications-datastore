@@ -28,16 +28,16 @@ describe MAAT::GetMAATId do
     context 'when decision is empty found' do
       let(:body) { {} }
 
-      it 'raises Errors::MAATRecordNotFound' do
-        expect { get_by_usn! }.to raise_error(Errors::MAATRecordNotFound)
+      it 'returns nil' do
+        expect(get_by_usn!).to be_nil
       end
     end
 
     context 'when decision found has no maat id' do
       let(:body) { { 'maat_ref' => nil } }
 
-      it 'raises Errors::MAATRecordNotFound' do
-        expect { get_by_usn! }.to raise_error(Errors::MAATRecordNotFound)
+      it 'returns nil' do
+        expect(get_by_usn!).to be_nil
       end
     end
   end

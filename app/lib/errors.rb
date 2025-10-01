@@ -22,7 +22,4 @@ module Errors
 
   class CannotArchive < StandardError
   end
-
-  class MAATRecordNotFound < StandardError
-  end
 end
