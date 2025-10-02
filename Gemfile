@@ -13,6 +13,8 @@ gem 'grape-swagger'
 gem 'kaminari-activerecord'
 gem 'rails', '~> 7.2'
 
+gem 'oauth2'
+
 # Monitoring
 gem 'prometheus_exporter'
 

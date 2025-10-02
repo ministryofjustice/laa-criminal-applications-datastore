@@ -11,3 +11,5 @@ data:
   ENABLE_PROMETHEUS_EXPORTER: "true"
   # Datastore is accessed via local cluster networking (no SSL)
   DISABLE_HTTPS: enabled
+  MAAT_API_API_URL: https://laa-crime-applications-adaptor-uat.apps.live.cloud-platform.service.justice.gov.uk
+  MAAT_API_OAUTH_URL: https://caa-api-uat.auth.eu-west-2.amazoncognito.com

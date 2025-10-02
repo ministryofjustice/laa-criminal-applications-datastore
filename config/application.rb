@@ -41,5 +41,10 @@ module LaaCriminalApplicationsDatastore
 
     # Remove any middleware we don't need right now
     config.middleware.delete ::Rack::Sendfile
+
+    config.x.maat_api.oauth_url = ENV.fetch('MAAT_API_OAUTH_URL', nil)
+    config.x.maat_api.client_id = ENV.fetch('MAAT_API_CLIENT_ID', nil)
+    config.x.maat_api.client_secret = ENV.fetch('MAAT_API_CLIENT_SECRET', nil)
+    config.x.maat_api.api_url = ENV.fetch('MAAT_API_API_URL', nil)
   end
 end
