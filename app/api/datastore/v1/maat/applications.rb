@@ -17,6 +17,17 @@ module Datastore
               Operations::MAAT::GetApplication.new(reference: params[:usn]).call
             end
           end
+
+          desc 'Create a MaatRecordCreated event for an application.'
+          params do
+            requires :entity_id, type: String, desc: 'Application UUID.'
+            requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Application type.'
+            requires :business_reference, type: String, desc: 'Application reference number.'
+            requires :maat_id, type: String, desc: 'Id of the MAAT record.'
+          end
+          post 'maat_record_created' do
+            Operations::MAATRecordCreated.new(**declared(params).symbolize_keys).call
+          end
         end
       end
     end
