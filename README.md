@@ -107,3 +107,4 @@ At the moment these endpoints are:
 Endpoints used by MAAT adapter:
 
 * `GET /api/v1/maat/applications/{usn}` get an application by its USN
+* `POST /api/v1/maat/applications/maat_record_created` creates a MaatRecordCreated event
