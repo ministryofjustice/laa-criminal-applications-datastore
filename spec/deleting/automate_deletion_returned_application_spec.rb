@@ -63,8 +63,12 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model forward by two weeks' do
+      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
         expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      end
+
+      it 'sets `soft_deleted_at` on the application' do
+        expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
       context 'when two weeks have passed' do
@@ -82,9 +86,10 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
             {
-              entity_id:,
-              entity_type:,
-              business_reference:
+              entity_id: entity_id,
+              entity_type: entity_type,
+              business_reference: business_reference,
+              deletion_entry_id: DeletionEntry.first.id,
             }
           )
         end
@@ -142,8 +147,12 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
       end
 
-      it 'does not push the `review_deletion_at` timestamp on the read model forward' do
+      it 'does not push the `review_deletion_at` timestamp on the read model back' do
         expect(deletable_entity.reload.review_deletion_at).to eq(Time.zone.local(2023, 9, 4) + 2.years)
+      end
+
+      it 'does not set `soft_deleted_at` on the application' do
+        expect(crime_application.reload.soft_deleted_at).to be_nil
       end
     end
 
@@ -181,8 +190,12 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
       end
 
-      it 'does not push the `review_deletion_at` timestamp on the read model forward' do
+      it 'does not push the `review_deletion_at` timestamp on the read model back' do
         expect(deletable_entity.reload.review_deletion_at).to eq(Time.zone.local(2023, 9, 5) + 2.years)
+      end
+
+      it 'does not set `soft_deleted_at` on the application' do
+        expect(crime_application.reload.soft_deleted_at).to be_nil
       end
     end
   end

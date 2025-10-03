@@ -24,23 +24,20 @@ module Deleting
       attr_reader :business_reference, :reason, :deleted_by
 
       def soft_delete(deletable)
-        # TODO: update crime_application.soft_deleted_at ? is that necessary?
-        # could we just rely on the aggregate to tell us if/when an app was soft_deleted and expose in API responses?
-        # if we're updating soft_deleted_at, should we update it on all past/superseded apps?
         deletable.soft_delete(entity_id:, reason:, deleted_by:)
       end
 
       def hard_delete(deletable)
         # TODO: redact latest and superseded records
         # TODO: remove attachments
-        DeletionEntry.create!(
+        deletion_entry = DeletionEntry.create!(
           record_id: entity_id,
           record_type: Types::RecordType['application'],
           business_reference: business_reference,
           deleted_by: deleted_by,
           reason: reason
         )
-        deletable.hard_delete(entity_id:)
+        deletable.hard_delete(entity_id: entity_id, deletion_entry_id: deletion_entry.id)
       end
 
       def entity_id

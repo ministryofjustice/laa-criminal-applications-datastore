@@ -1,10 +1,18 @@
 module Deleting
-  class Deletable
+  class Deletable # rubocop:disable Metrics/ClassLength
     include AggregateRoot
     class AlreadySoftDeleted < StandardError; end
     class AlreadyHardDeleted < StandardError; end
 
-    attr_reader :business_reference, :deletion_at
+    attr_reader :business_reference, :deletion_at, :state
+
+    STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
+
+    STATES.each do |s|
+      define_method(:"#{s}?") do
+        state == s
+      end
+    end
 
     on Applying::DraftCreated do |event|
       @application_type = event.data.fetch(:entity_type)
@@ -23,6 +31,7 @@ module Deleting
     end
 
     on Applying::Submitted do |event|
+      @state = :submitted
       @deletion_at = timestamp(event) + 2.years
     end
 
@@ -33,35 +42,40 @@ module Deleting
 
     # :nocov:
     on Deciding::Decided do |event|
-      @decision = Decision.find_by(crime_application_id: event.data.fetch(:entity_id))
+      @decision_id = event.data.fetch(:decision_id)
+      @overall_decision = event.data.fetch(:overall_decision)
+      @state = :decided
       @deletion_at = timestamp(event) + 2.years
     end
     # :nocov:
 
     on Reviewing::SentBack do |event|
-      @application_returned = true
+      @state = :returned
       @deletion_at = timestamp(event) + 2.years
     end
 
     # :nocov:
     on Reviewing::Completed do |event|
+      @state = :completed
       @deletion_at = timestamp(event) + 2.years
     end
     # :nocov:
 
     on Deleting::SoftDeleted do |event|
+      @state = :soft_deleted
       @soft_deleted_at = timestamp(event)
       @deletion_at = timestamp(event) + 2.weeks
     end
 
     on Deleting::HardDeleted do |event|
+      @state = :hard_deleted
       @hard_deleted_at = timestamp(event)
-      @deletion_log_entry = DeletionEntry.find_by(business_reference:)
+      @deletion_entry_id = event.data.fetch(:deletion_entry_id)
     end
 
     # :nocov:
     on Deleting::ExemptFromDeletion do |event|
-      @exempt_from_deletion = true
+      @state = :exempt_from_deletion
       @exemption_reason = event.data.fetch(:reason)
       @exempt_until = event.data.fetch(:exempt_until)
       @deletion_at = @exempt_until + 2.years
@@ -86,7 +100,7 @@ module Deleting
       )
     end
 
-    def hard_delete(entity_id:)
+    def hard_delete(entity_id:, deletion_entry_id:)
       raise AlreadyHardDeleted if hard_deleted?
 
       apply Deleting::HardDeleted.new(
@@ -94,12 +108,13 @@ module Deleting
           entity_id: entity_id,
           entity_type: @application_type,
           business_reference: @business_reference,
+          deletion_entry_id: deletion_entry_id
         }
       )
     end
 
     def soft_deletable?
-      return false unless @application_returned
+      return false unless returned?
       return false if active_drafts?
 
       @deletion_at <= Time.zone.now && !@injected_into_maat
@@ -115,14 +130,6 @@ module Deleting
 
     def active_drafts?
       @active_drafts.positive?
-    end
-
-    def soft_deleted?
-      @soft_deleted_at.present?
-    end
-
-    def hard_deleted?
-      @hard_deleted_at.present?
     end
 
     def timestamp(event)

@@ -26,7 +26,7 @@ module Deleting
 
   class Configuration
     class << self
-      def call(event_store)
+      def call(event_store) # rubocop:disable Metrics/MethodLength
         event_store.subscribe(Deleting::Handlers::LinkToStream, to:
           [
             Applying::DraftCreated,
@@ -39,6 +39,7 @@ module Deleting
             Reviewing::Completed
           ])
         event_store.subscribe(Deleting::Handlers::UpdateReadModel, to: EVENTS)
+        event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted, to: [Deleting::SoftDeleted])
       end
     end
   end
