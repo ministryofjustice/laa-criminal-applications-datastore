@@ -1,6 +1,6 @@
 module Datastore
   module V1
-    class Applications < Base
+    class Applications < Base # rubocop:disable Metrics/ClassLength
       version 'v1', using: :path
 
       resource :applications do
@@ -83,9 +83,11 @@ module Datastore
           requires :entity_id, type: String, desc: 'Draft application UUID.'
           requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
           requires :business_reference, type: String, desc: 'Draft application reference number.'
+          optional :created_at, type: Time, desc: 'Draft application creation timestamp.'
         end
         post 'draft_created' do
-          Operations::DraftCreated.new(**declared(params).symbolize_keys).call
+          event = Operations::DraftCreated.new(**declared(params).symbolize_keys).call
+          Entities::V1::EventResponse.represent(event)
         end
 
         desc 'Create a DraftUpdated event for an application.'
@@ -96,7 +98,8 @@ module Datastore
           requires :business_reference, type: String, desc: 'Draft application reference number.'
         end
         post 'draft_updated' do
-          Operations::DraftUpdated.new(**declared(params).symbolize_keys).call
+          event = Operations::DraftUpdated.new(**declared(params).symbolize_keys).call
+          Entities::V1::EventResponse.represent(event)
         end
 
         desc 'Create a DraftDeleted event for an application.'
@@ -109,7 +112,8 @@ module Datastore
           requires :deleted_by, type: String, desc: 'Who the application was deleted by.'
         end
         post 'draft_deleted' do
-          Operations::DraftDeleted.new(**declared(params).symbolize_keys).call
+          event = Operations::DraftDeleted.new(**declared(params).symbolize_keys).call
+          Entities::V1::EventResponse.represent(event)
         end
       end
     end

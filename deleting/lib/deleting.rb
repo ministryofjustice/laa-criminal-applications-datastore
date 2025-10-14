@@ -3,6 +3,7 @@ module Deleting
   class SoftDeleted < Event; end
   class HardDeleted < Event; end
   class ExemptFromDeletion < Event; end
+  class ApplicationMigrated < Event; end
 
   EVENTS = [
     Applying::DraftCreated,
@@ -15,7 +16,8 @@ module Deleting
     Reviewing::Completed,
     SoftDeleted,
     HardDeleted,
-    ExemptFromDeletion
+    ExemptFromDeletion,
+    ApplicationMigrated
   ].freeze
 
   class << self
@@ -36,7 +38,8 @@ module Deleting
             Deciding::MaatRecordCreated,
             Deciding::Decided,
             Reviewing::SentBack,
-            Reviewing::Completed
+            Reviewing::Completed,
+            Deleting::ApplicationMigrated
           ])
         event_store.subscribe(Deleting::Handlers::UpdateReadModel, to: EVENTS)
         event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted, to: [Deleting::SoftDeleted])

@@ -11,6 +11,7 @@ module Operations
     def call
       event = Applying::DraftUpdated.new(data: { business_reference:, entity_id:, entity_type: })
       Rails.configuration.event_store.publish(event)
+      event
     end
   end
 end
