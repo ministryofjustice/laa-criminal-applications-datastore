@@ -246,7 +246,7 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
       end
 
-      it 'does not push the `review_deletion_at` timestamp on the read model back' do
+      it 'does not alter the `review_deletion_at` timestamp on the read model' do
         expect(deletable_entity.reload.review_deletion_at).to eq(Time.zone.local(2023, 9, 4) + 2.years)
       end
 
@@ -295,7 +295,7 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
       end
 
-      it 'does not push the `review_deletion_at` timestamp on the read model back' do
+      it 'does not alter the `review_deletion_at` timestamp on the read model' do
         expect(deletable_entity.reload.review_deletion_at).to eq(Time.zone.local(2023, 9, 4) + 2.years)
       end
 
@@ -338,7 +338,7 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
       end
 
-      it 'does not push the `review_deletion_at` timestamp on the read model back' do
+      it 'does not alter the `review_deletion_at` timestamp on the read model' do
         expect(deletable_entity.reload.review_deletion_at).to eq(Time.zone.local(2023, 9, 5) + 2.years)
       end
 
@@ -394,7 +394,7 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
       end
 
-      it 'does not push the `review_deletion_at` timestamp on the read model back' do
+      it 'does not alter the `review_deletion_at` timestamp on the read model' do
         expect(deletable_entity.reload.review_deletion_at).to eq(Time.zone.local(2023, 9, 3) + 2.years)
       end
 
