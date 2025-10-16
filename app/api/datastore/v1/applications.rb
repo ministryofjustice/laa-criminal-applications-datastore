@@ -86,8 +86,7 @@ module Datastore
           optional :created_at, type: Time, desc: 'Draft application creation timestamp.'
         end
         post 'draft_created' do
-          event = Operations::DraftCreated.new(**declared(params).symbolize_keys).call
-          Entities::V1::EventResponse.represent(event)
+          Operations::DraftCreated.new(**declared(params).symbolize_keys).call
         end
 
         desc 'Create a DraftUpdated event for an application.'
@@ -98,8 +97,7 @@ module Datastore
           requires :business_reference, type: String, desc: 'Draft application reference number.'
         end
         post 'draft_updated' do
-          event = Operations::DraftUpdated.new(**declared(params).symbolize_keys).call
-          Entities::V1::EventResponse.represent(event)
+          Operations::DraftUpdated.new(**declared(params).symbolize_keys).call
         end
 
         desc 'Create a DraftDeleted event for an application.'
@@ -112,8 +110,7 @@ module Datastore
           requires :deleted_by, type: String, desc: 'Who the application was deleted by.'
         end
         post 'draft_deleted' do
-          event = Operations::DraftDeleted.new(**declared(params).symbolize_keys).call
-          Entities::V1::EventResponse.represent(event)
+          Operations::DraftDeleted.new(**declared(params).symbolize_keys).call
         end
       end
     end
