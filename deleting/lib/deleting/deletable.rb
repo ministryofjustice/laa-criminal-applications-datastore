@@ -7,6 +7,12 @@ module Deleting
     attr_reader :business_reference, :deletion_at, :state
 
     STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
+    REVIEW_STATUS_TO_STATE = {
+      'application_received' => :submitted,
+      'ready_for_assessment' => :submitted,
+      'returned_to_provider' => :returned,
+      'assessment_completed' => :completed
+    }.freeze
 
     STATES.each do |s|
       define_method(:"#{s}?") do
@@ -18,11 +24,11 @@ module Deleting
       @application_type = event.data.fetch(:entity_type)
       @business_reference = event.data.fetch(:business_reference)
       @active_drafts += 1
-      @deletion_at = timestamp(event) + 2.years
+      @deletion_at = (event.data.fetch(:created_at, nil) || timestamp(event)) + retention_period
     end
 
     on Applying::DraftUpdated do |event|
-      @deletion_at = timestamp(event) + 2.years
+      @deletion_at = timestamp(event) + retention_period
     end
 
     on Applying::DraftDeleted do |_event|
@@ -32,34 +38,33 @@ module Deleting
 
     on Applying::Submitted do |event|
       @state = :submitted
-      @deletion_at = timestamp(event) + 2.years
+      @submitted_at = timestamp(event)
+      @deletion_at = timestamp(event) + retention_period
     end
 
     on Deciding::MaatRecordCreated do |event|
-      @injected_into_maat = true
       @maat_id = event.data.fetch(:maat_id)
     end
 
-    # :nocov:
     on Deciding::Decided do |event|
       @decision_id = event.data.fetch(:decision_id)
       @overall_decision = event.data.fetch(:overall_decision)
       @state = :decided
-      @deletion_at = timestamp(event) + 2.years
+      @deletion_at = timestamp(event) + retention_period
     end
-    # :nocov:
 
     on Reviewing::SentBack do |event|
       @state = :returned
-      @deletion_at = timestamp(event) + 2.years
+      @returned_at = timestamp(event)
+      @reviewed_at = timestamp(event)
+      @deletion_at = timestamp(event) + retention_period
     end
 
-    # :nocov:
     on Reviewing::Completed do |event|
       @state = :completed
-      @deletion_at = timestamp(event) + 2.years
+      @reviewed_at = timestamp(event)
+      @deletion_at = timestamp(event) + retention_period
     end
-    # :nocov:
 
     on Deleting::SoftDeleted do |event|
       @state = :soft_deleted
@@ -78,9 +83,22 @@ module Deleting
       @state = :exempt_from_deletion
       @exemption_reason = event.data.fetch(:reason)
       @exempt_until = event.data.fetch(:exempt_until)
-      @deletion_at = @exempt_until + 2.years
+      @deletion_at = @exempt_until + retention_period
     end
     # :nocov:
+
+    on Deleting::ApplicationMigrated do |event|
+      @state = REVIEW_STATUS_TO_STATE[event.data.fetch(:review_status)]
+      @application_type = event.data.fetch(:entity_type)
+      @business_reference = event.data.fetch(:business_reference)
+      @maat_id = event.data.fetch(:maat_id)
+      @decision_id = event.data.fetch(:decision_id)
+      @overall_decision = event.data.fetch(:overall_decision)
+      @submitted_at = event.data.fetch(:submitted_at)
+      @returned_at = event.data.fetch(:returned_at)
+      @reviewed_at = event.data.fetch(:reviewed_at)
+      @deletion_at = event.data.fetch(:last_updated_at) + retention_period
+    end
 
     def initialize
       @active_drafts = 0
@@ -117,7 +135,7 @@ module Deleting
       return false unless returned?
       return false if active_drafts?
 
-      @deletion_at <= Time.zone.now && !@injected_into_maat
+      @deletion_at <= Time.zone.now && !injected_into_maat
     end
 
     def hard_deletable?
@@ -132,8 +150,38 @@ module Deleting
       @active_drafts.positive?
     end
 
+    def injected_into_maat
+      @maat_id.present?
+    end
+
     def timestamp(event)
       event.timestamp || Time.zone.now
+    end
+
+    def retention_period
+      return 2.years if never_submitted?
+      return 2.years if returned?
+      return 3.years if completed_without_decision?
+      return 3.years if refused?
+      return 7.years if granted?
+
+      2.years
+    end
+
+    def never_submitted?
+      @submitted_at.nil?
+    end
+
+    def completed_without_decision?
+      completed? && @decision_id.blank?
+    end
+
+    def refused?
+      @overall_decision.present? && @overall_decision.starts_with?('refused')
+    end
+
+    def granted?
+      @overall_decision.present? && @overall_decision.starts_with?('granted')
     end
   end
 end
