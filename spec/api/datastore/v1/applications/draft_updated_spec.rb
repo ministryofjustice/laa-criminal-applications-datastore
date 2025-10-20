@@ -6,7 +6,7 @@ RSpec.describe 'create a DraftUpdated event' do
 
   let(:entity_id) { '696dd4fd-b619-4637-ab42-a5f4565bcf4a' }
   let(:entity_type) { 'initial' }
-  let(:business_reference) { '7000001' }
+  let(:business_reference) { 7_000_001 }
 
   before do
     allow(

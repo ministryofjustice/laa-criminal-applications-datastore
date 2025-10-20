@@ -82,7 +82,7 @@ module Datastore
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
           requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
-          requires :business_reference, type: String, desc: 'Draft application reference number.'
+          requires :business_reference, type: Integer, desc: 'Draft application reference number.'
           optional :created_at, type: Time, desc: 'Draft application creation timestamp.'
         end
         post 'draft_created' do
@@ -94,7 +94,7 @@ module Datastore
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
           requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
-          requires :business_reference, type: String, desc: 'Draft application reference number.'
+          requires :business_reference, type: Integer, desc: 'Draft application reference number.'
         end
         post 'draft_updated' do
           Operations::DraftUpdated.new(**declared(params).symbolize_keys).call
@@ -105,7 +105,7 @@ module Datastore
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
           requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
-          requires :business_reference, type: String, desc: 'Draft application reference number.'
+          requires :business_reference, type: Integer, desc: 'Draft application reference number.'
           requires :reason, type: String, values: Types::DELETION_REASONS, desc: 'Deletion reason.'
           requires :deleted_by, type: String, desc: 'Who the application was deleted by.'
         end
