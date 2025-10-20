@@ -18,6 +18,7 @@ describe Operations::ReturnApplication do
   end
 
   let(:service) { described_class.new(application_id:, return_details:) }
+  let(:event_stream) { Rails.configuration.event_store.read }
 
   describe '.new' do
     context 'when application is not found' do
@@ -70,6 +71,15 @@ describe Operations::ReturnApplication do
         expect(
           returned_event
         ).to have_received(:publish)
+      end
+
+      it 'publishes a SentBack event with the expected attributes' do
+        expect(event_stream.map(&:event_type)).to match []
+        call
+        event = event_stream.first
+        expect(event_stream.map(&:event_type)).to match ['Reviewing::SentBack']
+        expect(event.data).to eq({ entity_id: application_id, entity_type: 'initial',
+                                   business_reference: 6_000_001 })
       end
 
       context 'with redacted application metadata' do

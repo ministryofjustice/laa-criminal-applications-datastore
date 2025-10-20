@@ -6,6 +6,7 @@ RSpec.describe 'complete application' do
       submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
+  let(:event_stream) { Rails.configuration.event_store.read }
 
   describe 'PUT /api/applications/application_id/complete' do
     subject(:api_request) do
@@ -27,6 +28,14 @@ RSpec.describe 'complete application' do
       it 'records reviewed_at' do
         expect { api_request }.to change { application.reload.reviewed_at }
           .from(nil)
+      end
+
+      it 'publishes a Reviewing::Completed event with the expected attributes' do
+        api_request
+        event = event_stream.first
+        expect(event_stream.map(&:event_type)).to match ['Reviewing::Completed']
+        expect(event.data).to eq({ entity_id: application.id, entity_type: 'initial',
+                                   business_reference: 6_000_001 })
       end
     end
 
@@ -81,6 +90,11 @@ RSpec.describe 'complete application' do
             "The property '#/0/funding_decision' of type null did not match the following type: string in schema",
             "The property '#/1/interests_of_justice' did not contain a required property of 'assessed_on'"
           )
+        end
+
+        it 'does not publish any events' do
+          api_request
+          expect(event_stream.map(&:event_type)).to match []
         end
       end
 
@@ -142,6 +156,29 @@ RSpec.describe 'complete application' do
           expect(decisions.first.comment).to eq('test comment')
           expect(decisions.first.assessment_rules).to eq('appeal_to_crown_court')
           expect(decisions.first.overall_result).to eq(Types::OverallResult['granted_failed_means'])
+        end
+
+        it 'publishes a Reviewing::Completed event with the expected attributes' do
+          api_request
+          event = event_stream.to_a.find { |e| e.event_type == 'Reviewing::Completed' }
+          expect(event.data).to eq({ entity_id: application.id, entity_type: 'initial',
+                                     business_reference: 6_000_001 })
+        end
+
+        it 'publishes a Deciding::MaatRecordCreated event with the expected attributes' do
+          api_request
+          event = event_stream.to_a.find { |e| e.event_type == 'Deciding::MaatRecordCreated' }
+          expect(event.data).to eq({ entity_id: application.id, entity_type: 'initial',
+                                     business_reference: 6_000_001, maat_id: 5678 })
+        end
+
+        it 'publishes a Deciding::Decided event with the expected attributes' do
+          api_request
+          decision = application.reload.decisions.first
+          event = event_stream.to_a.find { |e| e.event_type == 'Deciding::Decided' }
+          expect(event.data).to eq({ entity_id: application.id, entity_type: 'initial',
+                                     business_reference: 6_000_001, decision_id: decision.id,
+                                     overall_decision: decision.overall_result })
         end
       end
     end
