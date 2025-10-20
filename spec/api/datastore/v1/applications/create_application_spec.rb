@@ -122,7 +122,7 @@ RSpec.describe 'create application' do
         ).not_to have_received(:publish)
       end
 
-      it 'does not publishes an Applying::Submitted event' do
+      it 'does not publish an Applying::Submitted event' do
         expect(event_stream.map(&:event_type)).to match []
       end
     end
@@ -151,7 +151,7 @@ RSpec.describe 'create application' do
         )
       end
 
-      it 'does not publishes an Applying::Submitted event' do
+      it 'does not publish an Applying::Submitted event' do
         expect(event_stream.map(&:event_type)).to match []
       end
     end
