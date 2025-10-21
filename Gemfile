@@ -32,7 +32,7 @@ gem 'aws-sdk-sns'
 
 gem 'laa-criminal-legal-aid-schemas',
     github: 'ministryofjustice/laa-criminal-legal-aid-schemas',
-    branch: 'CRIMAPP-1964-maat-language'
+    tag: 'v1.7.4'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
