@@ -17,7 +17,8 @@ RSpec.describe Datastore::Entities::V1::PostSubmissionEvidenceApplication do
       return_details: { reason: nil, details: nil, returned_at: nil },
       offence_class: Types::OffenceClass['C'],
       work_stream: Types::WorkStreamType['criminal_applications_team'],
-      submitted_application: submitted_application
+      submitted_application: submitted_application,
+      soft_deleted_at: nil
     )
   end
 

@@ -18,7 +18,8 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       offence_class: Types::OffenceClass['C'],
       work_stream: Types::WorkStreamType['criminal_applications_team'],
       submitted_application: submitted_application,
-      decisions: []
+      decisions: [],
+      soft_deleted_at: nil
     )
   end
 
