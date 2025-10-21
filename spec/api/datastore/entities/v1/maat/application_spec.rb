@@ -59,7 +59,8 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           nino: 'AJ123456C',
           other_names: '',
          residence_type: nil,
-         telephone_number:  '07771231231'
+         telephone_number:  '07771231231',
+         welsh_correspondence: false
         }.deep_stringify_keys
       end
 
