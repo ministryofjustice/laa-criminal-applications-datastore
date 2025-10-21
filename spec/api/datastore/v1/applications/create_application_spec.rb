@@ -9,13 +9,16 @@ RSpec.describe 'create application' do
       submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read)
     )
   end
+  let(:event_stream) { Rails.configuration.event_store.read }
 
   describe 'POST /api/applications' do
     subject(:api_request) do
       post '/api/v1/applications', params: { application: payload }
     end
 
-    let(:record) { instance_double(CrimeApplication, id: application_id) }
+    let(:record) do
+      instance_double(CrimeApplication, id: application_id, application_type: 'initial', reference: 6_000_001)
+    end
     let(:payload) { LaaCrimeSchemas.fixture(1.0).read }
 
     let(:submission_event) { instance_double(Events::Submission, publish: true) }
@@ -65,6 +68,13 @@ RSpec.describe 'create application' do
         ).to have_received(:publish)
       end
 
+      it 'publishes an Applying::Submitted event with the expected attributes' do
+        event = event_stream.first
+        expect(event_stream.map(&:event_type)).to match ['Applying::Submitted']
+        expect(event.data).to eq({ entity_id: application_id, entity_type: 'initial',
+                                   business_reference: 6_000_001 })
+      end
+
       context 'when is a resubmission' do
         let(:payload) { JSON.dump(JSON.parse(super()).merge('parent_id' => '12345')) }
 
@@ -78,6 +88,13 @@ RSpec.describe 'create application' do
           expect(
             submission_event
           ).to have_received(:publish)
+        end
+
+        it 'publishes an Applying::Submitted event with the expected attributes' do
+          event = event_stream.first
+          expect(event_stream.map(&:event_type)).to match ['Applying::Submitted']
+          expect(event.data).to eq({ entity_id: application_id, entity_type: 'initial',
+                                     business_reference: 6_000_001 })
         end
       end
     end
@@ -104,6 +121,10 @@ RSpec.describe 'create application' do
           submission_event
         ).not_to have_received(:publish)
       end
+
+      it 'does not publish an Applying::Submitted event' do
+        expect(event_stream.map(&:event_type)).to match []
+      end
     end
 
     context 'with a schema error' do
@@ -128,6 +149,10 @@ RSpec.describe 'create application' do
         expect(response.body).to include(
           "The property '#/reference' of type null did not match the following type: integer in schema"
         )
+      end
+
+      it 'does not publish an Applying::Submitted event' do
+        expect(event_stream.map(&:event_type)).to match []
       end
     end
   end

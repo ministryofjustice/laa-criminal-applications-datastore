@@ -22,6 +22,8 @@ module Operations
 
         # Publish event notification to the SNS topic
         Events::Returned.new(application).publish
+
+        publish_to_event_store
       end
 
       application
@@ -35,6 +37,12 @@ module Operations
     def validate_application!
       raise Errors::AlreadyReturned if application.returned?
       raise Errors::AlreadyCompleted if application.assessment_completed?
+    end
+
+    def publish_to_event_store
+      Rails.configuration.event_store.publish(
+        Reviewing::SentBack.from_application(application)
+      )
     end
   end
 end

@@ -17,6 +17,8 @@ module Operations
 
         # Publish event notification to the SNS topic
         Events::Submission.new(@app).publish
+
+        publish_to_event_store
       end
 
       { id: @app.id }
@@ -35,6 +37,12 @@ module Operations
 
     def parent_id
       payload.fetch('parent_id', nil)
+    end
+
+    def publish_to_event_store
+      Rails.configuration.event_store.publish(
+        Applying::Submitted.from_application(@app)
+      )
     end
   end
 end

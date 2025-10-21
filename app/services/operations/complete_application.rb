@@ -17,6 +17,7 @@ module Operations
           reviewed_at: Time.zone.now,
           decisions: decisions.map { |d| Decision.new(d) }
         )
+        publish_to_event_store
       end
 
       application
@@ -43,6 +44,21 @@ module Operations
 
     def schema
       File.join(LaaCrimeSchemas.root, 'schemas', schema_version, 'application.json')
+    end
+
+    def publish_to_event_store # rubocop:disable Metrics/AbcSize
+      application.decisions.each do |decision|
+        if decision.maat_id.present?
+          Rails.configuration.event_store.publish(Deciding::MaatRecordCreated.from_application(
+                                                    crime_application: application, maat_id: decision.maat_id
+                                                  ))
+        end
+        Rails.configuration.event_store.publish(Deciding::Decided.from_application(crime_application: application,
+                                                                                   decision: decision))
+      end
+      Rails.configuration.event_store.publish(
+        Reviewing::Completed.from_application(application)
+      )
     end
 
     attr_reader :application, :decisions
