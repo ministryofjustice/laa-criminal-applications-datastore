@@ -53,6 +53,7 @@ describe Redacting::Redact do
                                                     'benefit_type' => 'universal_credit',
                                                     'last_jsa_appointment_date' => nil,
                                                     'correspondence_address' => nil,
+                                                    'preferred_correspondence_language' => nil,
                                                     'residence_type' => nil,
                                                     'relationship_to_owner_of_usual_home_address' => nil,
                                                     'has_partner' => 'yes',
