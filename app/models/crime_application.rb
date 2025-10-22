@@ -11,15 +11,8 @@ class CrimeApplication < ApplicationRecord
 
   has_many :decisions, dependent: :destroy
 
-  scope :consumer_scope, lambda { |consumer|
-    case consumer
-    when 'crime-apply'
-      where(archived_at: nil)
-    else
-      all
-    end
-  }
-
+  scope :active, -> { where(archived_at: nil, soft_deleted_at: nil) }
+  scope :consumer_scope, ->(consumer) { active unless consumer == 'crime-review' }
   scope :latest, lambda { |reference|
     where(reference:).order(submitted_at: :desc).limit(1)
   }
@@ -68,7 +61,7 @@ class CrimeApplication < ApplicationRecord
     return unless submitted_application
 
     if post_submission_evidence?
-      parent_app = CrimeApplication.find(submitted_application['parent_id'])
+      parent_app = CrimeApplication.active.find(submitted_application['parent_id'])
       self.work_stream = parent_app.work_stream
     else
       self.work_stream = Utils::WorkStreamCalculator.new(

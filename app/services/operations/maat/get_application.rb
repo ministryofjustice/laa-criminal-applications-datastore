@@ -36,7 +36,7 @@ module Operations
       end
 
       def record
-        @record ||= CrimeApplication.find_by!(
+        @record ||= CrimeApplication.active.find_by!(
           reference: reference,
           review_status: [
             Types::ReviewApplicationStatus['ready_for_assessment'],

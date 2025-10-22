@@ -1,7 +1,7 @@
 module Operations
   class ReturnApplication
     def initialize(application_id:, return_details:)
-      @application = CrimeApplication.find(application_id)
+      @application = CrimeApplication.active.find(application_id)
       @return_details = return_details
     end
 

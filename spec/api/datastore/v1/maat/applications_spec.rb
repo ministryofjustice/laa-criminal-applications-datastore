@@ -60,6 +60,24 @@ RSpec.describe 'get application ready for maat' do
       end
     end
 
+    context 'with a deleted application' do
+      before do
+        application.touch(:soft_deleted_at) # rubocop:disable Rails/SkipsModelValidations
+        api_request
+      end
+
+      it_behaves_like 'an error that raises a 404 status code'
+    end
+
+    context 'with an archived application' do
+      before do
+        application.touch(:archived_at) # rubocop:disable Rails/SkipsModelValidations
+        api_request
+      end
+
+      it_behaves_like 'an error that raises a 404 status code'
+    end
+
     describe 'returning the calcuated offence class' do
       let(:offence_class) { Types::OffenceClass.values.sample }
 
