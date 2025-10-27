@@ -22,7 +22,9 @@ module Datastore
         end
         route_param :application_id do
           get do
-            crime_application = CrimeApplication.find(params[:application_id])
+            crime_application = CrimeApplication.consumer_scope(current_consumer)
+                                                .find(params[:application_id])
+
             if crime_application.application_type == Types::ApplicationType['post_submission_evidence']
               Datastore::Entities::V1::PostSubmissionEvidenceApplication.represent(crime_application)
             elsif crime_application.application_type == Types::ApplicationType['change_in_financial_circumstances']

@@ -1,7 +1,7 @@
 module Operations
   class CompleteApplication
     def initialize(application_id:, decisions:)
-      @application = CrimeApplication.find(application_id)
+      @application = CrimeApplication.active.find(application_id)
       @decisions = decisions
 
       validate!
