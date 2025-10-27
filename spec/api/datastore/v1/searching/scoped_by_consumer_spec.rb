@@ -29,7 +29,7 @@ RSpec.describe 'scope search by consumer' do
           archived_at: nil, soft_deleted_at: nil
         },
         {
-          submitted_application: { reference: 6_000_004 },
+          submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge('reference' => 6_000_004),
           status: 'returned', submitted_at: 1.year.ago, returned_at: 1.year.ago,
           archived_at: nil, soft_deleted_at: 1.day.ago
         }

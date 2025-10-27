@@ -25,6 +25,22 @@ class CrimeApplication < ApplicationRecord
     archived_at.present?
   end
 
+  def soft_deleted?
+    soft_deleted_at.present?
+  end
+
+  def submitted_application
+    return super unless soft_deleted?
+
+    anonymised_application
+  end
+
+  def anonymised_application
+    LaaCrimeSchemas::Structs::AnonymisedCrimeApplication.new(
+      self[:submitted_application]
+    ).as_json
+  end
+
   private
 
   def shift_payload_attributes
@@ -50,7 +66,8 @@ class CrimeApplication < ApplicationRecord
     return if submitted_application.blank?
     return if post_submission_evidence?
 
-    case_details = submitted_application.fetch('case_details')
+    case_details = submitted_application['case_details']
+    return unless case_details
     return if case_details['first_court_hearing_name'].present?
     return if case_details['is_first_court_hearing'] == Types::FirstHearingAnswerValues['no']
 
