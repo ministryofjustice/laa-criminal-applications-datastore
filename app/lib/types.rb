@@ -22,4 +22,12 @@ module Types
   ].freeze
 
   Types::DeletionReason = String.enum(*DELETION_REASONS)
+
+  DELETION_EXEMPTION_REASONS = %w[
+    deleted_in_error
+    restricted_by_user
+    under_investigation
+  ].freeze
+
+  Types::DeletionExemptionReason = String.enum(*DELETION_EXEMPTION_REASONS)
 end
