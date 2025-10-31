@@ -3,6 +3,7 @@ module Deleting
     include AggregateRoot
     class AlreadySoftDeleted < StandardError; end
     class AlreadyHardDeleted < StandardError; end
+    class CannotBeExempt < StandardError; end
 
     attr_reader :business_reference, :deletion_at, :state
 
@@ -78,14 +79,12 @@ module Deleting
       @deletion_entry_id = event.data.fetch(:deletion_entry_id)
     end
 
-    # :nocov:
     on Deleting::ExemptFromDeletion do |event|
       @state = :exempt_from_deletion
       @exemption_reason = event.data.fetch(:reason)
-      @exempt_until = event.data.fetch(:exempt_until)
-      @deletion_at = @exempt_until + retention_period
+      @exempt_until = event.data.fetch(:exempt_until, nil)
+      @deletion_at = @exempt_until || (timestamp(event) + retention_period)
     end
-    # :nocov:
 
     on Deleting::ApplicationMigrated do |event|
       @state = REVIEW_STATUS_TO_STATE[event.data.fetch(:review_status)]
@@ -127,6 +126,20 @@ module Deleting
           entity_type: @application_type,
           business_reference: @business_reference,
           deletion_entry_id: deletion_entry_id
+        }
+      )
+    end
+
+    def exempt(entity_id:, reason:, exempt_until:)
+      raise CannotBeExempt if hard_deleted?
+
+      apply Deleting::ExemptFromDeletion.new(
+        data: {
+          entity_id: entity_id,
+          entity_type: @application_type,
+          business_reference: @business_reference,
+          reason: reason,
+          exempt_until: exempt_until
         }
       )
     end
