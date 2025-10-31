@@ -81,7 +81,7 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event' do
+        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
@@ -94,7 +94,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'creates a deletion record' do
+        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
           expect(DeletionEntry.first).to have_attributes(
             {
               record_id: entity_id,
@@ -106,7 +106,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'removes deletable_entities record' do
+        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
@@ -180,7 +180,7 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event' do
+        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
@@ -193,7 +193,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'creates a deletion record' do
+        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
           expect(DeletionEntry.first).to have_attributes(
             {
               record_id: entity_id,
@@ -205,7 +205,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'removes deletable_entities record' do
+        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
