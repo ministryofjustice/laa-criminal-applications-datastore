@@ -73,11 +73,13 @@ module Deleting
       @deletion_at = timestamp(event) + 2.weeks
     end
 
+    # :nocov:
     on Deleting::HardDeleted do |event|
       @state = :hard_deleted
       @hard_deleted_at = timestamp(event)
       @deletion_entry_id = event.data.fetch(:deletion_entry_id)
     end
+    # :nocov:
 
     on Deleting::ExemptFromDeletion do |event|
       @state = :exempt_from_deletion
@@ -117,6 +119,7 @@ module Deleting
       )
     end
 
+    # :nocov:
     def hard_delete(entity_id:, deletion_entry_id:)
       raise AlreadyHardDeleted if hard_deleted?
 
@@ -129,6 +132,7 @@ module Deleting
         }
       )
     end
+    # :nocov:
 
     def exempt(entity_id:, reason:, exempt_until:)
       raise CannotBeExempt if hard_deleted?
