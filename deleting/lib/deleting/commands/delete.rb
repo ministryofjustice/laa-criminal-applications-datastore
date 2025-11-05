@@ -15,6 +15,7 @@ module Deleting
           elsif deletable.soft_deletable?
             soft_delete(deletable)
           else
+            # This may happen if there is a draft application in Apply pending hard-deletion
             Rails.logger.warn("Application #{business_reference} is not ready for deletion")
           end
         end
