@@ -167,11 +167,11 @@ module Deleting
       @submitted_at.nil?
     end
 
-    private
-
     def active_drafts?
       @active_drafts.positive?
     end
+
+    private
 
     def injected_into_maat
       @maat_id.present?
