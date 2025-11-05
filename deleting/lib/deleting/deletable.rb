@@ -162,6 +162,10 @@ module Deleting
       @deletion_at <= Time.zone.now
     end
 
+    def never_submitted?
+      @submitted_at.nil?
+    end
+
     private
 
     def active_drafts?
@@ -184,10 +188,6 @@ module Deleting
       return 7.years if granted?
 
       2.years
-    end
-
-    def never_submitted?
-      @submitted_at.nil?
     end
 
     def completed_without_decision?
