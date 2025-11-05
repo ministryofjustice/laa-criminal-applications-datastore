@@ -41,6 +41,7 @@ module Deleting
       @state = :submitted
       @submitted_at = timestamp(event)
       @deletion_at = timestamp(event) + retention_period
+      @active_drafts -= 1
     end
 
     on Deciding::MaatRecordCreated do |event|
