@@ -1,6 +1,7 @@
 require 'laa_crime_schemas'
 
 module Datastore
+  Grape::Validations.register(YearMonthFormat)
   class Base < Grape::API
     include Datastore::Concerns::Logging
 
