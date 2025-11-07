@@ -13,6 +13,7 @@ RSpec.describe Deleting::Commands::Exempt do
   let(:entity_type) { crime_application.application_type }
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
+  let(:repository) { Deleting::DeletableRepository.new }
 
   let(:events) do
     [
@@ -63,6 +64,12 @@ RSpec.describe Deleting::Commands::Exempt do
 
     it 'clears the soft_deleted_at timestamp' do
       expect(crime_application.reload.soft_deleted_at).to be_nil
+    end
+
+    it 'clears the soft_deleted_at timestamp in the aggregate' do
+      repository.with_deletable(business_reference) do |deletable|
+        expect(deletable.soft_deleted_at).to be_nil
+      end
     end
 
     it 'sets `review_deletion_at` to the given date' do

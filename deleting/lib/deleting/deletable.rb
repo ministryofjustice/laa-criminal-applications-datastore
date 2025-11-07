@@ -5,7 +5,7 @@ module Deleting
     class AlreadyHardDeleted < StandardError; end
     class CannotBeExempt < StandardError; end
 
-    attr_reader :business_reference, :deletion_at, :state
+    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at
 
     STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
     REVIEW_STATUS_TO_STATE = {
@@ -87,6 +87,7 @@ module Deleting
       @exemption_reason = event.data.fetch(:reason)
       @exempt_until = event.data.fetch(:exempt_until, nil)
       @deletion_at = @exempt_until || (timestamp(event) + retention_period)
+      @soft_deleted_at = nil
     end
 
     on Deleting::ApplicationMigrated do |event|
