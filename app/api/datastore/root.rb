@@ -17,6 +17,7 @@ module Datastore
     mount V1::Documents
     mount V1::Searching
     mount V1::Reviewing
+    mount V1::Reporting
     mount V1::Healthcheck
 
     add_swagger_documentation(
