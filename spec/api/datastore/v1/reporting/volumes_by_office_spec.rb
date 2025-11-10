@@ -52,8 +52,10 @@ RSpec.describe 'Monthly submissions by office code' do
     api_request
   end
 
-  it 'return the volumes by office report for the given period' do
-    expect(data).to eq({ '1A2B3C' => 2, '1A2CFC' => 1 })
+  describe 'whith the default application types' do
+    it 'returns the volumes by office report for the given period excluding PSE' do
+      expect(data).to eq({ '1A2B3C' => 2, '1A2CFC' => 1 })
+    end
   end
 
   describe 'when application types are specified' do
