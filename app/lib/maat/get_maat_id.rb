@@ -2,7 +2,7 @@ module MAAT
   class GetMAATId
     USN_FORMAT = '/api/external/v1/crime-application/result/usn/%d'.freeze
 
-    def initialize(http_client: Maat::HttpClient.call)
+    def initialize(http_client: MAAT::HttpClient.call)
       @http_client = http_client
     end
 

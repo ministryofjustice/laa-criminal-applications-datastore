@@ -154,7 +154,7 @@ module Deleting
       return false unless returned?
       return false if active_drafts?
 
-      @deletion_at <= Time.zone.now && !injected_into_maat
+      @deletion_at <= Time.zone.now && !injected_into_maat?
     end
 
     def hard_deletable?
@@ -173,8 +173,12 @@ module Deleting
 
     private
 
-    def injected_into_maat
-      @maat_id.present?
+    def injected_into_maat?
+      return true if @maat_id.present?
+      return true if CrimeApplication.where(reference: @business_reference).map(&:maat_id).any?
+      return true if @decision_id.present? && Decision.find(@decision_id).maat_id.present?
+
+      MAAT::GetMAATId.new.by_usn(@business_reference).present?
     end
 
     def timestamp(event)

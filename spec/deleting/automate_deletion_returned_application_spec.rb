@@ -14,8 +14,10 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:maat_id) { '987654321' }
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
+  let(:get_maat_id) { instance_double(MAAT::GetMAATId) }
 
   before do
+    allow(MAAT::GetMAATId).to receive(:new).and_return(get_maat_id)
     travel_to current_date
   end
 
@@ -39,11 +41,16 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(get_maat_id).to receive(:by_usn).with(business_reference).and_return(nil)
         publish_events
         automate_deletion.call
       end
 
       it_behaves_like 'an application with events'
+
+      it 'queries the MAAT API to check for a MAAT ID' do
+        expect(get_maat_id).to have_received(:by_usn).with(business_reference)
+      end
 
       it 'publishes a SoftDeleted event' do
         soft_deleted_events = events_in_stream.of_type([Deleting::SoftDeleted]).to_a
@@ -162,12 +169,17 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(get_maat_id).to receive(:by_usn).with(business_reference).and_return(nil)
         crime_application.superseded!
         publish_events
         automate_deletion.call
       end
 
       it_behaves_like 'an application with events'
+
+      it 'queries the MAAT API to check for a MAAT ID' do
+        expect(get_maat_id).to have_received(:by_usn).with(business_reference)
+      end
 
       it 'publishes a SoftDeleted event' do
         soft_deleted_events = events_in_stream.of_type([Deleting::SoftDeleted]).to_a
@@ -263,11 +275,16 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(get_maat_id).to receive(:by_usn).with(business_reference).and_return(nil)
         publish_events
         automate_deletion.call
       end
 
       it_behaves_like 'an application with events'
+
+      it 'queries the MAAT API to check for a MAAT ID' do
+        expect(get_maat_id).to have_received(:by_usn).with(business_reference)
+      end
 
       it 'publishes a SoftDeleted event' do
         soft_deleted_events = events_in_stream.of_type([Deleting::SoftDeleted]).to_a
