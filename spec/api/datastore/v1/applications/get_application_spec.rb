@@ -8,7 +8,7 @@ RSpec.describe 'get application' do
   let(:application_id) { application.submitted_application['id'] }
 
   let(:application) do
-    CrimeApplication.new(submitted_application: submitted_application, submitted_at: 1.day.ago)
+    CrimeApplication.create!(submitted_application: submitted_application, submitted_at: 1.day.ago)
   end
 
   let(:submitted_application) { JSON.parse(LaaCrimeSchemas.fixture(1.0).read) }
@@ -21,27 +21,30 @@ RSpec.describe 'get application' do
     end
 
     context 'when found' do
-      before do
-        allow(CrimeApplication).to receive(:find)
-          .with(application_id)
-          .and_return(application)
+      context 'when an initial application' do
+        before { api_request }
 
-        api_request
-      end
+        it 'returns http status 200' do
+          expect(response).to have_http_status(:success)
+        end
 
-      it 'returns http status 200' do
-        expect(response).to have_http_status(:success)
-      end
+        it "returns the application's details" do
+          expect(JSON.parse(response.body)['id']).to eq('696dd4fd-b619-4637-ab42-a5f4565bcf4a')
+        end
 
-      it "returns the application's details" do
-        expect(JSON.parse(response.body)['id']).to eq('696dd4fd-b619-4637-ab42-a5f4565bcf4a')
-      end
-
-      it 'returned details satisfy with schema' do
-        expect(validator).to be_valid, -> { validator.fully_validate }
+        it 'returned details satisfy with schema' do
+          expect(validator).to be_valid, -> { validator.fully_validate }
+        end
       end
 
       context 'when post submission evidence application' do
+        before do
+          CrimeApplication.create!(
+            submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read), submitted_at: 1.day.ago
+          )
+          api_request
+        end
+
         let(:submitted_application) { JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'post_submission_evidence').read) }
 
         it 'returns http status 200' do
@@ -58,6 +61,8 @@ RSpec.describe 'get application' do
       end
 
       context 'when change in financial circumstances application' do
+        before { api_request }
+
         let(:submitted_application) do
           JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'change_in_financial_circumstances').read)
         end
@@ -81,14 +86,58 @@ RSpec.describe 'get application' do
       end
     end
 
-    context 'when not found' do
-      before do
-        allow(CrimeApplication).to receive(:find) {
-          raise ActiveRecord::RecordNotFound
-        }
+    context 'when a soft deleted application' do
+      include_context 'with a consumer' do
+        before do
+          application.touch(:soft_deleted_at) # rubocop:disable Rails/SkipsModelValidations
 
-        api_request
+          api_request
+        end
+
+        context 'when crime-review' do
+          let(:consumer) { 'crime-review' }
+
+          it 'returns http status 200' do
+            expect(response).to have_http_status(:success)
+          end
+        end
+
+        context 'when crime-apply' do
+          let(:consumer) { 'crime-apply' }
+
+          it_behaves_like 'an error that raises a 404 status code'
+        end
       end
+    end
+
+    context 'when an archived application' do
+      include_context 'with a consumer' do
+        before do
+          application.touch(:archived_at) # rubocop:disable Rails/SkipsModelValidations
+
+          api_request
+        end
+
+        context 'when crime-review' do
+          let(:consumer) { 'crime-review' }
+
+          it 'returns http status 200' do
+            expect(response).to have_http_status(:success)
+          end
+        end
+
+        context 'when crime-apply' do
+          let(:consumer) { 'crime-apply' }
+
+          it_behaves_like 'an error that raises a 404 status code'
+        end
+      end
+    end
+
+    context 'when not found' do
+      let(:application_id) { SecureRandom.uuid }
+
+      before { api_request }
 
       it_behaves_like 'an error that raises a 404 status code'
     end

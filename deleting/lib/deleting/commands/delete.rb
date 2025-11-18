@@ -10,10 +10,12 @@ module Deleting
       def call
         repository.with_deletable(@business_reference) do |deletable|
           if deletable.hard_deletable?
-            hard_delete(deletable)
+            # TODO: uncomment when hard deletion code is ready
+            # hard_delete(deletable)
           elsif deletable.soft_deletable?
             soft_delete(deletable)
           else
+            # This may happen if there is a draft application in Apply pending hard-deletion
             Rails.logger.warn("Application #{business_reference} is not ready for deletion")
           end
         end
@@ -27,6 +29,7 @@ module Deleting
         deletable.soft_delete(entity_id:, reason:, deleted_by:)
       end
 
+      # :nocov:
       def hard_delete(deletable)
         # TODO: redact latest and superseded records
         # TODO: remove attachments
@@ -39,6 +42,7 @@ module Deleting
         )
         deletable.hard_delete(entity_id: entity_id, deletion_entry_id: deletion_entry.id)
       end
+      # :nocov:
 
       def entity_id
         @entity_id ||= CrimeApplication.latest(business_reference).first.id

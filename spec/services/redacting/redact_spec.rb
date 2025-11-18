@@ -68,7 +68,8 @@ describe Redacting::Redact do
                                                     'has_benefit_evidence' => 'no',
                                                     'has_nino' => 'yes',
                                                     'will_enter_nino' => nil,
-                                                    'arc' => nil
+                                                    'arc' => nil,
+                                                    'dwp_response' => nil
                                                   })
       end
 
@@ -93,6 +94,7 @@ describe Redacting::Redact do
                                                   'confirm_dwp_result' => nil,
                                                   'has_benefit_evidence' => nil,
                                                   'will_enter_nino' => nil,
+                                                  'dwp_response' => nil,
                                                   'last_jsa_appointment_date' => nil,
                                                   'home_address' => {
                                                     'lookup_id' => nil,

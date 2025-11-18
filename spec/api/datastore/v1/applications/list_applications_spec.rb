@@ -87,17 +87,17 @@ RSpec.describe 'list applications' do
         {
           submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read),
           status: 'submitted', submitted_at: 1.day.ago, returned_at: nil,
-          archived_at: nil
+          archived_at: nil, soft_deleted_at: nil
         },
         {
           submitted_application: { reference: 6_000_002 },
           status: 'returned', submitted_at: 1.week.ago, returned_at: Time.zone.now,
-          archived_at: Time.zone.now
+          archived_at: Time.zone.now, soft_deleted_at: nil
         },
         {
           submitted_application: { reference: 6_000_003 },
           status: 'superseded', submitted_at: 1.month.ago, returned_at: 1.week.ago,
-          archived_at: nil
+          archived_at: nil, soft_deleted_at: nil
         }
       ]
     end
@@ -105,7 +105,7 @@ RSpec.describe 'list applications' do
     let(:returned_statuses) { records.pluck('status').uniq }
 
     let(:query) { nil }
-    let(:consumer) { nil }
+    let(:consumer) { 'crime-review' }
 
     it 'is an array of valid crime application details' do
       validator = LaaCrimeSchemas::Validator.new(records.first, version: 1.0, schema_name: 'pruned_application')
@@ -307,11 +307,34 @@ RSpec.describe 'list applications' do
     end
 
     describe 'scoping by consumer' do
+      let(:applications) do
+        super() << {
+          submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge('reference' => 6_000_004),
+          status: 'returned', submitted_at: 1.year.ago, returned_at: 1.year.ago,
+          archived_at: nil, soft_deleted_at: 1.day.ago
+        }
+      end
+
       context 'when the consumer is crime-apply' do
         let(:consumer) { 'crime-apply' }
 
-        it 'excludes archived applications' do
-          expect(records.size).to be(2)
+        it 'excludes archived and soft delted applications' do
+          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
+        end
+      end
+
+      context 'when the consumer is crime-apply-preprod' do
+        let(:consumer) { 'crime-apply-preprod' }
+
+        it 'excludes archived and soft deleted applications' do
+          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
+        end
+      end
+
+      context 'when the consumer is maat' do
+        let(:consumer) { 'maat-adapter' }
+
+        it 'excludes archived and soft delted applications' do
           expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
         end
       end
@@ -320,8 +343,9 @@ RSpec.describe 'list applications' do
         let(:consumer) { 'crime-review' }
 
         it 'includes all applications' do
-          expect(records.size).to be(3)
-          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_002, 6_000_003)
+          expect(records.pluck('reference')).to contain_exactly(
+            6_000_001, 6_000_002, 6_000_003, 6_000_004
+          )
         end
       end
     end

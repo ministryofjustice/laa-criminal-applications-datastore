@@ -3,8 +3,9 @@ module Deleting
     include AggregateRoot
     class AlreadySoftDeleted < StandardError; end
     class AlreadyHardDeleted < StandardError; end
+    class CannotBeExempt < StandardError; end
 
-    attr_reader :business_reference, :deletion_at, :state
+    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at
 
     STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
     REVIEW_STATUS_TO_STATE = {
@@ -40,6 +41,7 @@ module Deleting
       @state = :submitted
       @submitted_at = timestamp(event)
       @deletion_at = timestamp(event) + retention_period
+      @active_drafts -= 1
     end
 
     on Deciding::MaatRecordCreated do |event|
@@ -72,20 +74,21 @@ module Deleting
       @deletion_at = timestamp(event) + 2.weeks
     end
 
+    # :nocov:
     on Deleting::HardDeleted do |event|
       @state = :hard_deleted
       @hard_deleted_at = timestamp(event)
       @deletion_entry_id = event.data.fetch(:deletion_entry_id)
     end
-
     # :nocov:
+
     on Deleting::ExemptFromDeletion do |event|
       @state = :exempt_from_deletion
       @exemption_reason = event.data.fetch(:reason)
-      @exempt_until = event.data.fetch(:exempt_until)
-      @deletion_at = @exempt_until + retention_period
+      @exempt_until = event.data.fetch(:exempt_until, nil)
+      @deletion_at = @exempt_until || (timestamp(event) + retention_period)
+      @soft_deleted_at = nil
     end
-    # :nocov:
 
     on Deleting::ApplicationMigrated do |event|
       @state = REVIEW_STATUS_TO_STATE[event.data.fetch(:review_status)]
@@ -118,6 +121,7 @@ module Deleting
       )
     end
 
+    # :nocov:
     def hard_delete(entity_id:, deletion_entry_id:)
       raise AlreadyHardDeleted if hard_deleted?
 
@@ -130,12 +134,27 @@ module Deleting
         }
       )
     end
+    # :nocov:
+
+    def exempt(entity_id:, reason:, exempt_until:)
+      raise CannotBeExempt if hard_deleted?
+
+      apply Deleting::ExemptFromDeletion.new(
+        data: {
+          entity_id: entity_id,
+          entity_type: @application_type,
+          business_reference: @business_reference,
+          reason: reason,
+          exempt_until: exempt_until
+        }
+      )
+    end
 
     def soft_deletable?
       return false unless returned?
       return false if active_drafts?
 
-      @deletion_at <= Time.zone.now && !injected_into_maat
+      @deletion_at <= Time.zone.now && !injected_into_maat?
     end
 
     def hard_deletable?
@@ -144,14 +163,22 @@ module Deleting
       @deletion_at <= Time.zone.now
     end
 
-    private
+    def never_submitted?
+      @submitted_at.nil?
+    end
 
     def active_drafts?
       @active_drafts.positive?
     end
 
-    def injected_into_maat
-      @maat_id.present?
+    private
+
+    def injected_into_maat?
+      return true if @maat_id.present?
+      return true if CrimeApplication.where(reference: @business_reference).map(&:maat_id).any?
+      return true if @decision_id.present? && Decision.find(@decision_id).maat_id.present?
+
+      MAAT::GetMAATId.new.by_usn(@business_reference).present?
     end
 
     def timestamp(event)
@@ -166,10 +193,6 @@ module Deleting
       return 7.years if granted?
 
       2.years
-    end
-
-    def never_submitted?
-      @submitted_at.nil?
     end
 
     def completed_without_decision?

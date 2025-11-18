@@ -43,6 +43,8 @@ module Deleting
           ])
         event_store.subscribe(Deleting::Handlers::UpdateReadModel, to: EVENTS)
         event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted, to: [Deleting::SoftDeleted])
+        event_store.subscribe(Deleting::Handlers::ClearApplicationSoftDeleted, to: [Deleting::ExemptFromDeletion])
+        event_store.subscribe(Deleting::Handlers::DeleteUnsubmittedDeletableEntity, to: [Applying::DraftDeleted])
       end
     end
   end

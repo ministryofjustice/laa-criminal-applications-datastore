@@ -7,7 +7,7 @@ module Operations
     end
 
     def call
-      app = CrimeApplication.returned.find_by(id: application_id)
+      app = CrimeApplication.active.returned.find_by(id: application_id)
       app.try(:superseded!)
     end
   end

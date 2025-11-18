@@ -14,8 +14,10 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:maat_id) { '987654321' }
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
+  let(:get_maat_id) { instance_double(MAAT::GetMAATId) }
 
   before do
+    allow(MAAT::GetMAATId).to receive(:new).and_return(get_maat_id)
     travel_to current_date
   end
 
@@ -27,10 +29,6 @@ RSpec.describe Deleting::AutomateDeletion do
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftDeleted, Time.zone.local(2023, 9, 1), { entity_id: entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference,
-                                                                  reason: 'provider_action',
-                                                                  deleted_by: SecureRandom.uuid },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Reviewing::SentBack, Time.zone.local(2023, 9, 4), { entity_id: entity_id, entity_type: entity_type,
                                                               business_reference: business_reference,
@@ -43,11 +41,16 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(get_maat_id).to receive(:by_usn).with(business_reference).and_return(nil)
         publish_events
         automate_deletion.call
       end
 
       it_behaves_like 'an application with events'
+
+      it 'queries the MAAT API to check for a MAAT ID' do
+        expect(get_maat_id).to have_received(:by_usn).with(business_reference)
+      end
 
       it 'publishes a SoftDeleted event' do
         soft_deleted_events = events_in_stream.of_type([Deleting::SoftDeleted]).to_a
@@ -81,7 +84,7 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event' do
+        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
@@ -94,7 +97,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'creates a deletion record' do
+        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
           expect(DeletionEntry.first).to have_attributes(
             {
               record_id: entity_id,
@@ -106,7 +109,137 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'removes deletable_entities record' do
+        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
+          expect(DeletableEntity.find_by(business_reference:)).to be_nil
+        end
+      end
+    end
+
+    context 'when sent back 2 years ago, not injected into MAAT and has a superseded application' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      let!(:crime_application) do
+        CrimeApplication.create!(
+          submitted_application:
+            JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge('submitted_at' => Time.zone.local(2023, 8, 27).to_s),
+          status: :returned,
+          review_status: 'returned_to_provider',
+          returned_at: Time.zone.local(2023, 8, 28),
+          reviewed_at: Time.zone.local(2023, 8, 28)
+        )
+      end
+      let(:new_crime_application) do
+        CrimeApplication.create!(
+          submitted_application:
+            JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge('id' => SecureRandom.uuid,
+                                                                'submitted_at' => Time.zone.local(2023, 8, 29).to_s),
+          status: :returned,
+          review_status: 'returned_to_provider',
+          returned_at: Time.zone.local(2023, 8, 29),
+          reviewed_at: Time.zone.local(2023, 8, 29)
+        )
+      end
+      let(:new_entity_id) { new_crime_application.id }
+      let(:events) do
+        [
+          Applying::DraftCreated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
+          Applying::DraftUpdated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
+          Applying::DraftUpdated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
+          Applying::DraftUpdated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
+          Applying::Submitted, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
+          Reviewing::SentBack, Time.zone.local(2023, 8, 28), { entity_id: entity_id, entity_type: entity_type,
+                                                              business_reference: business_reference,
+                                                              reason: 'duplicate_application' },
+          Applying::DraftCreated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
+                                                                  business_reference: business_reference },
+          Applying::DraftUpdated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
+                                                                  business_reference: business_reference },
+          Applying::DraftUpdated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
+                                                                  business_reference: business_reference },
+          Applying::DraftUpdated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
+                                                                  business_reference: business_reference },
+          Applying::Submitted, Time.zone.local(2023, 8, 29), { entity_id: new_entity_id, entity_type: entity_type,
+                                                               business_reference: business_reference },
+          Reviewing::SentBack, Time.zone.local(2023, 8, 29), { entity_id: new_entity_id, entity_type: entity_type,
+                                                              business_reference: business_reference,
+                                                              reason: 'evidence_issue' }
+        ]
+      end
+      let!(:deletable_entity) do
+        DeletableEntity.create!(business_reference: business_reference,
+                                review_deletion_at: Time.zone.local(2023, 8, 28))
+      end
+
+      before do
+        allow(get_maat_id).to receive(:by_usn).with(business_reference).and_return(nil)
+        crime_application.superseded!
+        publish_events
+        automate_deletion.call
+      end
+
+      it_behaves_like 'an application with events'
+
+      it 'queries the MAAT API to check for a MAAT ID' do
+        expect(get_maat_id).to have_received(:by_usn).with(business_reference)
+      end
+
+      it 'publishes a SoftDeleted event' do
+        soft_deleted_events = events_in_stream.of_type([Deleting::SoftDeleted]).to_a
+        expect(soft_deleted_events.count).to eq(1)
+        expect(soft_deleted_events.first.data).to eq(
+          {
+            entity_id: new_entity_id,
+            entity_type: entity_type,
+            business_reference: business_reference,
+            reason: Types::DeletionReason['retention_rule'],
+            deleted_by: 'system_automated'
+          }
+        )
+      end
+
+      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      end
+
+      it 'sets `soft_deleted_at` on both applications' do
+        expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
+        expect(new_crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
+      end
+
+      context 'when two weeks have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+        before do
+          travel_to current_date + 2.weeks
+          automate_deletion.call
+        end
+
+        it 'does not publish another SoftDeleted event' do
+          expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
+        end
+
+        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
+          hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
+          expect(hard_deleted_events.count).to eq(1)
+          expect(hard_deleted_events.first.data).to eq(
+            {
+              entity_id: new_entity_id,
+              entity_type: entity_type,
+              business_reference: business_reference,
+              deletion_entry_id: DeletionEntry.first.id,
+            }
+          )
+        end
+
+        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
+          expect(DeletionEntry.first).to have_attributes(
+            {
+              record_id: new_entity_id,
+              record_type: Types::RecordType['application'],
+              business_reference: business_reference.to_s,
+              deleted_by: 'system_automated',
+              reason: Types::DeletionReason['retention_rule']
+            }
+          )
+        end
+
+        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
@@ -142,11 +275,16 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(get_maat_id).to receive(:by_usn).with(business_reference).and_return(nil)
         publish_events
         automate_deletion.call
       end
 
       it_behaves_like 'an application with events'
+
+      it 'queries the MAAT API to check for a MAAT ID' do
+        expect(get_maat_id).to have_received(:by_usn).with(business_reference)
+      end
 
       it 'publishes a SoftDeleted event' do
         soft_deleted_events = events_in_stream.of_type([Deleting::SoftDeleted]).to_a
@@ -180,7 +318,7 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event' do
+        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
@@ -193,7 +331,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'creates a deletion record' do
+        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
           expect(DeletionEntry.first).to have_attributes(
             {
               record_id: entity_id,
@@ -205,7 +343,7 @@ RSpec.describe Deleting::AutomateDeletion do
           )
         end
 
-        it 'removes deletable_entities record' do
+        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
@@ -218,10 +356,6 @@ RSpec.describe Deleting::AutomateDeletion do
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftDeleted, Time.zone.local(2023, 9, 1), { entity_id: entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference,
-                                                                  reason: 'provider_action',
-                                                                  deleted_by: SecureRandom.uuid },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Deciding::MaatRecordCreated, Time.zone.local(2023, 9, 2), { entity_id:, entity_type:, business_reference:,
                                                                       maat_id: },
@@ -311,10 +445,6 @@ RSpec.describe Deleting::AutomateDeletion do
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftDeleted, Time.zone.local(2023, 9, 1), { entity_id: entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference,
-                                                                  reason: 'provider_action',
-                                                                  deleted_by: SecureRandom.uuid },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Reviewing::SentBack, Time.zone.local(2023, 9, 4), { entity_id: entity_id, entity_type: entity_type,
                                                               business_reference: business_reference,

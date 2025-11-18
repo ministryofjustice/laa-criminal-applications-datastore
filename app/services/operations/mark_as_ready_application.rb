@@ -1,7 +1,7 @@
 module Operations
   class MarkAsReadyApplication
     def initialize(application_id:)
-      @application = CrimeApplication.find(application_id)
+      @application = CrimeApplication.active.find(application_id)
     end
 
     def call

@@ -13,6 +13,7 @@ module Datastore
         expose :parent_id
         expose :created_at
         expose :work_stream
+        expose :soft_deleted_at, expose_nil: false
 
         private
 
@@ -28,6 +29,12 @@ module Datastore
           case_details = submitted_value('case_details') || {}
           case_details['offence_class'] = object.offence_class
           case_details
+        end
+
+        def submitted_at
+          return object.submitted_at if object.soft_deleted_at.blank?
+
+          object.submitted_at.in_time_zone('London').at_midnight
         end
 
         def client_details

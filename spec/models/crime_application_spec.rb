@@ -281,6 +281,51 @@ describe CrimeApplication do
     end
   end
 
+  describe '#submitted_application' do
+    subject(:submitted_application) { described_class.new(valid_attributes).submitted_application }
+
+    it { is_expected.to eq(valid_attributes.fetch(:submitted_application)) }
+
+    context 'when soft deleted' do
+      let(:valid_attributes) { super().merge(soft_deleted_at: Time.zone.now) }
+
+      it { is_expected.not_to eq(valid_attributes.fetch(:submitted_application)) }
+
+      it 'returns the anoymised application' do
+        expect(submitted_application['client_details']).to eq(
+          'applicant' => { 'last_name' => '[deleted]' }
+        )
+      end
+    end
+  end
+
+  describe '#anonymised_application' do
+    subject(:anonymised_application) { described_class.new(valid_attributes).anonymised_application }
+
+    it 'returns a hash of anoymised attributes' do
+      expectation = JSON.parse(LaaCrimeSchemas.fixture(1.0, name: 'anonymised_application').read)
+      expect(anonymised_application).to eq(expectation)
+    end
+
+    it 'replaces the applicant\'s name with [deleted]' do
+      expect(anonymised_application['client_details']).to eq(
+        'applicant' => { 'last_name' => '[deleted]' }
+      )
+    end
+
+    it 'retains only the office code from provider details' do
+      expect(anonymised_application['provider_details']).to eq(
+        { 'office_code' => '1A123B' }
+      )
+    end
+
+    it 'converts timestamps to dates' do
+      expect(anonymised_application['submitted_at'].to_s).to eq(
+        '2022-10-24'
+      )
+    end
+  end
+
   describe '#archived?' do
     subject(:archived?) { described_class.new(valid_attributes).archived? }
 
@@ -292,6 +337,22 @@ describe CrimeApplication do
 
     context 'when the application is not archived' do
       let(:valid_attributes) { super().merge(archived_at: nil) }
+
+      it { is_expected.to be(false) }
+    end
+  end
+
+  describe '#soft_deleted?' do
+    subject(:soft_deleted?) { described_class.new(valid_attributes).soft_deleted? }
+
+    context 'when the application is soft deleted' do
+      let(:valid_attributes) { super().merge(soft_deleted_at: Time.zone.now) }
+
+      it { is_expected.to be(true) }
+    end
+
+    context 'when the application is not soft deleted' do
+      let(:valid_attributes) { super().merge(soft_deleted_at: nil) }
 
       it { is_expected.to be(false) }
     end
