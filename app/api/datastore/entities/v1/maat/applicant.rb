@@ -12,6 +12,7 @@ module Datastore
           expose :nino
           expose :last_jsa_appointment_date
           expose(:benefit_type) { |p| p['benefit_type'] unless p['benefit_type'] == 'none' }
+          expose :dwp_response
 
           expose :telephone_number
           expose :correspondence_address_type
