@@ -11,10 +11,19 @@ module Types
   Types::ApplicationStatus = String.enum(*APPLICATION_STATUSES)
 
   RECORD_TYPES = %w[
+    document
     application
   ].freeze
 
   Types::RecordType = String.enum(*RECORD_TYPES)
+
+  RECORD_SOURCE = %w[
+    amazon_s3
+    crime_apply
+    criminal_applications_datastore
+  ].freeze
+
+  Types::RecordSource = String.enum(*RECORD_SOURCE)
 
   DELETION_REASONS = %w[
     provider_action
