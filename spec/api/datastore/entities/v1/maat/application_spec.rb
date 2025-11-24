@@ -61,7 +61,8 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           other_names: '',
          residence_type: nil,
          telephone_number:  '07771231231',
-         welsh_correspondence: false
+         welsh_correspondence: false,
+         dwp_response: nil,
         }.deep_stringify_keys
       end
 
@@ -82,6 +83,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           other_names: 'Diane',
           conflict_of_interest: 'no',
           involvement_in_case: 'codefendant',
+          dwp_response: nil,
         }.deep_stringify_keys
       end
 
