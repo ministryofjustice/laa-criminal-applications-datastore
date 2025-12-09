@@ -1,5 +1,5 @@
 module Deleting
-  SOFT_DELETION_PERIOD = 2.weeks
+  SOFT_DELETION_PERIOD = 30.days
 
   class Event < RailsEventStore::Event; end
   class SoftDeleted < Event; end

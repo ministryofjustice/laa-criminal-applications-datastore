@@ -6,7 +6,7 @@ RSpec.describe Deleting::AutomateDeletion do
   include_context 'with published events'
   include_context 'with an S3 client'
 
-  let!(:crime_application) do
+  let(:crime_application) do
     CrimeApplication.create!(submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read))
   end
 
@@ -77,17 +77,17 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
-        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      it 'pushes the `review_deletion_at` timestamp on the read model back by thirty days' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 30.days)
       end
 
       it 'sets `soft_deleted_at` on the application' do
         expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
-      context 'when two weeks have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      context 'when soft deletion period has passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         before do
-          travel_to current_date + 2.weeks
+          travel_to current_date + Deleting::SOFT_DELETION_PERIOD
           automate_deletion.call
         end
 
@@ -192,8 +192,8 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
-        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      it 'pushes the `review_deletion_at` timestamp on the read model back by 30 days' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 30.days)
       end
 
       it 'sets `soft_deleted_at` on both applications' do
@@ -201,9 +201,9 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(new_crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
-      context 'when two weeks have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      context 'when thirty days have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         before do
-          travel_to current_date + 2.weeks
+          travel_to current_date + Deleting::SOFT_DELETION_PERIOD
           automate_deletion.call
         end
 
@@ -294,17 +294,17 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
-        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      it 'pushes the `review_deletion_at` timestamp on the read model back by thirty days' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 30.days)
       end
 
       it 'sets `soft_deleted_at` on the application' do
         expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
-      context 'when two weeks have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      context 'when thirty days have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         before do
-          travel_to current_date + 2.weeks
+          travel_to current_date + 30.days
           automate_deletion.call
         end
 
