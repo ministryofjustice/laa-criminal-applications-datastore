@@ -34,7 +34,7 @@ describe Operations::Documents::List do
     end
 
     context 'when there is an error' do
-      let(:endpoint) { 'https://s3.eu-west-2.amazonaws.com/s3_bucket_name/?list-type=2&prefix=123/' }
+      let(:endpoint) { 'https://s3.eu-west-2.amazonaws.com/s3_bucket_name?list-type=2&prefix=123/' }
 
       before do
         stub_request(:get, endpoint)
