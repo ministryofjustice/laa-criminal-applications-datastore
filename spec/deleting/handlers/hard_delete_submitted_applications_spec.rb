@@ -33,6 +33,7 @@ RSpec.describe Deleting::Handlers::HardDeleteSubmittedApplications do
     end
 
     before do
+      # create an application that should not be deleted
       CrimeApplication.create!(
         submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read).merge({ 'id' => SecureRandom.uuid,
 'reference' => 6_000_022 })
@@ -51,6 +52,7 @@ RSpec.describe Deleting::Handlers::HardDeleteSubmittedApplications do
       expect { handler.call(event) }.to change {
         CrimeApplication.pluck(:applicant_last_name).sort
       }.to(['Pound', '[deleted]', '[deleted]', '[deleted]'])
+      # 'Pound' is the last name of the unrelated application
     end
 
     it 'persists a deletion entry for each anonymised application' do
@@ -83,6 +85,16 @@ RSpec.describe Deleting::Handlers::HardDeleteSubmittedApplications do
       handler.call(event)
 
       expect(DeletionEntry).not_to have_received(:create!)
+    end
+
+    context 'when a crime applications has not yet been soft deleted' do
+      before do
+        applications.first.update(soft_deleted_at: nil)
+      end
+
+      it 'raises an Errors::NotSoftDeleted error' do
+        expect { handler.call(event) }.to raise_error Errors::NotSoftDeleted
+      end
     end
   end
 end

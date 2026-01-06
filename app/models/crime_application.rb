@@ -40,7 +40,7 @@ class CrimeApplication < ApplicationRecord
   end
 
   def destroy
-    raise unless soft_deleted?
+    raise Errors::NotSoftDeleted unless soft_deleted?
     return false if hard_deleted?
 
     # rubocop:disable Rails/SkipsModelValidations

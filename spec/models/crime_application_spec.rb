@@ -173,6 +173,42 @@ describe CrimeApplication do
     end
   end
 
+  describe '#destroy' do
+    let(:application) { described_class.create!(valid_attributes) }
+
+    it 'raises an error unless soft deleted' do
+      expect { application.destroy }.to raise_error(Errors::NotSoftDeleted)
+    end
+
+    it 'returns false if already hard deleted' do
+      application.update(hard_deleted_at: Time.current, soft_deleted_at: 30.days.ago)
+      expect(application.destroy).to be false
+    end
+
+    it 'anonymises the submitted_application in the database' do
+      application.update(soft_deleted_at: Time.current)
+
+      expect { application.destroy }.to change {
+        application.reload.attributes['submitted_application']['client_details']
+      }.to(
+        'applicant' => { 'last_name' => '[deleted]' }
+      )
+    end
+
+    it 'sets hard deleted at' do
+      application.update(soft_deleted_at: Time.current)
+
+      expect { application.destroy }.to change {
+        application.reload.hard_deleted_at
+      }.from(nil)
+
+      # but only once
+      expect { application.destroy }.not_to(change do
+        application.reload.hard_deleted_at
+      end)
+    end
+  end
+
   describe '#applicant_name' do
     context 'when created' do
       subject!(:application) do

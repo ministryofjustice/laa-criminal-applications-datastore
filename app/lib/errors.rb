@@ -5,6 +5,7 @@ module Errors
   class AlreadyReturned < StandardError; end
   class AlreadySubmitted < StandardError; end
   class CannotArchive < StandardError; end
+  class NotSoftDeleted < StandardError; end
   class DocumentUploadError < StandardError; end
   class NotValidForMAAT < StandardError; end
 end
