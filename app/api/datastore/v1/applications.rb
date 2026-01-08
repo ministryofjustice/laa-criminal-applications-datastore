@@ -1,6 +1,6 @@
 module Datastore
   module V1
-    class Applications < Base # rubocop:disable Metrics/ClassLength
+    class Applications < Base
       version 'v1', using: :path
 
       resource :applications do
@@ -89,17 +89,6 @@ module Datastore
         end
         post 'draft_created' do
           Operations::DraftCreated.new(**declared(params).symbolize_keys).call
-        end
-
-        desc 'Create a DraftUpdated event for an application.'
-        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
-        params do
-          requires :entity_id, type: String, desc: 'Draft application UUID.'
-          requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
-          requires :business_reference, type: String, desc: 'Draft application reference number.'
-        end
-        post 'draft_updated' do
-          Operations::DraftUpdated.new(**declared(params).symbolize_keys).call
         end
 
         desc 'Create a DraftDeleted event for an application.'
