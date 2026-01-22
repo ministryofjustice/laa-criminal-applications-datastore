@@ -69,6 +69,18 @@ RSpec.describe 'get application ready for maat' do
       it_behaves_like 'an error that raises a 404 status code'
     end
 
+    context 'with a CIFC application' do
+      let(:submitted_application) do
+        super().deep_merge(
+          'application_type' => Types::ApplicationType['change_in_financial_circumstances']
+        )
+      end
+
+      before { api_request }
+
+      it_behaves_like 'an error that raises a 404 status code'
+    end
+
     context 'with an archived application' do
       before do
         application.touch(:archived_at) # rubocop:disable Rails/SkipsModelValidations
