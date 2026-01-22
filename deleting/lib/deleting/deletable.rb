@@ -30,7 +30,10 @@ module Deleting
     end
 
     on Applying::DraftUpdated do |_event|
-      # do nothing
+      # No action required.
+      # Draft application deletion is handled by CrimeApply.
+      # The datastore only checks for the existence of drafts and does not
+      # process DraftUpdated events.
     end
 
     on Applying::DraftDeleted do |_event|
