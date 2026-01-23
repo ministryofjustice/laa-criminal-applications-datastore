@@ -26,9 +26,6 @@ RSpec.describe Deleting::AutomateDeletion do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Reviewing::SentBack, Time.zone.local(2023, 9, 4), { entity_id: entity_id, entity_type: entity_type,
                                                               business_reference: business_reference,
@@ -141,21 +138,10 @@ RSpec.describe Deleting::AutomateDeletion do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
           Applying::Submitted, Time.zone.local(2023, 8, 27), { entity_id:, entity_type:, business_reference: },
           Reviewing::SentBack, Time.zone.local(2023, 8, 28), { entity_id: entity_id, entity_type: entity_type,
                                                               business_reference: business_reference,
                                                               reason: 'duplicate_application' },
-          Applying::DraftCreated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 28), { entity_id: new_entity_id, entity_type: entity_type,
-                                                                  business_reference: business_reference },
           Applying::Submitted, Time.zone.local(2023, 8, 29), { entity_id: new_entity_id, entity_type: entity_type,
                                                                business_reference: business_reference },
           Reviewing::SentBack, Time.zone.local(2023, 8, 29), { entity_id: new_entity_id, entity_type: entity_type,
@@ -353,9 +339,6 @@ RSpec.describe Deleting::AutomateDeletion do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Deciding::MaatRecordCreated, Time.zone.local(2023, 9, 2), { entity_id:, entity_type:, business_reference:,
                                                                       maat_id: },
@@ -442,9 +425,6 @@ RSpec.describe Deleting::AutomateDeletion do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Reviewing::SentBack, Time.zone.local(2023, 9, 4), { entity_id: entity_id, entity_type: entity_type,
                                                               business_reference: business_reference,

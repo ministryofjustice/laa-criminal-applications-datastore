@@ -24,9 +24,6 @@ RSpec.describe Deleting::AutomateDeletion do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
-          Applying::DraftUpdated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
           Applying::Submitted, Time.zone.local(2023, 9, 1), { entity_id:, entity_type:, business_reference: },
           Deciding::Decided, Time.zone.local(2023, 9, 4), { entity_id: entity_id, entity_type: entity_type,
                                                               business_reference: business_reference,

@@ -7,7 +7,6 @@ module Deleting
 
   EVENTS = [
     Applying::DraftCreated,
-    Applying::DraftUpdated,
     Applying::DraftDeleted,
     Applying::Submitted,
     Deciding::MaatRecordCreated,
@@ -32,7 +31,6 @@ module Deleting
         event_store.subscribe(Deleting::Handlers::LinkToStream, to:
           [
             Applying::DraftCreated,
-            Applying::DraftUpdated,
             Applying::DraftDeleted,
             Applying::Submitted,
             Deciding::MaatRecordCreated,

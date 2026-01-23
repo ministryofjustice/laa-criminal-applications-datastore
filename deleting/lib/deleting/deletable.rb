@@ -1,6 +1,7 @@
 module Deleting
   class Deletable # rubocop:disable Metrics/ClassLength
     include AggregateRoot
+
     class AlreadySoftDeleted < StandardError; end
     class AlreadyHardDeleted < StandardError; end
     class CannotBeExempt < StandardError; end
@@ -28,8 +29,11 @@ module Deleting
       @deletion_at = (event.data.fetch(:created_at, nil) || timestamp(event)) + retention_period
     end
 
-    on Applying::DraftUpdated do |event|
-      @deletion_at = timestamp(event) + retention_period
+    on Applying::DraftUpdated do |_event|
+      # No action required.
+      # Draft application deletion is handled by CrimeApply.
+      # The datastore only checks for the existence of drafts and does not
+      # process DraftUpdated events.
     end
 
     on Applying::DraftDeleted do |_event|
