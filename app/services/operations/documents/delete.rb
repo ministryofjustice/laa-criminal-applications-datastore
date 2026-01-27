@@ -6,7 +6,7 @@ module Operations
       attr_accessor :object_key
 
       def initialize(object_key:)
-        @object_key = Base64.strict_decode64(object_key)
+        @object_key = object_key
       end
 
       def call
