@@ -29,10 +29,26 @@ class CrimeApplication < ApplicationRecord
     soft_deleted_at.present?
   end
 
+  def hard_deleted?
+    hard_deleted_at.present?
+  end
+
   def submitted_application
     return super unless soft_deleted?
 
     anonymised_application
+  end
+
+  def destroy
+    raise Errors::NotSoftDeleted unless soft_deleted?
+    return false if hard_deleted?
+
+    # rubocop:disable Rails/SkipsModelValidations
+    CrimeApplication.where(id:).update_all(
+      submitted_application: anonymised_application,
+      hard_deleted_at: Time.current
+    ).positive?
+    # rubocop:enable Rails/SkipsModelValidations
   end
 
   def anonymised_application

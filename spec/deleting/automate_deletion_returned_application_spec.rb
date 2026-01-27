@@ -4,10 +4,12 @@ RSpec.describe Deleting::AutomateDeletion do
   subject(:automate_deletion) { described_class }
 
   include_context 'with published events'
+  include_context 'with an S3 client'
 
-  let!(:crime_application) do
+  let(:crime_application) do
     CrimeApplication.create!(submitted_application: JSON.parse(LaaCrimeSchemas.fixture(1.0).read))
   end
+
   let(:entity_id) { crime_application.id }
   let(:business_reference) { crime_application.reference }
   let(:entity_type) { crime_application.application_type }
@@ -15,14 +17,28 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
   let(:get_maat_id) { instance_double(MAAT::GetMAATId) }
+  let(:hard_delete_submitted_applications) { instance_double(Deleting::Handlers::HardDeleteSubmittedApplications) }
+  let(:hard_delete_documents) { instance_double(Deleting::Handlers::HardDeleteDocuments) }
 
   before do
+    allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new) {
+      hard_delete_submitted_applications
+    }
+
+    allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new) {
+      hard_delete_documents
+    }
+
+    allow(hard_delete_documents).to receive(:call)
+    allow(hard_delete_submitted_applications).to receive(:call)
+
     allow(MAAT::GetMAATId).to receive(:new).and_return(get_maat_id)
+
     travel_to current_date
   end
 
   describe 'Returned application' do
-    context 'when sent back 2 years ago and not injected into MAAT' do
+    context 'when sent back 2 years ago and not injected into MAAT' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
@@ -54,8 +70,6 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(soft_deleted_events.count).to eq(1)
         expect(soft_deleted_events.first.data).to eq(
           {
-            entity_id: entity_id,
-            entity_type: entity_type,
             business_reference: business_reference,
             reason: Types::DeletionReason['retention_rule'],
             deleted_by: 'system_automated'
@@ -63,17 +77,17 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
-        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      it 'pushes the `review_deletion_at` timestamp on the read model back by thirty days' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 30.days)
       end
 
       it 'sets `soft_deleted_at` on the application' do
         expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
-      context 'when two weeks have passed' do
+      context 'when soft deletion period has passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         before do
-          travel_to current_date + 2.weeks
+          travel_to current_date + Deleting::SOFT_DELETION_PERIOD
           automate_deletion.call
         end
 
@@ -81,32 +95,31 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
+        it 'publishes a HardDeleted event' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
             {
-              entity_id: entity_id,
-              entity_type: entity_type,
               business_reference: business_reference,
-              deletion_entry_id: DeletionEntry.first.id,
+              reason: Types::DeletionReason['retention_rule'],
+              deleted_by: 'system_automated'
             }
           )
         end
 
-        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
-          expect(DeletionEntry.first).to have_attributes(
-            {
-              record_id: entity_id,
-              record_type: Types::RecordType['application'],
-              business_reference: business_reference.to_s,
-              deleted_by: 'system_automated',
-              reason: Types::DeletionReason['retention_rule']
-            }
+        it 'deletion of documents occurs' do
+          expect(hard_delete_documents).to have_received(:call).with(
+            events_in_stream.of_type([Deleting::HardDeleted]).first
           )
         end
 
-        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
+        it 'deletion of submitted applications occurs' do
+          expect(hard_delete_submitted_applications).to have_received(:call).with(
+            events_in_stream.of_type([Deleting::HardDeleted]).first
+          )
+        end
+
+        it 'removes deletable_entities record' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
@@ -172,8 +185,6 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(soft_deleted_events.count).to eq(1)
         expect(soft_deleted_events.first.data).to eq(
           {
-            entity_id: new_entity_id,
-            entity_type: entity_type,
             business_reference: business_reference,
             reason: Types::DeletionReason['retention_rule'],
             deleted_by: 'system_automated'
@@ -181,8 +192,8 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
-        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      it 'pushes the `review_deletion_at` timestamp on the read model back by 30 days' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 30.days)
       end
 
       it 'sets `soft_deleted_at` on both applications' do
@@ -190,9 +201,9 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(new_crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
-      context 'when two weeks have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      context 'when thirty days have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         before do
-          travel_to current_date + 2.weeks
+          travel_to current_date + Deleting::SOFT_DELETION_PERIOD
           automate_deletion.call
         end
 
@@ -200,32 +211,31 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
+        it 'publishes a HardDeleted event' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
             {
-              entity_id: new_entity_id,
-              entity_type: entity_type,
               business_reference: business_reference,
-              deletion_entry_id: DeletionEntry.first.id,
-            }
-          )
-        end
-
-        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
-          expect(DeletionEntry.first).to have_attributes(
-            {
-              record_id: new_entity_id,
-              record_type: Types::RecordType['application'],
-              business_reference: business_reference.to_s,
               deleted_by: 'system_automated',
               reason: Types::DeletionReason['retention_rule']
             }
           )
         end
 
-        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
+        it 'deletion of documents occurs' do
+          expect(hard_delete_documents).to have_received(:call).with(
+            events_in_stream.of_type([Deleting::HardDeleted]).first
+          )
+        end
+
+        it 'deletion of submitted applications occurs' do
+          expect(hard_delete_submitted_applications).to have_received(:call).with(
+            events_in_stream.of_type([Deleting::HardDeleted]).first
+          )
+        end
+
+        it 'removes deletable_entities record' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
@@ -277,8 +287,6 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(soft_deleted_events.count).to eq(1)
         expect(soft_deleted_events.first.data).to eq(
           {
-            entity_id: entity_id,
-            entity_type: entity_type,
             business_reference: business_reference,
             reason: Types::DeletionReason['retention_rule'],
             deleted_by: 'system_automated'
@@ -286,17 +294,17 @@ RSpec.describe Deleting::AutomateDeletion do
         )
       end
 
-      it 'pushes the `review_deletion_at` timestamp on the read model back by two weeks' do
-        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 2.weeks)
+      it 'pushes the `review_deletion_at` timestamp on the read model back by thirty days' do
+        expect(deletable_entity.reload.review_deletion_at).to eq(current_date + 30.days)
       end
 
       it 'sets `soft_deleted_at` on the application' do
         expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
       end
 
-      context 'when two weeks have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      context 'when thirty days have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
         before do
-          travel_to current_date + 2.weeks
+          travel_to current_date + 30.days
           automate_deletion.call
         end
 
@@ -304,38 +312,37 @@ RSpec.describe Deleting::AutomateDeletion do
           expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(1)
         end
 
-        it 'publishes a HardDeleted event', pending: 'full implementation of hard deletion' do
+        it 'publishes a HardDeleted event' do
           hard_deleted_events = events_in_stream.of_type([Deleting::HardDeleted]).to_a
           expect(hard_deleted_events.count).to eq(1)
           expect(hard_deleted_events.first.data).to eq(
             {
-              entity_id: entity_id,
-              entity_type: entity_type,
               business_reference: business_reference,
-              deletion_entry_id: DeletionEntry.first.id,
+              reason: Types::DeletionReason['retention_rule'],
+              deleted_by: 'system_automated'
             }
           )
         end
 
-        it 'creates a deletion record', pending: 'full implementation of hard deletion' do
-          expect(DeletionEntry.first).to have_attributes(
-            {
-              record_id: entity_id,
-              record_type: Types::RecordType['application'],
-              business_reference: business_reference.to_s,
-              deleted_by: 'system_automated',
-              reason: Types::DeletionReason['retention_rule']
-            }
+        it 'deletion of documents occurs' do
+          expect(hard_delete_documents).to have_received(:call).with(
+            events_in_stream.of_type([Deleting::HardDeleted]).first
           )
         end
 
-        it 'removes deletable_entities record', pending: 'full implementation of hard deletion' do
+        it 'deletion of submitted applications occurs' do
+          expect(hard_delete_submitted_applications).to have_received(:call).with(
+            events_in_stream.of_type([Deleting::HardDeleted]).first
+          )
+        end
+
+        it 'removes deletable_entities record' do
           expect(DeletableEntity.find_by(business_reference:)).to be_nil
         end
       end
     end
 
-    context 'when sent back 2 years ago and was injected into MAAT' do
+    context 'when sent back 2 years ago and was injected into MAAT' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
@@ -347,6 +354,7 @@ RSpec.describe Deleting::AutomateDeletion do
                                                               reason: 'duplicate_application' }
         ]
       end
+
       let!(:deletable_entity) do
         DeletableEntity.create!(business_reference: business_reference,
                                 review_deletion_at: Time.zone.local(2023, 9, 4))
@@ -421,7 +429,7 @@ RSpec.describe Deleting::AutomateDeletion do
       end
     end
 
-    context 'when sent back 2 years ago and has active drafts' do
+    context 'when sent back 2 years ago and has active drafts' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },

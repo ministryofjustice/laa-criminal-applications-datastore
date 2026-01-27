@@ -15,8 +15,16 @@ describe Operations::DraftDeleted do
     it 'publishes a DraftDeleted event with the expected attributes' do
       expect(deleting_stream.map(&:event_type)).to match []
       subject.call
-      expect(event.data).to eq({ entity_id: '696dd4fd-b619-4637-ab42-a5f4565bcf4a', entity_type: 'initial',
-                                 business_reference: '7000001', reason: 'retention_rule', deleted_by: '1' })
+      expect(event.data).to eq(
+        {
+          entity_id: '696dd4fd-b619-4637-ab42-a5f4565bcf4a',
+          entity_type: 'initial',
+          business_reference: '7000001',
+          reason: 'retention_rule',
+          deleted_by: '1',
+          deleted_from: 'crime_apply'
+        }
+      )
       expect(deleting_stream.map(&:event_type)).to match ['Applying::DraftDeleted']
     end
   end

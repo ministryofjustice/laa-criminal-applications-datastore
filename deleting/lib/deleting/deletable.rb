@@ -75,16 +75,15 @@ module Deleting
     on Deleting::SoftDeleted do |event|
       @state = :soft_deleted
       @soft_deleted_at = timestamp(event)
-      @deletion_at = timestamp(event) + 2.weeks
+      @deletion_at = timestamp(event) + SOFT_DELETION_PERIOD
     end
 
-    # :nocov:
     on Deleting::HardDeleted do |event|
       @state = :hard_deleted
       @hard_deleted_at = timestamp(event)
-      @deletion_entry_id = event.data.fetch(:deletion_entry_id)
+      @deletion_reason = event.data.fetch(:reason)
+      @deleted_by = event.data.fetch(:deleted_by)
     end
-    # :nocov:
 
     on Deleting::ExemptFromDeletion do |event|
       @state = :exempt_from_deletion
@@ -111,13 +110,11 @@ module Deleting
       @active_drafts = 0
     end
 
-    def soft_delete(entity_id:, reason:, deleted_by:)
+    def soft_delete(reason:, deleted_by:)
       raise AlreadySoftDeleted if soft_deleted?
 
       apply Deleting::SoftDeleted.new(
         data: {
-          entity_id: entity_id,
-          entity_type: @application_type,
           business_reference: @business_reference,
           reason: reason,
           deleted_by: deleted_by
@@ -125,20 +122,18 @@ module Deleting
       )
     end
 
-    # :nocov:
-    def hard_delete(entity_id:, deletion_entry_id:)
+    def hard_delete(reason:, deleted_by:)
       raise AlreadyHardDeleted if hard_deleted?
+      raise CannotHardDelete unless hard_deletable?
 
       apply Deleting::HardDeleted.new(
         data: {
-          entity_id: entity_id,
-          entity_type: @application_type,
           business_reference: @business_reference,
-          deletion_entry_id: deletion_entry_id
+          reason: reason,
+          deleted_by: deleted_by
         }
       )
     end
-    # :nocov:
 
     def exempt(entity_id:, reason:, exempt_until:)
       raise CannotBeExempt if hard_deleted?

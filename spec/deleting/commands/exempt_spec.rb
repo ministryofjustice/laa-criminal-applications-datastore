@@ -40,7 +40,6 @@ RSpec.describe Deleting::Commands::Exempt do
       event_store.with_metadata(timestamp: Time.zone.local(2025, 9, 4)) do
         event_store.publish(Deleting::SoftDeleted.new(data:
         {
-          entity_id: entity_id, entity_type: entity_type,
           business_reference: business_reference,
           reason: Types::DeletionReason['retention_rule'],
           deleted_by: 'system_automated'
@@ -96,20 +95,16 @@ RSpec.describe Deleting::Commands::Exempt do
           deleted_by: 'system_automated'
         }), stream_name: event_stream)
       end
-      event_store.with_metadata(timestamp: Time.zone.local(2025, 9, 18)) do
-        event_store.publish(Deleting::HardDeleted.new(data:
+
+      allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new)
+      allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new)
+
+      event_store.publish(Deleting::HardDeleted.new(data:
         {
-          entity_id: entity_id, entity_type: entity_type,
           business_reference: business_reference,
-          deletion_entry_id: DeletionEntry.create!(
-            record_id: entity_id,
-            record_type: Types::RecordType['application'],
-            business_reference: business_reference,
-            deleted_by: 'system_automated',
-            reason: Types::DeletionReason['retention_rule']
-          ).id
+          reason: Types::DeletionReason['retention_rule'],
+          deleted_by: 'system_automated'
         }), stream_name: event_stream)
-      end
     end
 
     it 'raises a CannotBeExempt exception' do

@@ -3,17 +3,16 @@ module Deleting
     class Delete
       def initialize(business_reference:, reason:, deleted_by:)
         @business_reference = business_reference
-        @reason = reason
+        @reason = Types::DeletionReason[reason]
         @deleted_by = deleted_by
       end
 
       def call
         repository.with_deletable(@business_reference) do |deletable|
           if deletable.hard_deletable?
-            # TODO: uncomment when hard deletion code is ready
-            # hard_delete(deletable)
+            deletable.hard_delete(reason:, deleted_by:)
           elsif deletable.soft_deletable?
-            soft_delete(deletable)
+            deletable.soft_delete(reason:, deleted_by:)
           else
             # This may happen if there is a draft application in Apply pending hard-deletion
             Rails.logger.warn("Application #{business_reference} is not ready for deletion")
@@ -24,29 +23,6 @@ module Deleting
       private
 
       attr_reader :business_reference, :reason, :deleted_by
-
-      def soft_delete(deletable)
-        deletable.soft_delete(entity_id:, reason:, deleted_by:)
-      end
-
-      # :nocov:
-      def hard_delete(deletable)
-        # TODO: redact latest and superseded records
-        # TODO: remove attachments
-        deletion_entry = DeletionEntry.create!(
-          record_id: entity_id,
-          record_type: Types::RecordType['application'],
-          business_reference: business_reference,
-          deleted_by: deleted_by,
-          reason: reason
-        )
-        deletable.hard_delete(entity_id: entity_id, deletion_entry_id: deletion_entry.id)
-      end
-      # :nocov:
-
-      def entity_id
-        @entity_id ||= CrimeApplication.latest(business_reference).first.id
-      end
 
       def repository
         @repository ||= Deleting::DeletableRepository.new

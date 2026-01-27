@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_08_163141) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_08_150357) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_08_163141) do
     t.datetime "archived_at", precision: nil
     t.datetime "soft_deleted_at", precision: nil
     t.integer "maat_id"
+    t.datetime "hard_deleted_at", precision: nil
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["application_type"], name: "index_crime_applications_on_application_type"
     t.index ["archived_at"], name: "index_crime_applications_on_archived_at", where: "(archived_at IS NULL)"
@@ -87,6 +88,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_08_163141) do
     t.string "reason", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "correlation_id"
   end
 
   create_table "event_store_events", force: :cascade do |t|

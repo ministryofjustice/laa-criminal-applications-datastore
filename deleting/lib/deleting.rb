@@ -1,9 +1,13 @@
 module Deleting
+  SOFT_DELETION_PERIOD = 30.days
+
   class Event < RailsEventStore::Event; end
   class SoftDeleted < Event; end
   class HardDeleted < Event; end
   class ExemptFromDeletion < Event; end
   class ApplicationMigrated < Event; end
+
+  class UnexpectedEventType < StandardError; end
 
   EVENTS = [
     Applying::DraftCreated,
@@ -43,6 +47,8 @@ module Deleting
         event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted, to: [Deleting::SoftDeleted])
         event_store.subscribe(Deleting::Handlers::ClearApplicationSoftDeleted, to: [Deleting::ExemptFromDeletion])
         event_store.subscribe(Deleting::Handlers::DeleteUnsubmittedDeletableEntity, to: [Applying::DraftDeleted])
+        event_store.subscribe(Deleting::Handlers::HardDeleteDocuments, to: [Deleting::HardDeleted])
+        event_store.subscribe(Deleting::Handlers::HardDeleteSubmittedApplications, to: [Deleting::HardDeleted])
       end
     end
   end
