@@ -9,7 +9,7 @@ module Deleting
         usn = event.data.fetch(:business_reference)
 
         Operations::Documents::List.new(usn:).call.each do |object|
-          Operations::Documents::Delete.new(**object).call
+          Operations::Documents::Delete.new(object_key: object.fetch(:object_key)).call
           create_deletion_entry record_id: object.fetch(:object_key), event: event
         end
       end
