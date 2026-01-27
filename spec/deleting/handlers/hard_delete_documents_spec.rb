@@ -17,8 +17,8 @@ RSpec.describe Deleting::Handlers::HardDeleteDocuments do
 
     let(:documents) do
       [
-        { object_key: 'doc_1' },
-        { object_key: 'doc_2' }
+        { object_key: 'doc_1', size: 123_123, last_modified: 2.years.ago.to_i },
+        { object_key: 'doc_2', size: 223_223, last_modified: 2.years.ago.to_i }
       ]
     end
 
@@ -45,7 +45,7 @@ RSpec.describe Deleting::Handlers::HardDeleteDocuments do
       handler.call(event)
       documents.each do |doc|
         expect(Operations::Documents::Delete)
-          .to have_received(:new).with(**doc)
+          .to have_received(:new).with(**doc.slice(:object_key))
       end
     end
 
