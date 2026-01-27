@@ -49,7 +49,7 @@ module Datastore
         route_param :object_key do
           delete do
             Operations::Documents::Delete.new(
-              object_key: params[:object_key]
+              object_key: Base64.strict_decode64(params[:object_key])
             ).call
           end
         end

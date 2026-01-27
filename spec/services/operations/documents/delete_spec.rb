@@ -3,12 +3,11 @@ require 'rails_helper'
 describe Operations::Documents::Delete do
   subject { described_class.new(object_key:) }
 
-  let(:object_key) { 'MTIzL2ZpbGVuYW1l' }
-  let(:decoded_object_key) { '123/filename' }
+  let(:object_key) { '123/filename' }
 
   describe '.new' do
     it 'decodes the object_key' do
-      expect(subject.object_key).to eq(decoded_object_key)
+      expect(subject.object_key).to eq(object_key)
     end
   end
 
@@ -24,12 +23,12 @@ describe Operations::Documents::Delete do
       end
 
       it 'performs the deletion of the object and logs the operation' do
-        expect(subject.call).to eq({ object_key: decoded_object_key })
+        expect(subject.call).to eq({ object_key: })
 
         expect(logger).to have_received(:info).with(
           [
             '[Operations::Documents::Delete]',
-            { object_key: decoded_object_key }.to_json
+            { object_key: }.to_json
           ].join(' ')
         )
       end
@@ -47,7 +46,7 @@ describe Operations::Documents::Delete do
         expect(logger).to have_received(:error).with(
           [
             '[Operations::Documents::Delete]',
-            { object_key: decoded_object_key, error: 'boom!' }.to_json
+            { object_key: object_key, error: 'boom!' }.to_json
           ].join(' ')
         )
       end
