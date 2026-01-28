@@ -14,6 +14,7 @@ spec:
           labels:
             tier: worker
         spec:
+          serviceAccountName: laa-criminal-applications-datastore-staging-service
           restartPolicy: OnFailure
           containers:
           - name: automate-deletion-job
