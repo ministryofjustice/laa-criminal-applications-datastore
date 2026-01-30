@@ -5,6 +5,8 @@ module Deleting
     class AlreadySoftDeleted < StandardError; end
     class AlreadyHardDeleted < StandardError; end
     class CannotBeExempt < StandardError; end
+    class CannotHardDelete < StandardError; end
+    class CannotSoftDelete < StandardError; end
 
     attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at
 
@@ -49,12 +51,12 @@ module Deleting
     end
 
     on Deciding::MaatRecordCreated do |event|
-      @maat_id = event.data.fetch(:maat_id)
+      @maat_ids << event.data.fetch(:maat_id)
     end
 
     on Deciding::Decided do |event|
-      @decision_id = event.data.fetch(:decision_id)
-      @overall_decision = event.data.fetch(:overall_decision)
+      @decision_ids << event.data.fetch(:decision_id)
+      @overall_decisions << event.data.fetch(:overall_decision)
       @state = :decided
       @deletion_at = timestamp(event) + retention_period
     end
@@ -97,9 +99,9 @@ module Deleting
       @state = REVIEW_STATUS_TO_STATE[event.data.fetch(:review_status)]
       @application_type = event.data.fetch(:entity_type)
       @business_reference = event.data.fetch(:business_reference)
-      @maat_id = event.data.fetch(:maat_id)
-      @decision_id = event.data.fetch(:decision_id)
-      @overall_decision = event.data.fetch(:overall_decision)
+      @maat_ids = [event.data.fetch(:maat_id)] if event.data.fetch(:maat_id)
+      @decision_ids = [event.data.fetch(:decision_id)] if event.data.fetch(:decision_id)
+      @overall_decisions = [event.data.fetch(:overall_decision)] if event.data.fetch(:overall_decision)
       @submitted_at = event.data.fetch(:submitted_at)
       @returned_at = event.data.fetch(:returned_at)
       @reviewed_at = event.data.fetch(:reviewed_at)
@@ -108,10 +110,14 @@ module Deleting
 
     def initialize
       @active_drafts = 0
+      @decision_ids = []
+      @overall_decisions = []
+      @maat_ids = []
     end
 
     def soft_delete(reason:, deleted_by:)
       raise AlreadySoftDeleted if soft_deleted?
+      raise CannotSoftDelete unless soft_deletable?
 
       apply Deleting::SoftDeleted.new(
         data: {
@@ -153,7 +159,7 @@ module Deleting
       return false unless returned?
       return false if active_drafts?
 
-      @deletion_at <= Time.zone.now && !injected_into_maat?
+      @deletion_at <= Time.zone.now
     end
 
     def hard_deletable?
@@ -172,14 +178,6 @@ module Deleting
 
     private
 
-    def injected_into_maat?
-      return true if @maat_id.present?
-      return true if CrimeApplication.where(reference: @business_reference).map(&:maat_id).any?
-      return true if @decision_id.present? && Decision.find(@decision_id).maat_id.present?
-
-      MAAT::GetMAATId.new.by_usn(@business_reference).present?
-    end
-
     def timestamp(event)
       event.timestamp || Time.zone.now
     end
@@ -195,15 +193,21 @@ module Deleting
     end
 
     def completed_without_decision?
-      completed? && @decision_id.blank?
+      completed? && @decision_ids.empty?
     end
 
+    # all decisions must be refused to be considered refused for retention purposes
     def refused?
-      @overall_decision.present? && @overall_decision.starts_with?('refused')
+      return false if @overall_decisions.empty?
+
+      @overall_decisions.all? { |od| od.starts_with?('refused') }
     end
 
+    # any decision may be granted to be considdered granted for retention purposes
     def granted?
-      @overall_decision.present? && @overall_decision.starts_with?('granted')
+      return false if @overall_decisions.empty?
+
+      @overall_decisions.any? { |od| od.starts_with?('granted') }
     end
   end
 end
