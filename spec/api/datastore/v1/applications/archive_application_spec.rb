@@ -7,6 +7,8 @@ RSpec.describe 'Archive application' do
     )
   end
 
+  let(:archived_event) { instance_double(Events::Archived, publish: true) }
+
   describe 'PUT /api/applications/application_id/archive' do
     subject(:api_request) do
       put(
@@ -21,11 +23,17 @@ RSpec.describe 'Archive application' do
     context 'with a returned application' do
       before do
         application.update!(status: :returned, returned_at: 1.week.ago)
+        allow(Events::Archived).to receive(:new).with(application).and_return(archived_event)
       end
 
       it 'persists archived and archived_at timestamp' do
         expect { api_request }.to change { application.reload.archived_at }
           .from(nil)
+      end
+
+      it 'publishes an archived event' do
+        api_request
+        expect(archived_event).to have_received(:publish)
       end
     end
 
@@ -35,6 +43,10 @@ RSpec.describe 'Archive application' do
       end
 
       it_behaves_like 'an error that raises a 409 status code'
+
+      it 'does not publish an archived event' do
+        expect(archived_event).not_to have_received(:publish)
+      end
     end
 
     context 'with a submitted application' do
@@ -43,6 +55,10 @@ RSpec.describe 'Archive application' do
       end
 
       it_behaves_like 'an error that raises a 409 status code'
+
+      it 'does not publish an archived event' do
+        expect(archived_event).not_to have_received(:publish)
+      end
     end
 
     context 'with an unknown application' do
