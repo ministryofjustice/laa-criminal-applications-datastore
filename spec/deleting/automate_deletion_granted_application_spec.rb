@@ -14,6 +14,7 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:maat_id) { '987654321' }
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
+  let(:soft_deleted_event) { instance_double(Events::SoftDeletion, publish: true) }
 
   before do
     travel_to current_date
@@ -38,6 +39,8 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+
         publish_events
         automate_deletion.call
       end
@@ -46,6 +49,10 @@ RSpec.describe Deleting::AutomateDeletion do
 
       it 'does not publish a SoftDeleted event' do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
+      end
+
+      it 'does not publish a soft deleted sns event' do
+        expect(soft_deleted_event).not_to have_received(:publish)
       end
 
       it 'does not alter the `review_deletion_at` timestamp on the read model' do
@@ -82,6 +89,8 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+
         publish_events
         automate_deletion.call
       end
@@ -90,6 +99,10 @@ RSpec.describe Deleting::AutomateDeletion do
 
       it 'does not publish a SoftDeleted event' do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
+      end
+
+      it 'does not publish a soft deleted sns event' do
+        expect(soft_deleted_event).not_to have_received(:publish)
       end
 
       it 'does not alter the `review_deletion_at` timestamp on the read model' do

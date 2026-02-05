@@ -32,7 +32,7 @@ echo "Subscribing SQS queue to SNS topic..."
 aws sns subscribe \
     --topic-arn "$SNS_TOPIC_ARN" --endpoint-url "$ENDPOINT" \
     --protocol sqs --notification-endpoint "$SQS_QUEUE_ARN" \
-    --attributes '{"FilterPolicy":"{\"event_name\":[\"apply.submission\"]}"}' > /dev/null
+    --attributes '{"FilterPolicy":"{\"event_name\":[\"apply.submission\", \"apply.archived\", \"datastore.soft_deleted\"]}"}' > /dev/null
 
 echo
 echo "[-- Local development configuration --]"

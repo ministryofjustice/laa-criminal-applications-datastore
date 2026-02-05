@@ -9,6 +9,9 @@ module Operations
       raise Errors::CannotArchive unless application.returned?
 
       application.update!(archived_at: Time.zone.now)
+
+      # Publish event notification to the SNS topic
+      Events::Archived.new(application).publish
     end
 
     private

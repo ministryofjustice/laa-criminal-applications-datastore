@@ -18,6 +18,7 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:current_date) { Time.zone.local(2025, 9, 6) }
   let(:hard_delete_submitted_applications) { instance_double(Deleting::Handlers::HardDeleteSubmittedApplications) }
   let(:hard_delete_documents) { instance_double(Deleting::Handlers::HardDeleteDocuments) }
+  let(:soft_deleted_event) { instance_double(Events::SoftDeletion, publish: true) }
 
   before do
     allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new) {
@@ -51,6 +52,8 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+
         publish_events
         automate_deletion.call
       end
@@ -75,6 +78,10 @@ RSpec.describe Deleting::AutomateDeletion do
 
       it 'sets `soft_deleted_at` on the application' do
         expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
+      end
+
+      it 'publishes a soft deleted sns event for the application' do
+        expect(soft_deleted_event).to have_received(:publish)
       end
 
       context 'when soft deletion period has passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
@@ -160,6 +167,9 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+        # allow(Events::SoftDeletion).to receive(:new).with(new_crime_application).and_return(soft_deleted_event)
+
         crime_application.superseded!
         publish_events
         automate_deletion.call
@@ -186,6 +196,10 @@ RSpec.describe Deleting::AutomateDeletion do
       it 'sets `soft_deleted_at` on both applications' do
         expect(crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
         expect(new_crime_application.reload.soft_deleted_at).to be_within(2.seconds).of(Time.zone.now)
+      end
+
+      it 'publishes a soft deleted sns event for one of the applications' do
+        expect(soft_deleted_event).to have_received(:publish).once
       end
 
       context 'when thirty days have passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
@@ -258,6 +272,8 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+
         publish_events
         automate_deletion.call
       end
@@ -274,6 +290,10 @@ RSpec.describe Deleting::AutomateDeletion do
             deleted_by: 'system_automated'
           }
         )
+      end
+
+      it 'publishes a soft deleted sns event for the application' do
+        expect(soft_deleted_event).to have_received(:publish)
       end
 
       it 'pushes the `review_deletion_at` timestamp on the read model back by thirty days' do
@@ -341,6 +361,8 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+
         publish_events
         automate_deletion.call
       end
@@ -349,6 +371,10 @@ RSpec.describe Deleting::AutomateDeletion do
 
       it 'does not publish a SoftDeleted event' do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
+      end
+
+      it 'does not publish a soft deleted sns event' do
+        expect(soft_deleted_event).not_to have_received(:publish)
       end
 
       it 'does not alter the `review_deletion_at` timestamp on the read model' do
@@ -397,6 +423,8 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
+        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+
         publish_events
         automate_deletion.call
       end
@@ -405,6 +433,10 @@ RSpec.describe Deleting::AutomateDeletion do
 
       it 'does not publish a SoftDeleted event' do
         expect(events_in_stream.of_type([Deleting::SoftDeleted]).count).to eq(0)
+      end
+
+      it 'does not publish a soft deleted sns event' do
+        expect(soft_deleted_event).not_to have_received(:publish)
       end
 
       it 'does not alter the `review_deletion_at` timestamp on the read model' do
