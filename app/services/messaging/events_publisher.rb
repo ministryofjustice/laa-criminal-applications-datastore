@@ -8,7 +8,6 @@ module Messaging
       return false unless enabled?
 
       Rails.logger.debug { "==> Publishing event `#{event.name}` to SNS topic `#{topic_arn}`" }
-      Rails.logger.debug { "==> Publishing event `#{event}` to SNS topic `#{topic_arn}`" }
 
       client.publish(
         topic_arn: topic_arn,
