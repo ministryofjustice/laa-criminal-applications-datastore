@@ -168,7 +168,6 @@ RSpec.describe Deleting::AutomateDeletion do
 
       before do
         allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
-        # allow(Events::SoftDeletion).to receive(:new).with(new_crime_application).and_return(soft_deleted_event)
 
         crime_application.superseded!
         publish_events
