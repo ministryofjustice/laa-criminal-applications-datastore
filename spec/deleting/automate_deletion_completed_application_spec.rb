@@ -14,7 +14,7 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:maat_id) { '987654321' }
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
-  let(:soft_deleted_event) { instance_double(Events::SoftDeletion, publish: true) }
+  let(:soft_deleted_event) { instance_double(Events::SoftDeleted, publish: true) }
 
   before do
     travel_to current_date
@@ -46,7 +46,7 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
-        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+        allow(Events::SoftDeleted).to receive(:new).with(crime_application).and_return(soft_deleted_event)
 
         publish_events
         automate_deletion.call
@@ -96,7 +96,7 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
-        allow(Events::SoftDeletion).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+        allow(Events::SoftDeleted).to receive(:new).with(crime_application).and_return(soft_deleted_event)
 
         publish_events
         automate_deletion.call
