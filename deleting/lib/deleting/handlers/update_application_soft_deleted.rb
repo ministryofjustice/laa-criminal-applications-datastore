@@ -9,7 +9,7 @@ module Deleting
         # Publish event notification to the SNS topic
         # We only want to publish one event per business reference so we take the first application
         # from the collection to publish the event with.
-        Events::SoftDeletion.new(crime_applications.order(:submitted_at).first).publish
+        Events::SoftDeleted.new(crime_applications.order(:submitted_at).first).publish
       end
     end
   end

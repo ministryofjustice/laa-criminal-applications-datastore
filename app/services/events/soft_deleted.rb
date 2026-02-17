@@ -1,7 +1,7 @@
 module Events
-  class SoftDeletion < BaseEvent
+  class SoftDeleted < BaseEvent
     def name
-      'datastore.soft_deletion'.freeze
+      'datastore.soft_deleted'.freeze
     end
 
     def message

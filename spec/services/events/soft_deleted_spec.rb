@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Events::SoftDeletion do
+describe Events::SoftDeleted do
   let(:crime_application) do
     instance_double(
       CrimeApplication,
@@ -10,7 +10,7 @@ describe Events::SoftDeletion do
   end
 
   it_behaves_like 'an event notification',
-                  name: 'datastore.soft_deletion',
+                  name: 'datastore.soft_deleted',
                   message: {
                     soft_deleted_at: DateTime.parse('2024-06-01'),
                     reference: 673_209,
