@@ -57,6 +57,14 @@ Once all the above is done, you should be able to run the application as follows
 
 It will use port 3003 by default or any other `PORT` defined in your `.env.development.local`.
 
+### Pre-commit hooks
+
+We use the Ministry of Justice [DevSecOps Hooks](https://github.com/ministryofjustice/devsecops-hooks) to scan our repository and stop us from committing hardcoded secrets and credentials. Refer to their repository for documentation on how to set up the pre-commit hooks locally.
+
+With pre-commit hooks enabled, the following tools are run on each commit:
+- GitLeaks (via [devsecops-hooks](https://github.com/ministryofjustice/devsecops-hooks))
+- Rubocop
+
 ## Running the tests
 
 You can run all the code linters and tests with:
