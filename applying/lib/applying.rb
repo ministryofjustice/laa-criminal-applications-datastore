@@ -16,4 +16,12 @@ module Applying
   class DraftDeleted < Event; end
   class Submitted < Event; end
   class Archived < Event; end
+
+  class Configuration
+    class << self
+      def call(event_store)
+        event_store.subscribe(Applying::Handlers::PublishArchivedSns, to: [Applying::Archived])
+      end
+    end
+  end
 end
