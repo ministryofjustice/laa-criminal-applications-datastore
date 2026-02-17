@@ -39,7 +39,9 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
-        allow(Events::SoftDeleted).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+        allow(Events::SoftDeleted).to receive(:new)
+          .with(reference: crime_application.reference, soft_deleted_at: kind_of(ActiveSupport::TimeWithZone))
+          .and_return(soft_deleted_event)
 
         publish_events
         automate_deletion.call
@@ -89,7 +91,9 @@ RSpec.describe Deleting::AutomateDeletion do
       end
 
       before do
-        allow(Events::SoftDeleted).to receive(:new).with(crime_application).and_return(soft_deleted_event)
+        allow(Events::SoftDeleted).to receive(:new)
+          .with(reference: crime_application.reference, soft_deleted_at: kind_of(ActiveSupport::TimeWithZone))
+          .and_return(soft_deleted_event)
 
         publish_events
         automate_deletion.call

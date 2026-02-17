@@ -1,5 +1,11 @@
 RSpec.shared_examples 'an event notification' do |options|
-  subject { described_class.new(crime_application) }
+  subject do
+    if options.key?(:initialize_with)
+      described_class.new(**options.fetch(:initialize_with))
+    else
+      described_class.new(crime_application)
+    end
+  end
 
   let(:name) { options[:name] }
   let(:message) { options[:message] }

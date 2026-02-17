@@ -10,6 +10,7 @@ describe Events::SoftDeleted do
   end
 
   it_behaves_like 'an event notification',
+                  initialize_with: { reference: 673_209, soft_deleted_at: DateTime.parse('2024-06-01') },
                   name: 'Deleting::SoftDeleted',
                   message: {
                     soft_deleted_at: DateTime.parse('2024-06-01'),
