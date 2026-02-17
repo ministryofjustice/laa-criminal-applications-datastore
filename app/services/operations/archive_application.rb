@@ -4,15 +4,23 @@ module Operations
       @application = CrimeApplication.find(application_id)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def call
       raise Errors::AlreadyArchived if application.archived?
       raise Errors::CannotArchive unless application.returned?
 
-      application.update!(archived_at: Time.zone.now)
+      application.transaction do
+        application.update!(archived_at: Time.zone.now)
 
-      # Publish event notification to the SNS topic
-      Events::Archived.new(application).publish
+        event = Applying::Archived.new(data: { business_reference: application.reference,
+                                               entity_id: application.id,
+                                               entity_type: application.application_type,
+                                               archived_at: application.archived_at })
+
+        Rails.configuration.event_store.publish(event)
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 

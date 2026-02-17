@@ -183,10 +183,8 @@ module Deleting
     end
 
     def retention_period
-      return 0.seconds if never_submitted?
-      return 0.seconds if returned?
-      # return 2.years if never_submitted?
-      # return 2.years if returned?
+      return 2.years if never_submitted?
+      return 2.years if returned?
       return 3.years if completed_without_decision?
       return 3.years if refused?
       return 7.years if granted?
