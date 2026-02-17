@@ -10,7 +10,7 @@ describe Events::SoftDeleted do
   end
 
   it_behaves_like 'an event notification',
-                  name: 'datastore.soft_deleted',
+                  name: 'Deleting::SoftDeleted',
                   message: {
                     soft_deleted_at: DateTime.parse('2024-06-01'),
                     reference: 673_209,
