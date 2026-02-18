@@ -12,7 +12,7 @@ describe Events::Archived do
   end
 
   it_behaves_like 'an event notification',
-                  name: 'Applying::Archived',
+                  name: 'Deleting::Archived',
                   message: {
                     id: 'f7b429cc',
                     archived_at: DateTime.parse('2024-06-01'),
