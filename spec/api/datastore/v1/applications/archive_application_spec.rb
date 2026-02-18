@@ -30,9 +30,9 @@ RSpec.describe 'Archive application' do
           .from(nil)
       end
 
-      it 'creates an Applying::Archived event' do
+      it 'creates a Deleting::Archived event' do
         expect { api_request }.to change {
-          event_store.read.to_a.count { |e| e.event_type == 'Applying::Archived' }
+          event_store.read.to_a.count { |e| e.event_type == 'Deleting::Archived' }
         }.by(1)
       end
     end

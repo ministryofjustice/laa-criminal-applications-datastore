@@ -12,7 +12,7 @@ module Operations
       application.transaction do
         application.update!(archived_at: Time.zone.now)
 
-        event = Applying::Archived.new(data: { business_reference: application.reference,
+        event = Deleting::Archived.new(data: { business_reference: application.reference,
                                                entity_id: application.id,
                                                entity_type: application.application_type,
                                                archived_at: application.archived_at })

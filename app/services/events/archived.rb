@@ -1,7 +1,7 @@
 module Events
   class Archived < BaseEvent
     def name
-      'Applying::Archived'.freeze
+      'Deleting::Archived'.freeze
     end
 
     def message

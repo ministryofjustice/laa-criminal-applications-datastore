@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Applying::Handlers::PublishArchivedSns do
+RSpec.describe Deleting::Handlers::PublishArchivedSns do
   subject(:handler) { described_class.new }
 
   let(:application) do
@@ -11,7 +11,7 @@ RSpec.describe Applying::Handlers::PublishArchivedSns do
   end
 
   let(:event) do
-    Applying::Archived.new(
+    Deleting::Archived.new(
       data: {
         entity_id: application.id,
         entity_type: application.application_type,

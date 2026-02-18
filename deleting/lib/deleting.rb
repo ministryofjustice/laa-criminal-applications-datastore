@@ -6,6 +6,7 @@ module Deleting
   class HardDeleted < Event; end
   class ExemptFromDeletion < Event; end
   class ApplicationMigrated < Event; end
+  class Archived < Event; end
 
   class UnexpectedEventType < StandardError; end
 
@@ -20,7 +21,8 @@ module Deleting
     SoftDeleted,
     HardDeleted,
     ExemptFromDeletion,
-    ApplicationMigrated
+    ApplicationMigrated,
+    Archived
   ].freeze
 
   class << self
@@ -41,11 +43,13 @@ module Deleting
             Deciding::Decided,
             Reviewing::SentBack,
             Reviewing::Completed,
-            Deleting::ApplicationMigrated
+            Deleting::ApplicationMigrated,
+            Deleting::Archived
           ])
         event_store.subscribe(Deleting::Handlers::UpdateReadModel, to: EVENTS)
         event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted, to: [Deleting::SoftDeleted])
         event_store.subscribe(Deleting::Handlers::PublishSoftDeletedSns, to: [Deleting::SoftDeleted])
+        event_store.subscribe(Deleting::Handlers::PublishArchivedSns, to: [Deleting::Archived])
         event_store.subscribe(Deleting::Handlers::ClearApplicationSoftDeleted, to: [Deleting::ExemptFromDeletion])
         event_store.subscribe(Deleting::Handlers::DeleteUnsubmittedDeletableEntity, to: [Applying::DraftDeleted])
         event_store.subscribe(Deleting::Handlers::HardDeleteDocuments, to: [Deleting::HardDeleted])

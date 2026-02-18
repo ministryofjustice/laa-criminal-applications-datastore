@@ -1,4 +1,4 @@
-module Applying
+module Deleting
   module Handlers
     class PublishArchivedSns
       def call(event)
