@@ -8,7 +8,7 @@ module Deleting
     class CannotHardDelete < StandardError; end
     class CannotSoftDelete < StandardError; end
 
-    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at
+    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at, :archived_at
 
     STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
     REVIEW_STATUS_TO_STATE = {
@@ -93,6 +93,10 @@ module Deleting
       @exempt_until = event.data.fetch(:exempt_until, nil)
       @deletion_at = @exempt_until || (timestamp(event) + retention_period)
       @soft_deleted_at = nil
+    end
+
+    on Deleting::Archived do |event|
+      @archived_at = timestamp(event)
     end
 
     on Deleting::ApplicationMigrated do |event|
