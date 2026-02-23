@@ -1,5 +1,7 @@
 # LAA Criminal Applications Datastore microservice
 
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/laa-criminal-applications-datastore/badge)](https://github-community.service.justice.gov.uk/repository-standards/laa-criminal-applications-datastore) 
+
 ## Getting Started
 
 Clone the repository, and follow these steps in order.  
