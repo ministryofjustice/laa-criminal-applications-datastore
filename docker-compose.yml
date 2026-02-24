@@ -3,8 +3,6 @@
 #
 # Do not use docker-compose in production environments.
 #
-version: '3.4'
-
 x-aws-variables: &aws-variables
   AWS_ENDPOINT_URL: http://localstack:4566
   AWS_ACCESS_KEY_ID: test
@@ -15,7 +13,7 @@ x-aws-variables: &aws-variables
 
 services:
   db:
-    image: postgres:15.2-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
 
@@ -23,7 +21,7 @@ services:
   localstack:
     image: localstack/localstack:latest
     ports:
-      - "4566:4566"           # localstack gateway
+      - "4566:4566" # localstack gateway
       - "4510-4559:4510-4559" # external services port range
     environment:
       AWS_ACCESS_KEY_ID: test
