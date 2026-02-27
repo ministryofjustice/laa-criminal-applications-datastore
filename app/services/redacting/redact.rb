@@ -7,7 +7,6 @@ module Redacting
       super
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def process!(force: false)
       process_metadata!
 
@@ -22,22 +21,11 @@ module Redacting
 
       # Then we redact from this copy anything according to the rules
       Rules.pii_attributes.each do |path, rules|
-        path = path.split('.')
-        payload_details = redacted_payload.dig(*path)
-
-        next if payload_details.blank?
-
-        fields = rules.fetch(:redact)
-        type   = rules.fetch(:type, :object)
-
-        details = details_by_type(payload_details, type, fields)
-
-        merge_redacted(path, details)
+        redact_attribute(path.split('.'), rules)
       end
 
       true
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def process_metadata!
       redacted_record.metadata.merge!(
@@ -48,6 +36,17 @@ module Redacting
     end
 
     private
+
+    def redact_attribute(path, rules)
+      payload_details = redacted_payload.dig(*path)
+      return if payload_details.blank?
+
+      fields = rules.fetch(:redact)
+      type   = rules.fetch(:type, :object)
+
+      details = details_by_type(payload_details, type, fields)
+      merge_redacted(path, details)
+    end
 
     def details_by_type(details, type, fields)
       case type

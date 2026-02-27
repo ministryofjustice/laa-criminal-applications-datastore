@@ -12,16 +12,14 @@ module Operations
       end
 
       def call
-        url = object.presigned_url(verb, s3_opts)
+        call_with_error_handling({ object_key:, verb: }) do
+          url = object.presigned_url(verb, s3_opts)
 
-        {
-          object_key:,
-          url:,
-        }
-      rescue StandardError => e
-        raise Errors::DocumentUploadError, e
-      ensure
-        log(object_key:, verb:)
+          {
+            object_key:,
+            url:,
+          }
+        end
       end
     end
   end

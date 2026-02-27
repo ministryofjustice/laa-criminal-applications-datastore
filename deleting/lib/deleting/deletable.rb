@@ -99,9 +99,16 @@ module Deleting
       @state = REVIEW_STATUS_TO_STATE[event.data.fetch(:review_status)]
       @application_type = event.data.fetch(:entity_type)
       @business_reference = event.data.fetch(:business_reference)
-      @maat_ids = [event.data.fetch(:maat_id)] if event.data.fetch(:maat_id)
-      @decision_ids = [event.data.fetch(:decision_id)] if event.data.fetch(:decision_id)
-      @overall_decisions = [event.data.fetch(:overall_decision)] if event.data.fetch(:overall_decision)
+
+      maat_id = event.data.fetch(:maat_id)
+      @maat_ids = [maat_id] if maat_id
+
+      decision_id = event.data.fetch(:decision_id)
+      @decision_ids = [decision_id] if decision_id
+
+      overall_decision = event.data.fetch(:overall_decision)
+      @overall_decisions = [overall_decision] if overall_decision
+
       @submitted_at = event.data.fetch(:submitted_at)
       @returned_at = event.data.fetch(:returned_at)
       @reviewed_at = event.data.fetch(:reviewed_at)
@@ -176,6 +183,12 @@ module Deleting
       @active_drafts.positive?
     end
 
+    RETENTION_DEFAULT    = 2.years
+    RETENTION_RETURNED   = 2.years
+    RETENTION_REFUSED    = 3.years
+    RETENTION_COMPLETED  = 3.years
+    RETENTION_GRANTED    = 7.years
+
     private
 
     def timestamp(event)
@@ -183,13 +196,13 @@ module Deleting
     end
 
     def retention_period
-      return 2.years if never_submitted?
-      return 2.years if returned?
-      return 3.years if completed_without_decision?
-      return 3.years if refused?
-      return 7.years if granted?
+      return RETENTION_DEFAULT  if never_submitted?
+      return RETENTION_RETURNED if returned?
+      return RETENTION_COMPLETED if completed_without_decision?
+      return RETENTION_REFUSED  if refused?
+      return RETENTION_GRANTED  if granted?
 
-      2.years
+      RETENTION_DEFAULT
     end
 
     def completed_without_decision?
