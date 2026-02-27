@@ -10,15 +10,13 @@ module Operations
       end
 
       def call
-        object.delete
+        call_with_error_handling({ object_key: }) do
+          object.delete
 
-        {
-          object_key:
-        }
-      rescue StandardError => e
-        raise Errors::DocumentUploadError, e
-      ensure
-        log(object_key:)
+          {
+            object_key:
+          }
+        end
       end
     end
   end

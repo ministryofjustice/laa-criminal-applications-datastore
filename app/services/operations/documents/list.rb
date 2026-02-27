@@ -10,17 +10,15 @@ module Operations
       end
 
       def call
-        documents = bucket.objects(prefix:).map do |obj|
-          {
-            object_key: obj.key,
-            size: obj.size,
-            last_modified: obj.last_modified.iso8601,
-          }
+        call_with_error_handling(->(docs) { { prefix: prefix, count: docs.try(:count) } }) do
+          bucket.objects(prefix:).map do |obj|
+            {
+              object_key: obj.key,
+              size: obj.size,
+              last_modified: obj.last_modified.iso8601,
+            }
+          end
         end
-      rescue StandardError => e
-        raise Errors::DocumentUploadError, e
-      ensure
-        log(prefix: prefix, count: documents.try(:count))
       end
     end
   end

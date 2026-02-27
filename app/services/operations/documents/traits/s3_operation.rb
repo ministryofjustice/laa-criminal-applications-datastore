@@ -4,6 +4,15 @@ module Operations
       module S3Operation
         private
 
+        def call_with_error_handling(log_details)
+          result = yield
+          result
+        rescue StandardError => e
+          raise Errors::DocumentUploadError, e
+        ensure
+          log(log_details.respond_to?(:call) ? log_details.call(result) : log_details)
+        end
+
         def client
           @client ||= Aws::S3::Client.new(
             **{

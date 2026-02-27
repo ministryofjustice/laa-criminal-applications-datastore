@@ -95,7 +95,6 @@ module Transformer
     end
 
     class << self
-      # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
       # Cuts a given string value or set of values does to the specified limit. Works with
       # Hashes of key/value pairs or individual strings. Only chops string values, leaving
       # non-string values alone. If obj is a Hash, only matching keys defined in criteria will result
@@ -112,25 +111,13 @@ module Transformer
 
         case obj
         when String
-          length = criteria.is_a?(Hash) ? criteria[obj] : criteria
-
-          obj = truncate!(obj, length)
+          chop_string(obj, criteria)
         when Hash
-          obj.each do |k, v|
-            next if v.blank?
-            next unless v.is_a?(String)
-            next if criteria.is_a?(Hash) && !criteria.key?(k)
-
-            length = criteria.is_a?(Hash) ? criteria[k] : criteria
-            obj[k] = truncate!(v, length)
-          end
-
-          obj = calculate!(obj, criteria)
+          chop_hash(obj, criteria)
+        else
+          obj
         end
-
-        obj
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
 
       def truncate!(str, length)
         return str if length.blank?
@@ -142,6 +129,25 @@ module Transformer
         return obj unless criteria.is_a?(Hash) && criteria.key?('_calculation')
 
         criteria['_calculation'].call(obj)
+      end
+
+      private
+
+      def chop_string(str, criteria)
+        length = criteria.is_a?(Hash) ? criteria[str] : criteria
+        truncate!(str, length)
+      end
+
+      def chop_hash(hash, criteria)
+        hash.each do |k, v|
+          next if v.blank? || !v.is_a?(String)
+          next if criteria.is_a?(Hash) && !criteria.key?(k)
+
+          length = criteria.is_a?(Hash) ? criteria[k] : criteria
+          hash[k] = truncate!(v, length)
+        end
+
+        calculate!(hash, criteria)
       end
     end
   end
