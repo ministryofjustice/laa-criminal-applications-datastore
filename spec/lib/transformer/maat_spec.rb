@@ -55,6 +55,13 @@ describe Transformer::MAAT do
       it { is_expected.to eq 'My...' }
     end
 
+    context 'when obj is neither a String nor a Hash' do
+      let(:obj) { 42 }
+      let(:criteria) { 5 }
+
+      it { is_expected.to eq 42 }
+    end
+
     context 'when obj is nil' do
       let(:obj) { nil }
 
