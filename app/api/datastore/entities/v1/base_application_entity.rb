@@ -15,14 +15,36 @@ module Datastore
         expose :work_stream
         expose :soft_deleted_at, expose_nil: false
 
-        private
-
-        def additional_information
-          submitted_value('additional_information')
+        # Generates private methods that delegate to submitted_value
+        def self.submitted_delegates(*names)
+          names.each do |name|
+            define_method(name) { submitted_value(name.to_s) }
+          end
         end
 
-        def application_type
-          submitted_value('application_type')
+        # Generates private methods that delegate to submitted_value with a default
+        def self.submitted_delegates_with_default(mappings)
+          mappings.each do |name, default|
+            define_method(name) { submitted_value(name.to_s) || default }
+          end
+        end
+
+        submitted_delegates :additional_information, :application_type, :client_details,
+                            :date_stamp, :date_stamp_context, :created_at, :id,
+                            :ioj_passport, :interests_of_justice, :means_passport,
+                            :parent_id, :provider_details, :reference, :schema_version,
+                            :pre_cifc_reference_number, :pre_cifc_maat_id,
+                            :pre_cifc_usn, :pre_cifc_reason
+
+        submitted_delegates_with_default means_details: {}, supporting_evidence: [],
+                                         evidence_details: {}
+
+        private_class_method :submitted_delegates, :submitted_delegates_with_default
+
+        private
+
+        def is_means_tested # rubocop:disable Naming/PredicateName
+          submitted_value('is_means_tested')
         end
 
         def case_details
@@ -37,91 +59,8 @@ module Datastore
           object.submitted_at.in_time_zone('London').at_midnight
         end
 
-        def client_details
-          submitted_value('client_details')
-        end
-
-        def date_stamp
-          submitted_value('date_stamp')
-        end
-
-        def date_stamp_context
-          submitted_value('date_stamp_context')
-        end
-
-        # created_at is the date when the application was started on
-        # crime apply and therefore we take the value from the application
-        # json rather than the table
-        def created_at
-          submitted_value('created_at')
-        end
-
-        def id
-          submitted_value('id')
-        end
-
-        def is_means_tested # rubocop:disable Naming/PredicateName
-          submitted_value('is_means_tested')
-        end
-
-        def ioj_passport
-          submitted_value('ioj_passport')
-        end
-
-        def interests_of_justice
-          submitted_value('interests_of_justice')
-        end
-
-        def means_details
-          submitted_value('means_details') || {}
-        end
-
-        def means_passport
-          submitted_value('means_passport')
-        end
-
-        def parent_id
-          submitted_value('parent_id')
-        end
-
-        def provider_details
-          submitted_value('provider_details')
-        end
-
-        def reference
-          submitted_value('reference')
-        end
-
-        def schema_version
-          submitted_value('schema_version')
-        end
-
         def submitted_value(name)
           object.submitted_application&.dig(name)
-        end
-
-        def supporting_evidence
-          submitted_value('supporting_evidence') || []
-        end
-
-        def evidence_details
-          submitted_value('evidence_details') || {}
-        end
-
-        def pre_cifc_reference_number
-          submitted_value('pre_cifc_reference_number')
-        end
-
-        def pre_cifc_maat_id
-          submitted_value('pre_cifc_maat_id')
-        end
-
-        def pre_cifc_usn
-          submitted_value('pre_cifc_usn')
-        end
-
-        def pre_cifc_reason
-          submitted_value('pre_cifc_reason')
         end
       end
     end

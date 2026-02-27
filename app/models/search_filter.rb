@@ -29,7 +29,16 @@ class SearchFilter
     scope
   end
 
+  # Generates simple where-clause filter methods for column attributes
+  SIMPLE_WHERE_FILTERS = %i[status work_stream review_status case_type application_type office_code].freeze
+
   private
+
+  SIMPLE_WHERE_FILTERS.each do |column|
+    define_method(:"filter_#{column}") do |scope|
+      scope.where(column => send(column))
+    end
+  end
 
   def filter_applicant_date_of_birth(scope)
     scope.where(
@@ -62,31 +71,7 @@ class SearchFilter
     scope.where.not(id: application_id_not_in)
   end
 
-  def filter_status(scope)
-    scope.where(status:)
-  end
-
-  def filter_work_stream(scope)
-    scope.where(work_stream:)
-  end
-
-  def filter_review_status(scope)
-    scope.where(review_status:)
-  end
-
   def filter_search_text(scope)
     scope.where("searchable_text @@ plainto_tsquery('english', ?)", search_text)
-  end
-
-  def filter_case_type(scope)
-    scope.where(case_type:)
-  end
-
-  def filter_application_type(scope)
-    scope.where(application_type:)
-  end
-
-  def filter_office_code(scope)
-    scope.where(office_code:)
   end
 end
