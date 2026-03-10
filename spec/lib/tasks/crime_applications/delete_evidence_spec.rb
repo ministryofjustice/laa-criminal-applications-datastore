@@ -66,6 +66,17 @@ RSpec.describe 'crime_applications:delete_evidence' do # rubocop:disable RSpec/D
     end
   end
 
+  context 'when an S3 key is not present on the application' do
+    let(:s3_object_keys) { '123/abcdef1234 999/notpresent' }
+
+    it 'raises StandardError' do
+      expect { run_task }.to raise_error(
+        StandardError,
+        "At least one provided S3 key is not present on application #{application_id}"
+      )
+    end
+  end
+
   context 'when DRY_RUN is true' do
     before { stub_const('ENV', ENV.to_h.merge('DRY_RUN' => 'true')) }
 
@@ -116,8 +127,7 @@ RSpec.describe 'crime_applications:delete_evidence' do # rubocop:disable RSpec/D
         business_reference: crime_application.reference.to_s,
         deleted_by: 'system_manual',
         deleted_from: Types::RecordSource['amazon_s3'],
-        reason: 'data_breach',
-        correlation_id: nil
+        reason: 'data_breach'
       )
     end
 
@@ -140,6 +150,12 @@ RSpec.describe 'crime_applications:delete_evidence' do # rubocop:disable RSpec/D
 
       it 'creates a DeletionEntry for each deleted key' do
         expect { run_task }.to change(DeletionEntry, :count).by(2)
+      end
+
+      it 'assigns the same correlation_id to all entries' do
+        run_task
+        correlation_ids = DeletionEntry.last(2).map(&:correlation_id)
+        expect(correlation_ids.uniq.size).to eq(1)
       end
     end
 

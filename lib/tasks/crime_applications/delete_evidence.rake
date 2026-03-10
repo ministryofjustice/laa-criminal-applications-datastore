@@ -13,6 +13,9 @@ namespace :crime_applications do
 
     existing_supporting_evidence = crime_application.submitted_application['supporting_evidence']
     raise StandardError, "No evidence found for application #{crime_application.id}" if existing_supporting_evidence.blank?
+    unless s3_object_keys.all? { |object_key| existing_supporting_evidence.pluck('s3_object_key').include?(object_key) }
+      raise StandardError, "At least one provided S3 key is not present on application #{crime_application.id}"
+    end
 
     remaining_evidence_ids = existing_supporting_evidence.pluck('s3_object_key').reject { |key| key.in?(s3_object_keys) }
 
@@ -20,6 +23,7 @@ namespace :crime_applications do
       log("Remaining evidence expected after successful deletion: #{remaining_evidence_ids.inspect}")
     else
       log("Deleting S3 objects #{s3_object_keys.inspect} linked to application #{crime_application.id}...")
+      correlation_id = SecureRandom.uuid
       successful_deletions = []
       failed_deletions = []
       s3_object_keys.each do |object_key|
@@ -42,7 +46,7 @@ namespace :crime_applications do
           deleted_by: 'system_manual',
           deleted_from: Types::RecordSource['amazon_s3'],
           reason: reason,
-          correlation_id: nil
+          correlation_id: correlation_id
         )
       end
     end
