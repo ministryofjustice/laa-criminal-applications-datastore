@@ -28,6 +28,7 @@ module Types
   DELETION_REASONS = %w[
     provider_action
     retention_rule
+    data_breach
   ].freeze
 
   Types::DeletionReason = String.enum(*DELETION_REASONS)
