@@ -20,8 +20,6 @@ module Events
       }
     end
 
-    # Convenience method as currently we only have
-    # one SNS topic and one publisher
     def publish
       Messaging::EventsPublisher.publish(self)
     end

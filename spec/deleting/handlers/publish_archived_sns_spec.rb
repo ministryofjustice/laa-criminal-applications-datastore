@@ -10,21 +10,23 @@ RSpec.describe Deleting::Handlers::PublishArchivedSns do
     )
   end
 
+  let(:event_data) do
+    {
+      entity_id: application.id,
+      entity_type: application.application_type,
+      business_reference: application.reference,
+      archived_at: application.archived_at
+    }
+  end
+
   let(:event) do
-    Deleting::Archived.new(
-      data: {
-        entity_id: application.id,
-        entity_type: application.application_type,
-        business_reference: application.reference,
-        archived_at: application.archived_at
-      }
-    )
+    Deleting::Archived.new(data: event_data)
   end
 
   it 'publishes the Events::Archived SNS notification' do
     archived_sns_event = instance_double(Events::Archived, publish: true)
 
-    allow(Events::Archived).to receive(:new).with(application).and_return(archived_sns_event)
+    allow(Events::Archived).to receive(:new).with(event_data).and_return(archived_sns_event)
 
     handler.call(event)
 
