@@ -1,10 +1,7 @@
-def log(message)
-  puts("[crime_applications:delete_evidence] #{message}")
-end
-
 namespace :crime_applications do
   desc 'Permanently delete evidence from S3 for a given application and create deletion entries'
   task :delete_evidence, [:application_id, :s3_object_keys, :reason] => :environment do |_task, args|
+    log = ->(message) { puts("[crime_applications:delete_evidence] #{message}") }
     dry_run = ActiveModel::Type::Boolean.new.cast(ENV["DRY_RUN"])
     crime_application = CrimeApplication.find(args[:application_id])
     s3_object_keys = args[:s3_object_keys].to_s.split(' ')
@@ -20,9 +17,9 @@ namespace :crime_applications do
     remaining_evidence_ids = existing_supporting_evidence.pluck('s3_object_key').reject { |key| key.in?(s3_object_keys) }
 
     if dry_run
-      log("Remaining evidence expected after successful deletion: #{remaining_evidence_ids.inspect}")
+      log.call("Remaining evidence expected after successful deletion: #{remaining_evidence_ids.inspect}")
     else
-      log("Deleting S3 objects #{s3_object_keys.inspect} linked to application #{crime_application.id}...")
+      log.call("Deleting S3 objects #{s3_object_keys.inspect} linked to application #{crime_application.id}...")
       correlation_id = SecureRandom.uuid
       successful_deletions = []
       failed_deletions = []
@@ -31,12 +28,12 @@ namespace :crime_applications do
           Operations::Documents::Delete.new(object_key:).call
           successful_deletions << object_key
         rescue Errors::DocumentUploadError => e
-          log("Exception when deleting #{object_key} - #{e.message}")
+          log.call("Exception when deleting #{object_key} - #{e.message}")
           failed_deletions << object_key
         end
       end
-      log("Successful deletions - #{successful_deletions.inspect}")
-      log("Failed deletions - #{failed_deletions.inspect}")
+      log.call("Successful deletions - #{successful_deletions.inspect}")
+      log.call("Failed deletions - #{failed_deletions.inspect}")
 
       successful_deletions.each do |deletion|
         DeletionEntry.create!(
@@ -50,6 +47,6 @@ namespace :crime_applications do
         )
       end
     end
-    log('Done')
+    log.call('Done')
   end
 end
