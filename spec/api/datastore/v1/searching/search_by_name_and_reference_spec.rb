@@ -23,6 +23,8 @@ RSpec.describe 'search with text' do
       end
     )
 
+    CrimeApplication.find_each(&:recompute_searchable_text)
+
     api_request
   end
 
