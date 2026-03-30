@@ -19,6 +19,8 @@ RSpec.describe 'Archive application' do
     end
 
     context 'with a returned application' do
+      let(:event_store) { Rails.configuration.event_store }
+
       before do
         application.update!(status: :returned, returned_at: 1.week.ago)
       end
@@ -26,6 +28,12 @@ RSpec.describe 'Archive application' do
       it 'persists archived and archived_at timestamp' do
         expect { api_request }.to change { application.reload.archived_at }
           .from(nil)
+      end
+
+      it 'creates a Deleting::Archived event' do
+        expect { api_request }.to change {
+          event_store.read.to_a.count { |e| e.event_type == 'Deleting::Archived' }
+        }.by(1)
       end
     end
 
