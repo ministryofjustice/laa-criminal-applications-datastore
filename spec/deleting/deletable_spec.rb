@@ -442,11 +442,25 @@ RSpec.describe Deleting::Deletable do
     context 'when already hard deleted' do
       before do
         deletable.instance_variable_set(:@state, :hard_deleted)
+        deletable.instance_variable_set(:@business_reference, business_reference)
       end
 
       it 'raises AlreadyHardDeleted error' do
         expect { deletable.hard_delete(reason: reason, deleted_by: 'system') }
           .to raise_error(described_class::AlreadyHardDeleted)
+      end
+
+      it 'logs a warning with the application reference' do
+        allow(Rails.logger).to receive(:warn)
+
+        begin
+          deletable.hard_delete(reason: reason, deleted_by: 'system')
+        rescue described_class::AlreadyHardDeleted
+          # expected
+        end
+
+        expect(Rails.logger).to have_received(:warn)
+          .with("Application #{business_reference} has already been hard deleted")
       end
     end
 
