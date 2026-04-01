@@ -133,7 +133,10 @@ module Deleting
     end
 
     def hard_delete(reason:, deleted_by:)
-      raise AlreadyHardDeleted if hard_deleted?
+      if hard_deleted?
+        Rails.logger.warn("Application #{business_reference} has already been hard deleted")
+        raise AlreadyHardDeleted
+      end
       raise CannotHardDelete unless hard_deletable?
 
       apply Deleting::HardDeleted.new(
