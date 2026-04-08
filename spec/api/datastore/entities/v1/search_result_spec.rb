@@ -19,7 +19,8 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
       work_stream:,
       return_reason:,
       return_details:,
-      office_code:
+      office_code:,
+      archived_at:
     )
   end
 
@@ -36,6 +37,7 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
   let(:case_type) { 'summary_only' }
   let(:application_type) { 'initial' }
   let(:means_passport) { ['on_benefit_check'] }
+  let(:archived_at) { nil }
 
   let(:submitted_application) do
     LaaCrimeSchemas.fixture(1.0) { |json| json.merge('parent_id' => parent_id) }
@@ -109,6 +111,14 @@ RSpec.describe Datastore::Entities::V1::SearchResult do
 
   it 'represents the means_passport' do
     expect(representation.fetch(:means_passport)).to eq ['on_benefit_check']
+  end
+
+  context 'when archived_at is present' do
+    let(:archived_at) { '2023-05-22T12:42:10.907Z' }
+
+    it 'represents the archived_at in is8601' do
+      expect(representation.fetch(:archived_at)).to eq archived_at
+    end
   end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers

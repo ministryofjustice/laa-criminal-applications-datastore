@@ -18,6 +18,7 @@ module Datastore
         expose :application_type
         expose :case_type
         expose :means_passport
+        expose :archived_at
 
         private
 
