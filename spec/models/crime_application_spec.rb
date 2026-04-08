@@ -397,7 +397,7 @@ describe CrimeApplication do
   describe '#recompute_searchable_text' do
     subject(:application) { described_class.create!(valid_attributes) }
 
-    it 'populates searchable_text with applicant names and reference' do
+    it 'populates stored_searchable_text with applicant names and reference' do
       application.recompute_searchable_text
 
       first_name = application_attributes.dig('client_details', 'applicant', 'first_name')
@@ -405,13 +405,14 @@ describe CrimeApplication do
       reference = application_attributes['reference']
 
       [first_name, last_name, reference].each do |term|
-        expect(described_class.where('searchable_text @@ plainto_tsquery(:q)', q: term)).to include(application)
+        expect(described_class.where('stored_searchable_text @@ plainto_tsquery(:q)', q: term)).to include(application)
       end
     end
 
-    it 'populates searchable_text on create' do
+    it 'populates stored_searchable_text on create' do
       first_name = application_attributes.dig('client_details', 'applicant', 'first_name')
-      expect(described_class.where('searchable_text @@ plainto_tsquery(:q)', q: first_name)).to include(application)
+      expect(described_class.where('stored_searchable_text @@ plainto_tsquery(:q)',
+                                   q: first_name)).to include(application)
     end
 
     context 'when the application has a legacy maat_id' do
@@ -419,9 +420,9 @@ describe CrimeApplication do
         described_class.create!(valid_attributes.merge(maat_id: 9_876_543))
       end
 
-      it 'includes the maat_id in searchable_text' do
+      it 'includes the maat_id in stored_searchable_text' do
         result = described_class.where(
-          'searchable_text @@ plainto_tsquery(:q)', q: '9876543'
+          'stored_searchable_text @@ plainto_tsquery(:q)', q: '9876543'
         )
         expect(result).to include(application)
       end
@@ -437,9 +438,9 @@ describe CrimeApplication do
         )
       end
 
-      it 'includes the decision maat_id in searchable_text' do
+      it 'includes the decision maat_id in stored_searchable_text' do
         result = described_class.where(
-          'searchable_text @@ plainto_tsquery(:q)', q: '1122334'
+          'stored_searchable_text @@ plainto_tsquery(:q)', q: '1122334'
         )
         expect(result).to include(application)
       end

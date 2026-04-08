@@ -1,17 +1,17 @@
 namespace :crime_applications do
-  desc 'Backfill the searchable_text column for all crime applications'
+  desc 'Backfill the stored_searchable_text column for all crime applications'
   task backfill_searchable_text: :environment do
     log = ->(message) { puts("[crime_applications:backfill_searchable_text] #{message}") }
     batch_size = ENV.fetch('BATCH_SIZE', 500).to_i
-    total = CrimeApplication.where(hard_deleted_at: nil, searchable_text: nil).count
+    total = CrimeApplication.where(hard_deleted_at: nil, stored_searchable_text: nil).count
     updated = 0
 
-    log.call("Backfilling searchable_text for #{total} crime application(s) in batches of #{batch_size}...")
+    log.call("Backfilling stored_searchable_text for #{total} crime application(s) in batches of #{batch_size}...")
 
-    CrimeApplication.where(hard_deleted_at: nil, searchable_text: nil).in_batches(of: batch_size) do |batch|
+    CrimeApplication.where(hard_deleted_at: nil, stored_searchable_text: nil).in_batches(of: batch_size) do |batch|
       # rubocop:disable Rails/SkipsModelValidations
       batch.update_all(<<~SQL.squish)
-        searchable_text = (
+        stored_searchable_text = (
           to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,first_name}', ''))
           || to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,last_name}', ''))
           || to_tsvector('english', COALESCE(submitted_application ->> 'reference', ''))

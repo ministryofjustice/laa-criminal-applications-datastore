@@ -48,7 +48,7 @@ class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
     CrimeApplication.where(id:).update_all(
       submitted_application: anonymised_application,
       hard_deleted_at: Time.current,
-      searchable_text: nil
+      stored_searchable_text: nil
     ).positive?
     # rubocop:enable Rails/SkipsModelValidations
   end
@@ -56,7 +56,7 @@ class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def recompute_searchable_text # rubocop:disable Metrics/MethodLength
     # rubocop:disable Rails/SkipsModelValidations
     self.class.where(id:).update_all(<<~SQL.squish)
-      searchable_text = (
+      stored_searchable_text = (
         to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,first_name}', ''))
         || to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,last_name}', ''))
         || to_tsvector('english', COALESCE(submitted_application ->> 'reference', ''))
