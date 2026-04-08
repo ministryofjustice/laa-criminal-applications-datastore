@@ -13,4 +13,4 @@ data:
   DISABLE_HTTPS: enabled
   MAAT_API_API_URL: https://laa-crime-applications-adaptor-uat.apps.live.cloud-platform.service.justice.gov.uk
   MAAT_API_OAUTH_URL: https://caa-api-uat.auth.eu-west-2.amazoncognito.com
-  USE_STORED_SEARCHABLE_TEXT: true
+  USE_STORED_SEARCHABLE_TEXT: "true"
