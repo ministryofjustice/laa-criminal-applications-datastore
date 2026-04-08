@@ -9,6 +9,7 @@ RSpec.describe 'search with text' do
   let(:records) { JSON.parse(response.body).fetch('records') }
 
   before do
+    allow(ENV).to receive(:[]).with('USE_STORED_SEARCHABLE_TEXT').and_return('true')
     details = %i[Jenni Deere 1010 David Brown 1020 Jenny Deere 1030].each_slice(3)
     CrimeApplication.insert_all(
       details.map do |first_name, last_name, reference|
@@ -22,6 +23,8 @@ RSpec.describe 'search with text' do
         }
       end
     )
+
+    CrimeApplication.find_each(&:recompute_searchable_text)
 
     api_request
   end

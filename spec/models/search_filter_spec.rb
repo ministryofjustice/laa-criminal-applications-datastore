@@ -56,4 +56,26 @@ describe SearchFilter do
       expect { search_filter }.to raise_error ActiveModel::UnknownAttributeError
     end
   end
+
+  describe '#filter_search_text' do
+    let(:params) { { search_text: 'John' } }
+    let(:sql) { search_filter.apply_to_scope(CrimeApplication.all).to_sql }
+
+    context 'when USE_STORED_SEARCHABLE_TEXT is true' do
+      before { allow(ENV).to receive(:[]).with('USE_STORED_SEARCHABLE_TEXT').and_return('true') }
+
+      it 'queries stored_searchable_text' do
+        expect(sql).to include('stored_searchable_text')
+      end
+    end
+
+    context 'when USE_STORED_SEARCHABLE_TEXT is false' do
+      before { allow(ENV).to receive(:[]).with('USE_STORED_SEARCHABLE_TEXT').and_return('false') }
+
+      it 'queries the generated searchable_text column' do
+        expect(sql).to include('searchable_text')
+        expect(sql).not_to include('stored_searchable_text')
+      end
+    end
+  end
 end

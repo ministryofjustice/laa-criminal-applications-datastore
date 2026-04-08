@@ -1,4 +1,4 @@
-class CrimeApplication < ApplicationRecord
+class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Redactable
 
   attr_readonly :submitted_application, :submitted_at, :id
@@ -8,6 +8,7 @@ class CrimeApplication < ApplicationRecord
   before_validation :shift_payload_attributes, on: :create
   before_validation :set_overall_offence_class, :set_work_stream, on: :create
   before_save :copy_first_court_hearing_name
+  after_commit :recompute_searchable_text
 
   has_many :decisions, dependent: :destroy
 
@@ -46,8 +47,28 @@ class CrimeApplication < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     CrimeApplication.where(id:).update_all(
       submitted_application: anonymised_application,
-      hard_deleted_at: Time.current
+      hard_deleted_at: Time.current,
+      stored_searchable_text: nil
     ).positive?
+    # rubocop:enable Rails/SkipsModelValidations
+  end
+
+  def recompute_searchable_text # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Rails/SkipsModelValidations
+    self.class.where(id:).update_all(<<~SQL.squish)
+      stored_searchable_text = (
+        to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,first_name}', ''))
+        || to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,last_name}', ''))
+        || to_tsvector('english', COALESCE(submitted_application ->> 'reference', ''))
+        || COALESCE(to_tsvector('simple', maat_id::text), ''::tsvector)
+        || COALESCE(
+            (SELECT to_tsvector('simple', string_agg(d.maat_id::text, ' '))
+             FROM decisions d WHERE d.crime_application_id = crime_applications.id
+               AND d.maat_id IS NOT NULL),
+            ''::tsvector
+          )
+      )
+    SQL
     # rubocop:enable Rails/SkipsModelValidations
   end
 
