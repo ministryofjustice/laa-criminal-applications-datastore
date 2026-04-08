@@ -38,7 +38,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
     t.datetime "soft_deleted_at", precision: nil
     t.integer "maat_id"
     t.datetime "hard_deleted_at", precision: nil
-    t.tsvector "searchable_text"
+    t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (submitted_application ->> 'reference'::text)))", stored: true
     t.tsvector "stored_searchable_text"
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["application_type"], name: "index_crime_applications_on_application_type"
