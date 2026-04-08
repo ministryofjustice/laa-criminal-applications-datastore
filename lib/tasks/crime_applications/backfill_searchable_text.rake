@@ -10,7 +10,7 @@ namespace :crime_applications do
 
     CrimeApplication.where(hard_deleted_at: nil, stored_searchable_text: nil).in_batches(of: batch_size) do |batch|
       # rubocop:disable Rails/SkipsModelValidations
-      batch.update_all(<<~SQL.squish)
+      rows_updated = batch.update_all(<<~SQL.squish)
         stored_searchable_text = (
           to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,first_name}', ''))
           || to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,last_name}', ''))
@@ -26,7 +26,7 @@ namespace :crime_applications do
       SQL
       # rubocop:enable Rails/SkipsModelValidations
 
-      updated += batch.count
+      updated += rows_updated
       log.call("Updated #{updated}/#{total}")
     end
 
