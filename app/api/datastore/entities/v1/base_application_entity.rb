@@ -14,6 +14,7 @@ module Datastore
         expose :created_at
         expose :work_stream
         expose :soft_deleted_at, expose_nil: false
+        expose :archived_at, expose_nil: false
 
         private
 
