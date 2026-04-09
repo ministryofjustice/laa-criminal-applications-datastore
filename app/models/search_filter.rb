@@ -75,7 +75,8 @@ class SearchFilter
   end
 
   def filter_search_text(scope)
-    scope.where("searchable_text @@ plainto_tsquery('english', ?)", search_text)
+    column = ENV['USE_STORED_SEARCHABLE_TEXT'] == 'true' ? 'stored_searchable_text' : 'searchable_text'
+    scope.where("#{column} @@ plainto_tsquery('english', ?)", search_text)
   end
 
   def filter_case_type(scope)
