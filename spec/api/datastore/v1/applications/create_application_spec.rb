@@ -23,7 +23,7 @@ RSpec.describe 'create application' do
 
     let(:submission_event) { instance_double(Events::Submission, publish: true) }
 
-    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod] do
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply] do
       before { api_request }
     end
 
