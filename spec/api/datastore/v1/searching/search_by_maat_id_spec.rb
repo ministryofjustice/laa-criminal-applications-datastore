@@ -60,7 +60,7 @@ RSpec.describe 'search by maat_id' do
     api_request
   end
 
-  it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod crime-review]
+  it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-review]
 
   context 'when searching by a legacy maat_id (crime_applications.maat_id)' do
     let(:search) { { search_text: '1234567' } }

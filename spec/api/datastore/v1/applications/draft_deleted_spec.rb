@@ -23,7 +23,7 @@ RSpec.describe 'create a DraftDeleted event' do
                                                            deleted_by: }
     end
 
-    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod] do
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply] do
       before { api_request }
     end
   end

@@ -8,7 +8,7 @@ RSpec.describe 'list applications' do
   let(:query) { nil }
   let(:records_count) { JSON.parse(response.body).fetch('records').count }
 
-  it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod] do
+  it_behaves_like 'an authorisable endpoint', %w[crime-apply] do
     before { api_request }
   end
 
@@ -319,14 +319,6 @@ RSpec.describe 'list applications' do
         let(:consumer) { 'crime-apply' }
 
         it 'excludes archived and soft delted applications' do
-          expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
-        end
-      end
-
-      context 'when the consumer is crime-apply-preprod' do
-        let(:consumer) { 'crime-apply-preprod' }
-
-        it 'excludes archived and soft deleted applications' do
           expect(records.pluck('reference')).to contain_exactly(6_000_001, 6_000_003)
         end
       end

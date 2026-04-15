@@ -5,7 +5,7 @@ module Datastore
 
       resource :applications do
         desc 'Create an application.'
-        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
+        route_setting :authorised_consumers, %w[crime-apply]
         params do
           requires :application, type: JSON, desc: 'Application JSON payload.'
         end
@@ -16,7 +16,7 @@ module Datastore
         end
 
         desc 'Return an application by ID.'
-        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod crime-review]
+        route_setting :authorised_consumers, %w[crime-apply crime-review]
         params do
           requires :application_id, type: String, desc: 'Application UUID.'
         end
@@ -36,7 +36,7 @@ module Datastore
         end
 
         desc 'Return a pruned version of the applications with pagination.'
-        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
+        route_setting :authorised_consumers, %w[crime-apply]
         params do
           use :sorting
           use :pagination
@@ -72,7 +72,7 @@ module Datastore
         end
         route_param :application_id do
           resource :archive do
-            route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
+            route_setting :authorised_consumers, %w[crime-apply]
             put do
               Operations::ArchiveApplication.new(application_id: params[:application_id]).call
             end
@@ -80,7 +80,7 @@ module Datastore
         end
 
         desc 'Create a DraftCreated event for an application.'
-        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
+        route_setting :authorised_consumers, %w[crime-apply]
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
           requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'
@@ -92,7 +92,7 @@ module Datastore
         end
 
         desc 'Create a DraftDeleted event for an application.'
-        route_setting :authorised_consumers, %w[crime-apply crime-apply-preprod]
+        route_setting :authorised_consumers, %w[crime-apply]
         params do
           requires :entity_id, type: String, desc: 'Draft application UUID.'
           requires :entity_type, type: String, values: Types::APPLICATION_TYPES, desc: 'Draft application type.'

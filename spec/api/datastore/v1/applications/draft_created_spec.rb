@@ -20,7 +20,7 @@ RSpec.describe 'create a DraftCreated event' do
       post '/api/v1/applications/draft_created', params: { entity_id:, entity_type:, business_reference:, created_at: }
     end
 
-    it_behaves_like 'an authorisable endpoint', %w[crime-apply crime-apply-preprod] do
+    it_behaves_like 'an authorisable endpoint', %w[crime-apply] do
       before { api_request }
     end
   end
