@@ -8,7 +8,7 @@ module Deleting
     class CannotHardDelete < StandardError; end
     class CannotSoftDelete < StandardError; end
 
-    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at, :archived_at
+    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at, :archived_at, :last_significant_event_at
 
     STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
     REVIEW_STATUS_TO_STATE = {
@@ -29,6 +29,7 @@ module Deleting
       @business_reference = event.data.fetch(:business_reference)
       @active_drafts += 1
       @deletion_at = (event.data.fetch(:created_at, nil) || timestamp(event)) + retention_period
+      @last_significant_event_at = timestamp(event)
     end
 
     on Applying::DraftUpdated do |_event|
@@ -38,9 +39,10 @@ module Deleting
       # process DraftUpdated events.
     end
 
-    on Applying::DraftDeleted do |_event|
+    on Applying::DraftDeleted do |event|
       @deletion_log_entry = nil
       @active_drafts -= 1
+      @last_significant_event_at = timestamp(event)
     end
 
     on Applying::Submitted do |event|
@@ -48,15 +50,18 @@ module Deleting
       @submitted_at = timestamp(event)
       @deletion_at = timestamp(event) + retention_period
       @active_drafts -= 1
+      @last_significant_event_at = timestamp(event)
     end
 
     on Deciding::MaatRecordCreated do |event|
       @maat_ids << event.data.fetch(:maat_id)
+      @last_significant_event_at = timestamp(event)
     end
 
     # :nocov:
     on Deciding::MaatRecordUpdated do |event|
       @deletion_at = timestamp(event) + retention_period
+      @last_significant_event_at = timestamp(event)
     end
     # :nocov:
 
@@ -65,12 +70,14 @@ module Deleting
       @overall_decisions[event.data.fetch(:decision_id)] = event.data.fetch(:overall_decision)
       @state = :decided
       @deletion_at = timestamp(event) + retention_period
+      @last_significant_event_at = timestamp(event)
     end
 
     # :nocov:
     on Deciding::DecisionUpdated do |event|
       @overall_decisions[event.data.fetch(:decision_id)] = event.data.fetch(:overall_decision)
       @deletion_at = timestamp(event) + retention_period
+      @last_significant_event_at = timestamp(event)
     end
     # :nocov:
 
@@ -79,12 +86,14 @@ module Deleting
       @returned_at = timestamp(event)
       @reviewed_at = timestamp(event)
       @deletion_at = timestamp(event) + retention_period
+      @last_significant_event_at = timestamp(event)
     end
 
     on Reviewing::Completed do |event|
       @state = :completed
       @reviewed_at = timestamp(event)
       @deletion_at = timestamp(event) + retention_period
+      @last_significant_event_at = timestamp(event)
     end
 
     on Deleting::SoftDeleted do |event|
@@ -106,10 +115,12 @@ module Deleting
       @exempt_until = event.data.fetch(:exempt_until, nil)
       @deletion_at = @exempt_until || (timestamp(event) + retention_period)
       @soft_deleted_at = nil
+      @last_significant_event_at = timestamp(event)
     end
 
     on Deleting::Archived do |event|
       @archived_at = timestamp(event)
+      @last_significant_event_at = timestamp(event)
     end
 
     on Deleting::ApplicationMigrated do |event|
@@ -126,6 +137,7 @@ module Deleting
       @returned_at = event.data.fetch(:returned_at)
       @reviewed_at = event.data.fetch(:reviewed_at)
       @deletion_at = event.data.fetch(:last_updated_at) + retention_period
+      @last_significant_event_at = event.data.fetch(:last_updated_at)
     end
 
     def initialize
