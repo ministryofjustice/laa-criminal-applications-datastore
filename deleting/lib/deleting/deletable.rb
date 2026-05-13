@@ -54,12 +54,25 @@ module Deleting
       @maat_ids << event.data.fetch(:maat_id)
     end
 
+    # :nocov:
+    on Deciding::MaatRecordUpdated do |event|
+      @deletion_at = timestamp(event) + retention_period
+    end
+    # :nocov:
+
     on Deciding::Decided do |event|
       @decision_ids << event.data.fetch(:decision_id)
-      @overall_decisions << event.data.fetch(:overall_decision)
+      @overall_decisions[event.data.fetch(:decision_id)] = event.data.fetch(:overall_decision)
       @state = :decided
       @deletion_at = timestamp(event) + retention_period
     end
+
+    # :nocov:
+    on Deciding::DecisionUpdated do |event|
+      @overall_decisions[event.data.fetch(:decision_id)] = event.data.fetch(:overall_decision)
+      @deletion_at = timestamp(event) + retention_period
+    end
+    # :nocov:
 
     on Reviewing::SentBack do |event|
       @state = :returned
@@ -105,7 +118,10 @@ module Deleting
       @business_reference = event.data.fetch(:business_reference)
       @maat_ids = [event.data.fetch(:maat_id)] if event.data.fetch(:maat_id)
       @decision_ids = [event.data.fetch(:decision_id)] if event.data.fetch(:decision_id)
-      @overall_decisions = [event.data.fetch(:overall_decision)] if event.data.fetch(:overall_decision)
+      if event.data.fetch(:overall_decision)
+        @overall_decisions[event.data.fetch(:decision_id)] =
+          event.data.fetch(:overall_decision)
+      end
       @submitted_at = event.data.fetch(:submitted_at)
       @returned_at = event.data.fetch(:returned_at)
       @reviewed_at = event.data.fetch(:reviewed_at)
@@ -115,7 +131,7 @@ module Deleting
     def initialize
       @active_drafts = 0
       @decision_ids = []
-      @overall_decisions = []
+      @overall_decisions = {}
       @maat_ids = []
     end
 
@@ -207,14 +223,14 @@ module Deleting
     def refused?
       return false if @overall_decisions.empty?
 
-      @overall_decisions.all? { |od| od.starts_with?('refused') }
+      @overall_decisions.values.all? { |od| od.starts_with?('refused') }
     end
 
     # any decision may be granted to be considdered granted for retention purposes
     def granted?
       return false if @overall_decisions.empty?
 
-      @overall_decisions.any? { |od| od.starts_with?('granted') }
+      @overall_decisions.values.any? { |od| od.starts_with?('granted') }
     end
   end
 end
