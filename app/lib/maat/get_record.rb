@@ -1,6 +1,7 @@
 module MAAT
-  class GetMAATId
-    USN_FORMAT = '/api/external/v1/crime-application/result/usn/%d'.freeze
+  class GetRecord
+    USN_FORMAT =     '/api/external/v1/crime-application/result/usn/%d'.freeze
+    MAAT_ID_FORMAT = '/api/external/v1/crime-application/result/rep-order-id/%s'.freeze
 
     def initialize(http_client: MAAT::HttpClient.call)
       @http_client = http_client
@@ -13,14 +14,29 @@ module MAAT
     def by_usn!(usn)
       record = by_usn(usn)
 
-      return nil if record.blank?
+      raise MAAT::RecordNotFound if record.blank?
 
       record
     end
 
+    # Only returns results from the configured starting id
+    def by_maat_id(maat_id)
+      get(format(MAAT_ID_FORMAT, maat_id))
+    end
+
+    # :nocov:
+    def by_maat_id!(maat_id)
+      record = by_maat_id(maat_id)
+
+      raise MAAT::RecordNotFound if record.blank?
+
+      record
+    end
+    # :nocov:
+
     private
 
-    # By default, Maat::HttpClient configures the Faraday client to
+    # By default, MAAT::HttpClient configures the Faraday client to
     # raise an error on bad requests or server errors (e.g., Faraday::BadRequestError).
     def get(path)
       return if http_client.blank?
@@ -32,7 +48,7 @@ module MAAT
       # the response body includes a MAAT ID (maat_ref).
       return nil unless response.body.present? && response.body['maat_ref'].present?
 
-      response.body['maat_ref']
+      Record.new(response.body)
     end
 
     attr_reader :http_client
