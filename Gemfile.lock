@@ -458,6 +458,7 @@ DEPENDENCIES
   csv (~> 3.3)
   debug
   dotenv-rails (~> 2.8.1)
+  dry-struct
   grape
   grape-entity
   grape-swagger

@@ -6,6 +6,7 @@ ruby File.read('.ruby-version').chomp
 gem 'pg', '~> 1.5.6'
 gem 'puma'
 
+gem 'dry-struct'
 gem 'grape'
 gem 'grape-entity'
 gem 'grape_logging'
