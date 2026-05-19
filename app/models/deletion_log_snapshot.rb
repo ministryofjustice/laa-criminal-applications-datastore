@@ -1,0 +1,2 @@
+class DeletionLogSnapshot < ApplicationRecord
+end

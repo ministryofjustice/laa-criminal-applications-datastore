@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_19_115406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
     t.string "status", default: "submitted", null: false
     t.datetime "submitted_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "returned_at", precision: nil
+    t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (submitted_application ->> 'reference'::text)))", stored: true
     t.datetime "reviewed_at", precision: nil
     t.string "review_status", default: "application_received", null: false
     t.virtual "reference", type: :integer, as: "((submitted_application ->> 'reference'::text))::integer", stored: true
@@ -38,7 +39,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
     t.datetime "soft_deleted_at", precision: nil
     t.integer "maat_id"
     t.datetime "hard_deleted_at", precision: nil
-    t.virtual "searchable_text", type: :tsvector, as: "((to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,first_name}'::text[])) || to_tsvector('english'::regconfig, (submitted_application #>> '{client_details,applicant,last_name}'::text[]))) || to_tsvector('english'::regconfig, (submitted_application ->> 'reference'::text)))", stored: true
     t.tsvector "stored_searchable_text"
     t.index ["applicant_last_name", "applicant_first_name"], name: "index_crime_applications_on_applicant_name"
     t.index ["application_type"], name: "index_crime_applications_on_application_type"
@@ -91,6 +91,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "correlation_id"
+  end
+
+  create_table "deletion_log_snapshots", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "count"
+    t.datetime "recorded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "event_store_events", force: :cascade do |t|
