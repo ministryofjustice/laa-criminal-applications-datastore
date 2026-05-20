@@ -1,2 +1,0 @@
-class DeletionLogSnapshot < ApplicationRecord
-end

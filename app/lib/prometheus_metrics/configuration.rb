@@ -5,7 +5,7 @@ module PrometheusMetrics
 
     DEFAULT_PREFIX = 'ruby_'.freeze
     CUSTOM_COLLECTORS = [
-      PrometheusMetrics::Collectors::DeletionLogCollector,
+      # Add custom collector classes here
     ].freeze
 
     # :nocov:

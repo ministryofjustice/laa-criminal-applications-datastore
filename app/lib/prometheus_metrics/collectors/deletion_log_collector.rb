@@ -1,7 +1,7 @@
 module PrometheusMetrics
   module Collectors
     class DeletionLogCollector < PrometheusExporter::Server::TypeCollector
-      GAUGE_NAME = 'deletion_log_total'.freeze
+      GAUGE_NAME = 'deletion_log_count'.freeze
       GAUGE_HELP = 'Total number of deletion log entries'.freeze
 
       def initialize

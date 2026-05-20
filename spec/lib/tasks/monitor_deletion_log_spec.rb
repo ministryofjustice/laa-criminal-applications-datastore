@@ -27,42 +27,14 @@ RSpec.describe 'monitor_deletion_log' do # rubocop:disable RSpec/DescribeClass
     end
   end
 
-  describe 'when there is no previous snapshot' do
-    before { create_deletion_entries(1) }
-
-    it 'creates a snapshot with the current count' do
-      expect { run_task }.to change(DeletionLogSnapshot, :count).by(1)
-    end
-
-    it 'logs an initialisation message' do
-      expect { run_task }.to output(/Deletion log monitor initialised/).to_stdout_from_any_process
-    end
-
-    it 'reports the metric to Prometheus' do
-      run_task
-      expect(PrometheusMetrics::DeletionLogReporter).to have_received(:report).with(1)
-    end
+  it 'reports the current count to Prometheus' do
+    create_deletion_entries(3)
+    run_task
+    expect(PrometheusMetrics::DeletionLogReporter).to have_received(:report).with(3)
   end
 
-  describe 'when the count has increased' do
-    before do
-      DeletionLogSnapshot.create!(count: 5, recorded_at: 1.day.ago)
-      create_deletion_entries(7)
-    end
-
-    it 'logs a positive daily report' do
-      expect { run_task }.to output(/\+2 since last check/).to_stdout_from_any_process
-    end
-  end
-
-  describe 'when the count has decreased' do
-    before do
-      DeletionLogSnapshot.create!(count: 10, recorded_at: 1.day.ago)
-      create_deletion_entries(8)
-    end
-
-    it 'logs an error' do
-      expect { run_task }.to output(/Deletion log has DECREASED/).to_stdout_from_any_process
-    end
+  it 'logs the count' do
+    create_deletion_entries(2)
+    expect { run_task }.to output(/Deletion log count reported to Prometheus: 2/).to_stdout_from_any_process
   end
 end
