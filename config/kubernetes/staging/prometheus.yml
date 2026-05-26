@@ -71,6 +71,29 @@ spec:
         message: Dead letter queue `{{ $labels.queue_name }}` has {{ $value }} message(s).
         dashboard_url: https://grafana.live.cloud-platform.service.justice.gov.uk/d/AWSSQS000/aws-sqs?orgId=1&from=now-24h&to=now&var-datasource=Cloudwatch&var-region=default&var-queue={{ $labels.queue_name }}
 
+    # TESTING: revert expr offset to '1d' and for to '5m'
+    - alert: CrimeApplyDatastore-DeletionLogDecreased
+      expr: >-
+        ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"}
+        < ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"} offset 15m
+      for: 1m
+      labels:
+        severity: laa-crime-apply-alerts
+      annotations:
+        message: >-
+          Deletion log count has decreased. Investigate immediately.
+
+    # TESTING: revert for to '48h'
+    - alert: CrimeApplyDatastore-DeletionLogMonitorMissing
+      expr: >-
+        absent(ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"})
+      for: 5m
+      labels:
+        severity: laa-crime-apply-alerts
+      annotations:
+        message: >-
+          Deletion log metric has not been reported for 48h. The monitor_deletion_log job may not be running.
+
     - alert: CrimeApplyDatastore-PrometheusExporterFailure
       expr: >-
         ruby_collector_working{namespace=~"^laa-criminal-applications-datastore.*"} != 1
