@@ -416,9 +416,10 @@ RSpec.describe Deleting::Deletable do
     context 'when not soft deletable' do
       before do
         deletable.instance_variable_set(:@soft_deleted_at, nil)
+        deletable.instance_variable_set(:@deletion_at, 1.day.from_now)
       end
 
-      it 'raises CannotHardDelete error' do
+      it 'raises CannotSoftDelete error' do
         expect { deletable.soft_delete(reason: reason, deleted_by: 'system') }
           .to raise_error(described_class::CannotSoftDelete)
       end
@@ -515,17 +516,8 @@ RSpec.describe Deleting::Deletable do
       deletable.instance_variable_set(:@maat_ids, nil)
     end
 
-    context 'when not returned' do
-      before { deletable.instance_variable_set(:@state, :submitted) }
-
-      it 'returns false' do
-        expect(deletable.soft_deletable?).to be false
-      end
-    end
-
-    context 'when returned but has active drafts' do
+    context 'when has active drafts' do
       before do
-        deletable.instance_variable_set(:@state, :returned)
         deletable.instance_variable_set(:@active_drafts, 1)
         deletable.instance_variable_set(:@deletion_at, 1.day.ago)
       end
@@ -535,7 +527,26 @@ RSpec.describe Deleting::Deletable do
       end
     end
 
-    context 'when returned, no active drafts, deletion_at passed' do
+    context 'when not returned' do
+      before { deletable.instance_variable_set(:@state, :submitted) }
+
+      it 'returns false' do
+        expect(deletable.soft_deletable?).to be false
+      end
+    end
+
+    context 'when not refused' do
+      before do
+        deletable.instance_variable_set(:@state, :completed)
+        deletable.instance_variable_set(:@overall_decisions, { 9_874_622 => 'granted' })
+      end
+
+      it 'returns false' do
+        expect(deletable.soft_deletable?).to be false
+      end
+    end
+
+    context 'when has no active drafts, deletion_at passed' do
       before do
         deletable.instance_variable_set(:@state, :returned)
         deletable.instance_variable_set(:@active_drafts, 0)

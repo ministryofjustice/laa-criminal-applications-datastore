@@ -8,7 +8,8 @@ module Deleting
     class CannotHardDelete < StandardError; end
     class CannotSoftDelete < StandardError; end
 
-    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at, :archived_at, :last_significant_event_at
+    attr_reader :business_reference, :deletion_at, :state, :soft_deleted_at, :archived_at, :last_significant_event_at,
+                :decision_ids, :maat_ids
 
     STATES = [:submitted, :decided, :completed, :returned, :soft_deleted, :hard_deleted, :exempt_from_deletion].freeze
     REVIEW_STATUS_TO_STATE = {
@@ -58,12 +59,10 @@ module Deleting
       @last_significant_event_at = timestamp(event)
     end
 
-    # :nocov:
     on Deciding::MaatRecordUpdated do |event|
       @deletion_at = timestamp(event) + retention_period
       @last_significant_event_at = timestamp(event)
     end
-    # :nocov:
 
     on Deciding::Decided do |event|
       @decision_ids << event.data.fetch(:decision_id)
@@ -73,13 +72,11 @@ module Deleting
       @last_significant_event_at = timestamp(event)
     end
 
-    # :nocov:
     on Deciding::DecisionUpdated do |event|
       @overall_decisions[event.data.fetch(:decision_id)] = event.data.fetch(:overall_decision)
       @deletion_at = timestamp(event) + retention_period
       @last_significant_event_at = timestamp(event)
     end
-    # :nocov:
 
     on Reviewing::SentBack do |event|
       @state = :returned
@@ -190,8 +187,33 @@ module Deleting
       )
     end
 
+    def update_maat_record(decision_id:, maat_record:, overall_decision:, updated_at:) # rubocop:disable Metrics/MethodLength
+      apply Deciding::MaatRecordUpdated.new(
+        data: {
+          business_reference: @business_reference,
+          maat_record: maat_record.as_json
+        },
+        metadata: {
+          timestamp: updated_at
+        }
+      )
+
+      return if overall_decision == @overall_decisions[decision_id]
+
+      apply Deciding::DecisionUpdated.new(
+        data: {
+          business_reference: @business_reference,
+          decision_id: decision_id,
+          overall_decision: overall_decision
+        },
+        metadata: {
+          timestamp: updated_at
+        }
+      )
+    end
+
     def soft_deletable?
-      return false unless returned?
+      return false unless returned? || refused?
       return false if active_drafts?
 
       @deletion_at <= Time.zone.now
@@ -199,6 +221,13 @@ module Deleting
 
     def hard_deletable?
       return false if @soft_deleted_at.nil?
+
+      @deletion_at <= Time.zone.now
+    end
+
+    def maat_check_required?
+      return false unless completed_without_decision? || refused? || granted?
+      return false if active_drafts? || hard_deletable?
 
       @deletion_at <= Time.zone.now
     end
@@ -220,9 +249,9 @@ module Deleting
     def retention_period
       return 2.years if never_submitted?
       return 2.years if returned?
-      return 3.years if completed_without_decision?
-      return 3.years if refused?
       return 7.years if granted?
+      return 3.years if refused?
+      return 3.years if completed_without_decision?
 
       2.years
     end

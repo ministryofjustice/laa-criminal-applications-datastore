@@ -23,7 +23,7 @@ module Deciding
     # :nocov:
     def self.from_application(crime_application:, maat_record:)
       data = super(crime_application).data
-      data[:maat_record] = maat_record.to_h
+      data[:maat_record] = maat_record.as_json
       new(data:)
     end
     # :nocov:
