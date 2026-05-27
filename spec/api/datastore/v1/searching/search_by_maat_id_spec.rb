@@ -53,7 +53,6 @@ RSpec.describe 'search by maat_id' do
   end
 
   before do
-    allow(ENV).to receive(:[]).with('USE_STORED_SEARCHABLE_TEXT').and_return('true')
     app_with_legacy_maat_id
     app_with_decision_maat_id
     app_with_no_maat_id
