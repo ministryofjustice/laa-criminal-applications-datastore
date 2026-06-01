@@ -16,13 +16,12 @@ module PrometheusMetrics
         'deletion_log'
       end
 
-      def collect
-        [@deletion_log_gauge]
+      def collect(obj)
+        @deletion_log_gauge.observe(obj['count'])
       end
 
-      def process(str)
-        obj = JSON.parse(str)
-        @deletion_log_gauge.observe(obj['count'])
+      def metrics
+        [@deletion_log_gauge]
       end
     end
   end

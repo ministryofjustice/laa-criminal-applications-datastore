@@ -9,19 +9,19 @@ RSpec.describe PrometheusMetrics::Collectors::DeletionLogCollector do
     end
   end
 
-  describe '#process' do
-    it 'observes the count from the JSON payload' do
-      collector.process({ 'count' => 42 }.to_json)
+  describe '#collect' do
+    it 'observes the count from the parsed object' do
+      collector.collect({ 'count' => 42 })
 
-      metrics = collector.collect
+      metrics = collector.metrics
       expect(metrics.first.metric_text).to include('42')
     end
   end
 
-  describe '#collect' do
+  describe '#metrics' do
     it 'returns an array containing the gauge' do
-      expect(collector.collect).to be_an(Array)
-      expect(collector.collect.size).to eq(1)
+      expect(collector.metrics).to be_an(Array)
+      expect(collector.metrics.size).to eq(1)
     end
   end
 end
