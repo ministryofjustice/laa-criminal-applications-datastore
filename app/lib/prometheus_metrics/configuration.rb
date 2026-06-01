@@ -69,6 +69,10 @@ module PrometheusMetrics
       # NOTE: if running Puma in cluster mode, the following
       # instrumentation will need to be changed
       PrometheusExporter::Instrumentation::ActiveRecord.start
+
+      # Report deletion log count every 60 seconds so the metric is always available
+      require_relative 'deletion_log_reporter'
+      DeletionLogReporter.start
     end
     # :nocov:
   end
