@@ -75,15 +75,16 @@ spec:
     - alert: CrimeApplyDatastore-DeletionLogDecreased
       expr: >-
         ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"}
-        < ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"} offset 15m
+        < ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"} offset 5m
       for: 1m
       labels:
         severity: laa-crime-apply-alerts
+        exported_namespace: '{{ $labels.exported_namespace }}'
       annotations:
         message: >-
-          Deletion log count has decreased. Investigate immediately.
+          Deletion log count has decreased in `{{ $labels.exported_namespace }}`. Investigate immediately.
 
-    # TESTING: revert for to '48h'
+    # TESTING: revert for to '1h'
     - alert: CrimeApplyDatastore-DeletionLogMonitorMissing
       expr: >-
         absent(ruby_deletion_log_count{namespace=~"^laa-criminal-applications-datastore.*"})
@@ -92,7 +93,7 @@ spec:
         severity: laa-crime-apply-alerts
       annotations:
         message: >-
-          Deletion log metric has not been reported for 48h. The monitor_deletion_log job may not be running.
+          Deletion log metric has not been reported for over 1h. The deletion log reporter may not be running. Check both staging and production.
 
     - alert: CrimeApplyDatastore-PrometheusExporterFailure
       expr: >-
