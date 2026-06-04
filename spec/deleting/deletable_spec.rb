@@ -535,7 +535,7 @@ RSpec.describe Deleting::Deletable do
       end
     end
 
-    context 'when not refused' do
+    context 'when granted' do
       before do
         deletable.instance_variable_set(:@state, :completed)
         deletable.instance_variable_set(:@overall_decisions, { 9_874_622 => 'granted' })
