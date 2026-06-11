@@ -46,5 +46,7 @@ module LaaCriminalApplicationsDatastore
     config.x.maat_api.client_id = ENV.fetch('MAAT_API_CLIENT_ID', nil)
     config.x.maat_api.client_secret = ENV.fetch('MAAT_API_CLIENT_SECRET', nil)
     config.x.maat_api.api_url = ENV.fetch('MAAT_API_API_URL', nil)
+
+    config.x.automated_deletion_test_mode = ENV.fetch('AUTOMATED_DELETION_TEST_MODE', 'false')
   end
 end
