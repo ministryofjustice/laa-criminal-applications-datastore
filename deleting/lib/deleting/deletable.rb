@@ -250,8 +250,8 @@ module Deleting
       return 2.years if never_submitted?
       return 2.years if returned?
       return 7.years if granted?
-      return 3.years if refused?
-      return 3.years if completed_without_decision?
+      return refused_retention_period if refused?
+      return no_decision_retention_period if completed_without_decision?
 
       2.years
     end
@@ -272,6 +272,20 @@ module Deleting
       return false if @overall_decisions.empty?
 
       @overall_decisions.values.any? { |od| od.starts_with?('granted') }
+    end
+
+    # TODO: remove after 3-year retention QA
+    def refused_retention_period
+      return 10.minutes if Rails.configuration.x.automated_deletion_test_mode == 'true'
+
+      3.years
+    end
+
+    # TODO: remove after 3-year retention QA
+    def no_decision_retention_period
+      return 10.minutes if Rails.configuration.x.automated_deletion_test_mode == 'true'
+
+      3.years
     end
   end
 end

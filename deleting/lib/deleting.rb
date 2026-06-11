@@ -1,5 +1,5 @@
 module Deleting
-  SOFT_DELETION_PERIOD = 30.days
+  SOFT_DELETION_PERIOD = Rails.configuration.x.automated_deletion_test_mode == 'true' ? 10.minutes : 30.days
 
   class Event < RailsEventStore::Event; end
   class SoftDeleted < Event; end
