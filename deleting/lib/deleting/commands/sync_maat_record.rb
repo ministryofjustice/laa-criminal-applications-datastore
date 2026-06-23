@@ -15,7 +15,7 @@ module Deleting
           # They may have a maat_id provided by the Deleting::ApplicationMigrated event
           # Otherwise we need to fetch the record by USN
           if deletable.decision_ids.present?
-            deletable.decision_ids.each { |id| sync_by_maat_id(deletable, maat_client, id) }
+            sync_by_decision_ids(deletable, maat_client)
           elsif deletable.maat_ids.present?
             deletable.maat_ids.each { |id| sync_by_maat_id(deletable, maat_client, id) }
           else
@@ -26,11 +26,40 @@ module Deleting
 
       private
 
-      def sync_by_maat_id(deletable, maat_client, decision_id)
-        maat_record = maat_client.by_maat_id!(decision_id)
-        process(deletable, decision_id:, maat_record:)
+      def sync_by_maat_id(deletable, maat_client, maat_id)
+        maat_record = maat_client.by_maat_id!(maat_id)
+        process(deletable, decision_id: maat_id, maat_record: maat_record)
       rescue MAAT::RecordNotFound => e
         Rails.error.report(e)
+      end
+
+      def sync_by_decision_ids(deletable, maat_client)
+        deletable.decision_ids.each do |decision_id|
+          decision = Decision.find_by(id: decision_id)
+          maat_id = resolve_maat_id(decision, decision_id)
+          next unless maat_id
+
+          maat_record = maat_client.by_maat_id!(maat_id)
+          process(deletable, decision_id:, maat_record:)
+        rescue MAAT::RecordNotFound => e
+          Rails.error.report(e)
+        end
+      end
+
+      def resolve_maat_id(decision, decision_id)
+        unless decision
+          Rails.logger.warn("SyncMAATRecord: Decision not found for id #{decision_id} " \
+                            "(reference: #{@business_reference})")
+          return nil
+        end
+
+        unless decision.maat_id
+          Rails.logger.info("SyncMAATRecord: Decision #{decision_id} has no maat_id, skipping " \
+                            "(reference: #{@business_reference})")
+          return nil
+        end
+
+        decision.maat_id
       end
 
       def sync_by_usn(deletable, maat_client)

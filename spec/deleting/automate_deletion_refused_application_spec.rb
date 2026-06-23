@@ -139,10 +139,13 @@ RSpec.describe Deleting::AutomateDeletion do
         DeletableEntity.create!(business_reference: business_reference,
                                 review_deletion_at: Time.zone.local(2022, 9, 4))
       end
-      let(:decision_id) { 9_874_622 }
+      let(:decision_id) { SecureRandom.uuid }
+      let(:decision_maat_id) { 9_874_622 }
       let(:maat_record) { nil }
 
       before do
+        Decision.create!(id: decision_id, crime_application: crime_application, maat_id: decision_maat_id,
+                         funding_decision: 'refused')
         allow(Events::SoftDeleted).to receive(:new)
           .with(reference: crime_application.reference, soft_deleted_at: current_date)
           .and_return(soft_deleted_event)
@@ -171,7 +174,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'without new updates in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'FAIL',
             ioj_assessor_name: 'Jo Bloggs',
@@ -184,7 +187,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'does not publish a MaatRecordUpdated event' do
@@ -266,7 +269,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'with a granted IOJ appeal and granted funding decision in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'FAIL',
             ioj_assessor_name: 'Jo Bloggs',
@@ -282,7 +285,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'publishes a MaatRecordUpdated event' do
@@ -328,7 +331,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'with a refused IOJ appeal and unchanged funding decision in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'FAIL',
             ioj_assessor_name: 'Jo Bloggs',
@@ -344,7 +347,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'publishes a MaatRecordUpdated event' do
@@ -396,10 +399,13 @@ RSpec.describe Deleting::AutomateDeletion do
         DeletableEntity.create!(business_reference: business_reference,
                                 review_deletion_at: Time.zone.local(2022, 9, 4))
       end
-      let(:decision_id) { 9_874_622 }
+      let(:decision_id) { SecureRandom.uuid }
+      let(:decision_maat_id) { 9_874_622 }
       let(:maat_record) { nil }
 
       before do
+        Decision.create!(id: decision_id, crime_application: crime_application, maat_id: decision_maat_id,
+                         funding_decision: 'refused')
         allow(Events::SoftDeleted).to receive(:new)
           .with(reference: crime_application.reference, soft_deleted_at: current_date)
           .and_return(soft_deleted_event)
@@ -428,7 +434,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'without new updates in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'PASS',
             ioj_assessor_name: 'Jo Bloggs',
@@ -441,7 +447,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'does not publish a MaatRecordUpdated event' do
@@ -523,7 +529,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'with a granted CC decision and passed means in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'PASS',
             ioj_assessor_name: 'Jo Bloggs',
@@ -538,7 +544,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'publishes a MaatRecordUpdated event' do
@@ -584,7 +590,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'with a passed means reassessment in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'PASS',
             ioj_assessor_name: 'Jo Bloggs',
@@ -599,7 +605,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'publishes a MaatRecordUpdated event' do
@@ -645,7 +651,7 @@ RSpec.describe Deleting::AutomateDeletion do
       context 'with a refused means reassessment in MAAT' do
         let(:maat_record) do
           MAAT::Record.new(
-            maat_ref: decision_id,
+            maat_ref: decision_maat_id,
             usn: business_reference,
             ioj_result: 'PASS',
             ioj_assessor_name: 'Jo Bloggs',
@@ -660,7 +666,7 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'calls MAAT' do
-          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_id).once
+          expect(maat_get_record).to have_received(:by_maat_id!).with(decision_maat_id).once
         end
 
         it 'publishes a MaatRecordUpdated event' do
