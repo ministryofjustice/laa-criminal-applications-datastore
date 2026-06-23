@@ -64,4 +64,74 @@ RSpec.describe Deleting::Commands::SyncMAATRecord do
       expect(events_in_stream.of_type([Deciding::DecisionUpdated]).count).to eq(0)
     end
   end
+
+  context 'when the application has maat_ids' do
+    let(:events) do
+      [
+        Deleting::ApplicationMigrated, Time.zone.local(2022, 9, 4),
+        {
+          entity_id: entity_id,
+          entity_type: entity_type,
+          business_reference: business_reference,
+          maat_id: 6_563_959,
+          decision_id: nil,
+          overall_decision: nil,
+          submitted_at: Time.zone.local(2022, 9, 1),
+          returned_at: nil,
+          reviewed_at: Time.zone.local(2022, 9, 4),
+          last_updated_at: Time.zone.local(2022, 9, 4),
+          review_status: 'assessment_completed'
+        }
+      ]
+    end
+
+    it 'calls the MAAT API with the numeric maat_id' do
+      allow(maat_get_record).to receive(:by_maat_id!).and_raise(MAAT::RecordNotFound)
+      allow(Rails.error).to receive(:report)
+
+      sync_maat_record.call
+
+      expect(maat_get_record).to have_received(:by_maat_id!).with(6_563_959)
+    end
+  end
+
+  context 'when the application has decision_ids but no maat_ids' do
+    let(:decision) do
+      Decision.create!(crime_application: crime_application, maat_id: 7_654_321, funding_decision: 'refused')
+    end
+
+    let(:events) do
+      [
+        Applying::Submitted, Time.zone.local(2022, 9, 1),
+        {
+          entity_id:,
+          entity_type:,
+          business_reference:
+        },
+        Deciding::Decided, Time.zone.local(2022, 9, 4),
+        {
+          entity_id: entity_id,
+          entity_type: entity_type,
+          business_reference: business_reference,
+          decision_id: decision.id,
+          overall_decision: 'refused'
+        },
+        Reviewing::Completed, Time.zone.local(2022, 9, 4),
+        {
+          entity_id:,
+          entity_type:,
+          business_reference:
+        }
+      ]
+    end
+
+    it 'looks up the maat_id from the Decision record and calls the MAAT API' do
+      allow(maat_get_record).to receive(:by_maat_id!).and_raise(MAAT::RecordNotFound)
+      allow(Rails.error).to receive(:report)
+
+      sync_maat_record.call
+
+      expect(maat_get_record).to have_received(:by_maat_id!).with(7_654_321)
+    end
+  end
 end
