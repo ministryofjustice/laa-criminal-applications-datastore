@@ -7,9 +7,9 @@ spec:
   schedule: "0 0 * * *" # daily at midnight
   timeZone: "Europe/London"
   concurrencyPolicy: Forbid
+  suspend: true
   jobTemplate:
     spec:
-      suspend: true
       template:
         metadata:
           labels:
