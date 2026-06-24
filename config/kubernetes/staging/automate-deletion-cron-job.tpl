@@ -9,6 +9,7 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      suspend: true
       template:
         metadata:
           labels:
