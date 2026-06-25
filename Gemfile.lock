@@ -422,7 +422,7 @@ GEM
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    stackprof (0.2.26)
+    stackprof (0.2.28)
     stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
