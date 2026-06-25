@@ -12,7 +12,7 @@ gem 'grape-entity'
 gem 'grape_logging'
 gem 'grape-swagger'
 gem 'kaminari-activerecord'
-gem 'rails', '~> 7.2'
+gem 'rails', '~> 8.1'
 
 gem 'oauth2'
 
