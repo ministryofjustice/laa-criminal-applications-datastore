@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version').chomp
 
-gem 'pg', '~> 1.5.6'
+gem 'pg', '~> 1.6.3'
 gem 'puma'
 
 gem 'dry-struct'

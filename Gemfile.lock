@@ -275,7 +275,7 @@ GEM
     parser (3.3.7.2)
       ast (~> 2.4.1)
       racc
-    pg (1.5.6)
+    pg (1.6.3)
     pp (0.6.4)
       prettyprint
     prettyprint (0.2.0)
@@ -469,7 +469,7 @@ DEPENDENCIES
   moj-simple-jwt-auth (= 0.1.0)
   oauth2
   ostruct (~> 0.6.3)
-  pg (~> 1.5.6)
+  pg (~> 1.6.3)
   prometheus_exporter
   pry
   puma
