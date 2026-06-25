@@ -55,7 +55,7 @@ group :test do
   gem 'webmock', '>= 3.23.1'
 end
 
-gem 'ostruct', '~> 0.6.1'
+gem 'ostruct', '~> 0.6.3'
 
 gem 'benchmark', '~> 0.5.0'
 

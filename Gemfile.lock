@@ -270,7 +270,7 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0, >= 2.0.3)
       version_gem (~> 1.1, >= 1.1.9)
-    ostruct (0.6.1)
+    ostruct (0.6.3)
     parallel (1.26.3)
     parser (3.3.7.2)
       ast (~> 2.4.1)
@@ -467,7 +467,7 @@ DEPENDENCIES
   laa-criminal-legal-aid-schemas!
   moj-simple-jwt-auth (= 0.1.0)
   oauth2
-  ostruct (~> 0.6.1)
+  ostruct (~> 0.6.3)
   pg (~> 1.5.6)
   prometheus_exporter
   pry
