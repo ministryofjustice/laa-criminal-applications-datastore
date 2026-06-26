@@ -1,5 +1,5 @@
 module Applying
-  class Event < RailsEventStore::Event
+  class Event < RubyEventStore::Event
     def self.from_application(crime_application)
       new(
         data: {

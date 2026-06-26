@@ -17,8 +17,6 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
   let(:soft_deleted_event) { instance_double(Events::SoftDeleted, publish: true) }
-  let(:hard_delete_submitted_applications) { instance_double(Deleting::Handlers::HardDeleteSubmittedApplications) }
-  let(:hard_delete_documents) { instance_double(Deleting::Handlers::HardDeleteDocuments) }
   let(:maat_get_record) { instance_double(MAAT::GetRecord) }
 
   before do
@@ -99,14 +97,12 @@ RSpec.describe Deleting::AutomateDeletion do
         allow(Events::SoftDeleted).to receive(:new)
           .with(reference: crime_application.reference, soft_deleted_at: current_date)
           .and_return(soft_deleted_event)
-        allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new) {
-          hard_delete_submitted_applications
+        allow_any_instance_of(Deleting::Handlers::HardDeleteDocuments).to receive(:call) { |_, event|
+          @hard_delete_documents_event = event
         }
-        allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new) {
-          hard_delete_documents
+        allow_any_instance_of(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:call) { |_, event|
+          @hard_delete_submitted_applications_event = event
         }
-        allow(hard_delete_documents).to receive(:call)
-        allow(hard_delete_submitted_applications).to receive(:call)
         allow(MAAT::GetRecord).to receive(:new).and_return(maat_get_record)
         allow(maat_get_record).to receive(:by_maat_id!) do
           raise MAAT::RecordNotFound if maat_record.nil?
@@ -257,15 +253,12 @@ RSpec.describe Deleting::AutomateDeletion do
           end
 
           it 'deletion of documents occurs' do
-            expect(hard_delete_documents).to have_received(:call).with(
-              events_in_stream.of_type([Deleting::HardDeleted]).first
-            )
+            expect(@hard_delete_documents_event).to eq(events_in_stream.of_type([Deleting::HardDeleted]).first) # rubocop:disable RSpec/InstanceVariable
           end
 
           it 'deletion of submitted applications occurs' do
-            expect(hard_delete_submitted_applications).to have_received(:call).with(
-              events_in_stream.of_type([Deleting::HardDeleted]).first
-            )
+            expect(@hard_delete_submitted_applications_event) # rubocop:disable RSpec/InstanceVariable
+              .to eq(events_in_stream.of_type([Deleting::HardDeleted]).first)
           end
 
           it 'removes deletable_entities record' do
@@ -380,14 +373,8 @@ RSpec.describe Deleting::AutomateDeletion do
         allow(Events::SoftDeleted).to receive(:new)
           .with(reference: crime_application.reference, soft_deleted_at: current_date)
           .and_return(soft_deleted_event)
-        allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new) {
-          hard_delete_submitted_applications
-        }
-        allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new) {
-          hard_delete_documents
-        }
-        allow(hard_delete_documents).to receive(:call)
-        allow(hard_delete_submitted_applications).to receive(:call)
+        allow_any_instance_of(Deleting::Handlers::HardDeleteDocuments).to receive(:call)
+        allow_any_instance_of(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:call)
         allow(MAAT::GetRecord).to receive(:new).and_return(maat_get_record)
         allow(maat_get_record).to receive(:by_usn!).with(business_reference.to_s).and_return(maat_record)
         allow(maat_get_record).to receive(:by_maat_id!)
