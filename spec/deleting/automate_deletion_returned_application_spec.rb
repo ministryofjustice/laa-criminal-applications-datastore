@@ -16,27 +16,21 @@ RSpec.describe Deleting::AutomateDeletion do
   let(:maat_id) { '987654321' }
   let(:event_stream) { "Deleting$#{business_reference}" }
   let(:current_date) { Time.zone.local(2025, 9, 6) }
-  let(:hard_delete_submitted_applications) { instance_double(Deleting::Handlers::HardDeleteSubmittedApplications) }
-  let(:hard_delete_documents) { instance_double(Deleting::Handlers::HardDeleteDocuments) }
   let(:soft_deleted_event) { instance_double(Events::SoftDeleted, publish: true) }
 
   before do
-    allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new) {
-      hard_delete_submitted_applications
+    allow_any_instance_of(Deleting::Handlers::HardDeleteDocuments).to receive(:call) { |_, event|
+      @hard_delete_documents_event = event
     }
-
-    allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new) {
-      hard_delete_documents
+    allow_any_instance_of(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:call) { |_, event|
+      @hard_delete_submitted_applications_event = event
     }
-
-    allow(hard_delete_documents).to receive(:call)
-    allow(hard_delete_submitted_applications).to receive(:call)
 
     travel_to current_date
   end
 
   describe 'Returned application' do
-    context 'when sent back 2 years ago and not injected into MAAT' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+    context 'when sent back 2 years ago and not injected into MAAT' do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },
@@ -86,7 +80,7 @@ RSpec.describe Deleting::AutomateDeletion do
         expect(soft_deleted_event).to have_received(:publish)
       end
 
-      context 'when soft deletion period has passed' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+      context 'when soft deletion period has passed' do
         before do
           travel_to current_date + Deleting::SOFT_DELETION_PERIOD
           automate_deletion.call
@@ -109,15 +103,12 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'deletion of documents occurs' do
-          expect(hard_delete_documents).to have_received(:call).with(
-            events_in_stream.of_type([Deleting::HardDeleted]).first
-          )
+          expect(@hard_delete_documents_event).to eq(events_in_stream.of_type([Deleting::HardDeleted]).first) # rubocop:disable RSpec/InstanceVariable
         end
 
         it 'deletion of submitted applications occurs' do
-          expect(hard_delete_submitted_applications).to have_received(:call).with(
-            events_in_stream.of_type([Deleting::HardDeleted]).first
-          )
+          expect(@hard_delete_submitted_applications_event) # rubocop:disable RSpec/InstanceVariable
+            .to eq(events_in_stream.of_type([Deleting::HardDeleted]).first)
         end
 
         it 'removes deletable_entities record' do
@@ -228,15 +219,12 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'deletion of documents occurs' do
-          expect(hard_delete_documents).to have_received(:call).with(
-            events_in_stream.of_type([Deleting::HardDeleted]).first
-          )
+          expect(@hard_delete_documents_event).to eq(events_in_stream.of_type([Deleting::HardDeleted]).first) # rubocop:disable RSpec/InstanceVariable
         end
 
         it 'deletion of submitted applications occurs' do
-          expect(hard_delete_submitted_applications).to have_received(:call).with(
-            events_in_stream.of_type([Deleting::HardDeleted]).first
-          )
+          expect(@hard_delete_submitted_applications_event) # rubocop:disable RSpec/InstanceVariable
+            .to eq(events_in_stream.of_type([Deleting::HardDeleted]).first)
         end
 
         it 'removes deletable_entities record' do
@@ -332,15 +320,12 @@ RSpec.describe Deleting::AutomateDeletion do
         end
 
         it 'deletion of documents occurs' do
-          expect(hard_delete_documents).to have_received(:call).with(
-            events_in_stream.of_type([Deleting::HardDeleted]).first
-          )
+          expect(@hard_delete_documents_event).to eq(events_in_stream.of_type([Deleting::HardDeleted]).first) # rubocop:disable RSpec/InstanceVariable
         end
 
         it 'deletion of submitted applications occurs' do
-          expect(hard_delete_submitted_applications).to have_received(:call).with(
-            events_in_stream.of_type([Deleting::HardDeleted]).first
-          )
+          expect(@hard_delete_submitted_applications_event) # rubocop:disable RSpec/InstanceVariable
+            .to eq(events_in_stream.of_type([Deleting::HardDeleted]).first)
         end
 
         it 'removes deletable_entities record' do
@@ -349,7 +334,7 @@ RSpec.describe Deleting::AutomateDeletion do
       end
     end
 
-    context 'when sent back 2 years ago and has active drafts' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+    context 'when sent back 2 years ago and has active drafts' do
       let(:events) do
         [
           Applying::DraftCreated, Time.zone.local(2023, 8, 31), { entity_id:, entity_type:, business_reference: },

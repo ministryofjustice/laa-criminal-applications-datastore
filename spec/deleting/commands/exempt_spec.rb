@@ -96,8 +96,8 @@ RSpec.describe Deleting::Commands::Exempt do
         }), stream_name: event_stream)
       end
 
-      allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new)
-      allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new)
+      allow_any_instance_of(Deleting::Handlers::HardDeleteDocuments).to receive(:call)
+      allow_any_instance_of(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:call)
 
       event_store.publish(Deleting::HardDeleted.new(data:
         {
