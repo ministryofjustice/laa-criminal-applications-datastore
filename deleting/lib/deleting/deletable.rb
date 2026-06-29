@@ -276,14 +276,14 @@ module Deleting
 
     # TODO: remove after 3-year retention QA
     def refused_retention_period
-      return 10.minutes if Rails.configuration.x.automated_deletion_test_mode == 'true'
+      return 1.day if Rails.configuration.x.automated_deletion_test_mode == 'true'
 
       3.years
     end
 
     # TODO: remove after 3-year retention QA
     def no_decision_retention_period
-      return 10.minutes if Rails.configuration.x.automated_deletion_test_mode == 'true'
+      return 1.day if Rails.configuration.x.automated_deletion_test_mode == 'true'
 
       3.years
     end
