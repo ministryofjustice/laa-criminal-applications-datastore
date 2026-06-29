@@ -30,19 +30,14 @@ RSpec.describe 'cleanup_recreated_deletable_entities' do # rubocop:disable RSpec
     ]
   end
 
-  let(:hard_delete_documents) { instance_double(Deleting::Handlers::HardDeleteDocuments) }
-  let(:hard_delete_submitted_applications) { instance_double(Deleting::Handlers::HardDeleteSubmittedApplications) }
   let(:soft_deleted_event) { instance_double(Events::SoftDeleted, publish: true) }
 
   before do
     Rake::Task['cleanup_recreated_deletable_entities'].reenable
     stub_const('ENV', ENV.to_h.merge('DRY_RUN' => nil))
 
-    allow(Deleting::Handlers::HardDeleteDocuments).to receive(:new).and_return(hard_delete_documents)
-    allow(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:new)
-      .and_return(hard_delete_submitted_applications)
-    allow(hard_delete_documents).to receive(:call)
-    allow(hard_delete_submitted_applications).to receive(:call)
+    allow_any_instance_of(Deleting::Handlers::HardDeleteDocuments).to receive(:call)
+    allow_any_instance_of(Deleting::Handlers::HardDeleteSubmittedApplications).to receive(:call)
     allow(Events::SoftDeleted).to receive(:new).and_return(soft_deleted_event)
 
     travel_to current_date

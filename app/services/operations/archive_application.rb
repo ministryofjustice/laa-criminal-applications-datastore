@@ -19,6 +19,8 @@ module Operations
 
         Rails.configuration.event_store.publish(event)
       end
+
+      application
     end
     # rubocop:enable Metrics/AbcSize
 

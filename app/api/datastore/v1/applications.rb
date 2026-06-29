@@ -74,7 +74,8 @@ module Datastore
           resource :archive do
             route_setting :authorised_consumers, %w[crime-apply]
             put do
-              Operations::ArchiveApplication.new(application_id: params[:application_id]).call
+              app = Operations::ArchiveApplication.new(application_id: params[:application_id]).call
+              present app, with: Datastore::Entities::V1::CrimeApplication
             end
           end
         end
