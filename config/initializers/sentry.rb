@@ -21,7 +21,23 @@ Rails.application.config.to_prepare do
     )
 
     config.before_send = lambda do |event, _hint|
-      params_filter.filter(event.to_hash)
+      if event.request
+        event.request.data = params_filter.filter(event.request.data) if event.request.data
+        event.request.cookies = params_filter.filter(event.request.cookies) if event.request.cookies
+        event.request.headers&.delete('Authorization')
+        event.request.headers&.delete('HTTP_AUTHORIZATION')
+
+        if event.request.query_string.present?
+          parsed = Rack::Utils.parse_nested_query(event.request.query_string)
+          event.request.query_string = params_filter.filter(parsed).to_query
+        end
+      end
+
+      if event.user
+        event.user = params_filter.filter(event.user)
+      end
+
+      event
     end
   end
 end
