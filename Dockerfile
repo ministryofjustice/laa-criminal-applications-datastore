@@ -1,4 +1,4 @@
-FROM ruby:3.4.8-alpine3.23
+FROM ruby:4.0.5-alpine3.23
 MAINTAINER LAA Crime Apply Team
 
 RUN apk --no-cache add --virtual build-deps build-base postgresql17-dev yaml-dev git bash curl \
