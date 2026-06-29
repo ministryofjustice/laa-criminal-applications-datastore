@@ -147,7 +147,7 @@ RSpec.describe 'backfill_reference_history_events' do # rubocop:disable RSpec/De
     before do
       Rake::Task['publish_soft_deleted_sns_events'].reenable
       stub_const('ENV', ENV.to_h.merge('DRY_RUN' => nil, 'LIMIT' => nil, 'START_AFTER_ID' => nil))
-      allow(Deleting::Handlers::PublishSoftDeletedSns).to receive(:new).and_return(double(call: nil)) # rubocop:disable RSpec/VerifiedDoubles
+      allow_any_instance_of(Deleting::Handlers::PublishSoftDeletedSns).to receive(:call)
       soft_deleted_application
       event_store.publish(soft_deleted_event)
     end

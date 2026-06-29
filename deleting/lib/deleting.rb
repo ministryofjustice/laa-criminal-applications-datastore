@@ -1,7 +1,7 @@
 module Deleting
   SOFT_DELETION_PERIOD = Rails.configuration.x.automated_deletion_test_mode == 'true' ? 10.minutes : 30.days
 
-  class Event < RailsEventStore::Event; end
+  class Event < RubyEventStore::Event; end
   class SoftDeleted < Event; end
   class HardDeleted < Event; end
   class ExemptFromDeletion < Event; end
@@ -35,8 +35,8 @@ module Deleting
 
   class Configuration
     class << self
-      def call(event_store) # rubocop:disable Metrics/MethodLength
-        event_store.subscribe(Deleting::Handlers::LinkToStream, to:
+      def call(event_store) # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
+        event_store.subscribe(Deleting::Handlers::LinkToStream.new, to:
           [
             Applying::DraftCreated,
             Applying::DraftDeleted,
@@ -48,14 +48,14 @@ module Deleting
             Deleting::ApplicationMigrated,
             Deleting::Archived
           ])
-        event_store.subscribe(Deleting::Handlers::UpdateReadModel, to: EVENTS)
-        event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted, to: [Deleting::SoftDeleted])
-        event_store.subscribe(Deleting::Handlers::PublishSoftDeletedSns, to: [Deleting::SoftDeleted])
-        event_store.subscribe(Deleting::Handlers::PublishArchivedSns, to: [Deleting::Archived])
-        event_store.subscribe(Deleting::Handlers::ClearApplicationSoftDeleted, to: [Deleting::ExemptFromDeletion])
-        event_store.subscribe(Deleting::Handlers::DeleteUnsubmittedDeletableEntity, to: [Applying::DraftDeleted])
-        event_store.subscribe(Deleting::Handlers::HardDeleteDocuments, to: [Deleting::HardDeleted])
-        event_store.subscribe(Deleting::Handlers::HardDeleteSubmittedApplications, to: [Deleting::HardDeleted])
+        event_store.subscribe(Deleting::Handlers::UpdateReadModel.new, to: EVENTS)
+        event_store.subscribe(Deleting::Handlers::UpdateApplicationSoftDeleted.new, to: [Deleting::SoftDeleted])
+        event_store.subscribe(Deleting::Handlers::PublishSoftDeletedSns.new, to: [Deleting::SoftDeleted])
+        event_store.subscribe(Deleting::Handlers::PublishArchivedSns.new, to: [Deleting::Archived])
+        event_store.subscribe(Deleting::Handlers::ClearApplicationSoftDeleted.new, to: [Deleting::ExemptFromDeletion])
+        event_store.subscribe(Deleting::Handlers::DeleteUnsubmittedDeletableEntity.new, to: [Applying::DraftDeleted])
+        event_store.subscribe(Deleting::Handlers::HardDeleteDocuments.new, to: [Deleting::HardDeleted])
+        event_store.subscribe(Deleting::Handlers::HardDeleteSubmittedApplications.new, to: [Deleting::HardDeleted])
       end
     end
   end
