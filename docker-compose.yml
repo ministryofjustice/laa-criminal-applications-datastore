@@ -18,7 +18,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
 
   # Used to emulate AWS for local development
-  # Pinned to 4.4.0 as later versions require a paid license (LOCALSTACK_AUTH_TOKEN)
+  # Pinned to 4.4.0 as later versions require a paid license
   localstack:
     image: localstack/localstack:4.4.0
     ports:
