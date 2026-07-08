@@ -25,7 +25,7 @@ gem 'sentry-ruby'
 gem 'stackprof'
 
 # Datastore API authentication
-gem 'moj-simple-jwt-auth', '0.1.0'
+gem 'moj-simple-jwt-auth', '0.2.0'
 
 # AWS services
 gem 'aws-sdk-s3'

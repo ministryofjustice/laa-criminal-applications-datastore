@@ -239,7 +239,7 @@ GEM
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
-    moj-simple-jwt-auth (0.1.0)
+    moj-simple-jwt-auth (0.2.0)
       json
       jwt
     multi_json (1.15.0)
@@ -469,7 +469,7 @@ DEPENDENCIES
   grape_logging
   kaminari-activerecord
   laa-criminal-legal-aid-schemas!
-  moj-simple-jwt-auth (= 0.1.0)
+  moj-simple-jwt-auth (= 0.2.0)
   oauth2
   ostruct (~> 0.6.3)
   pg (~> 1.6.3)
