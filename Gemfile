@@ -40,7 +40,7 @@ group :development, :test do
   gem 'byebug'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   # Issue with freezing ENV with dotenv-rails v3 https://github.com/bkeepers/dotenv/issues/482
-  gem 'dotenv-rails', '~> 2.8.1'
+  gem 'dotenv-rails', '~> 3.2.0'
   gem 'pry'
   gem 'rspec-rails', '>= 7.1.1'
 end
