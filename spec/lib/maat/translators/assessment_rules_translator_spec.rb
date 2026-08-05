@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MAAT::Translators::AssessmentRulesTranslator do
-  expected_translations = [
+  it_behaves_like 'a MAAT decision value translator', [
     { case_type: 'INDICTABLE' }, 'crown_court',
     { case_type: 'SUMMARY ONLY' }, 'magistrates_court',
     { case_type: 'COMMITAL' }, 'committal_for_sentence',
@@ -11,6 +11,4 @@ RSpec.describe MAAT::Translators::AssessmentRulesTranslator do
     { case_type: 'EITHER WAY', cc_rep_decision: 'Granted' }, 'crown_court',
     { case_type: 'EITHER WAY', cc_rep_decision: 'nil' }, 'crown_court',
   ]
-
-  it_behaves_like 'a MAAT decision value translator', expected_translations
 end
