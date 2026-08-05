@@ -17,7 +17,7 @@ module Datastore
           expose :case_details, using: CaseDetails
           expose :client_details, using: ClientDetails
           expose :date_stamp
-          expose :ioj_bypass
+          expose :ioj_bypass?, as: :ioj_bypass
           expose :means_passport
           expose :provider_details
           expose :submitted_at, as: :declaration_signed_at
@@ -25,7 +25,7 @@ module Datastore
 
           private
 
-          def ioj_bypass
+          def ioj_bypass?
             interests_of_justice.blank?
           end
 

@@ -61,7 +61,7 @@ module Datastore
           submitted_value('id')
         end
 
-        def is_means_tested # rubocop:disable Naming/PredicateName
+        def means_tested?
           submitted_value('is_means_tested')
         end
 

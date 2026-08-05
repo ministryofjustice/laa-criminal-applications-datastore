@@ -11,7 +11,7 @@ module Redacting
       super(record.crime_application)
     end
 
-    def process!
+    def process! # rubocop:disable Naming/PredicateMethod
       Rules.pii_attributes.each_key do |path|
         path = path.split('.')
         details = original_payload.dig(*path)

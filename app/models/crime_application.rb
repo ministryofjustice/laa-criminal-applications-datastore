@@ -40,7 +40,7 @@ class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
     anonymised_application
   end
 
-  def destroy
+  def destroy # rubocop:disable Naming/PredicateMethod
     raise Errors::NotSoftDeleted unless soft_deleted?
     return false if hard_deleted?
 

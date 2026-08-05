@@ -20,11 +20,11 @@ module Datastore
           expose :home_address
           expose :correspondence_address
           expose :has_partner
-          expose :welsh_correspondence
+          expose :welsh_correspondence?, as: :welsh_correspondence
 
           private
 
-          def welsh_correspondence
+          def welsh_correspondence?
             object['preferred_correspondence_language'] == 'cy'
           end
         end

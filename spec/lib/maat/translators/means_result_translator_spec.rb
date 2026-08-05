@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MAAT::Translators::MeansResultTranslator do
-  expected_translations = [
+  it_behaves_like 'a MAAT decision value translator', [
     { means_result: 'FAIL' }, 'failed',
     { means_result: 'FAIL', case_type: 'COMMITAL' }, 'failed',
     { means_result: 'FAIL', case_type: 'APPEAL CC' }, 'failed',
@@ -13,6 +13,4 @@ RSpec.describe MAAT::Translators::MeansResultTranslator do
     { means_result: 'INEL' }, 'failed',
     { means_result: 'PASS' }, 'passed',
   ]
-
-  it_behaves_like 'a MAAT decision value translator', expected_translations
 end
