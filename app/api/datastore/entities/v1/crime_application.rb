@@ -4,7 +4,7 @@ module Datastore
       class CrimeApplication < BaseApplicationEntity
         expose :date_stamp
         expose :date_stamp_context
-        expose :is_means_tested
+        expose :means_tested?, as: :is_means_tested
 
         expose :ioj_passport
         expose :means_passport

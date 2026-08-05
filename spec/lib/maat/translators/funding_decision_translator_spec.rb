@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MAAT::Translators::FundingDecisionTranslator do
-  expected_translations = %w[
+  it_behaves_like 'a MAAT value translator', %w[
     PASS granted
     FAIL refused
     INEL refused
@@ -11,6 +11,4 @@ RSpec.describe MAAT::Translators::FundingDecisionTranslator do
     FAILIOJ refused
     FAILMEIOJ refused
   ]
-
-  it_behaves_like 'a MAAT value translator', expected_translations
 end
