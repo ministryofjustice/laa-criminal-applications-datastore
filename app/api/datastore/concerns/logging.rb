@@ -5,7 +5,7 @@ module Datastore
     module Logging
       extend ActiveSupport::Concern
 
-      # :nocov:
+      # simplecov:disable
       included do
         if Rails.env.production?
           insert_before(
@@ -21,7 +21,7 @@ module Datastore
           )
         end
       end
-      # :nocov:
+      # simplecov:enable
     end
   end
 end
