@@ -4,8 +4,8 @@ require 'simplecov'
 SimpleCov.minimum_coverage 100
 
 SimpleCov.start 'rails' do
-  add_filter 'config/initializers'
-  add_filter 'spec/'
+  skip 'config/initializers'
+  skip 'spec/'
 end
 
 RSpec.configure do |config|

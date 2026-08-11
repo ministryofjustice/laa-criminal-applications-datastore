@@ -24,7 +24,7 @@ module Operations
           bucket.object(object_key)
         end
 
-        # :nocov:
+        # simplecov:disable
         def object_key
           [prefix, filename].join
         end
@@ -32,7 +32,7 @@ module Operations
         def prefix
           "#{usn}/"
         end
-        # :nocov:
+        # simplecov:enable
 
         def log(details)
           if $ERROR_INFO

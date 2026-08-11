@@ -6,11 +6,11 @@ module Redacting
       @record = record
     end
 
-    # :nocov:
+    # simplecov:disable
     def process!
       raise 'implement in subclasses'
     end
-    # :nocov:
+    # simplecov:enable
 
     private
 

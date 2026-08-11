@@ -11,12 +11,11 @@ module MAAT
         end
       end
 
-      # :nocov:
+      # simplecov:disable
       def translate
         raise 'implement in subclasses'
       end
-      # :nocov:
-      #
+      # simplecov:enable
 
       private
 

@@ -9,7 +9,7 @@ module PrometheusMetrics
       Collectors::DeletionLogCollector
     ].freeze
 
-    # :nocov:
+    # simplecov:disable
     def self.should_configure?
       return false if ENV.key?('SKIP_PROMETHEUS_EXPORTER')
 
@@ -74,6 +74,6 @@ module PrometheusMetrics
       require_relative 'deletion_log_reporter'
       DeletionLogReporter.start
     end
-    # :nocov:
+    # simplecov:enable
   end
 end

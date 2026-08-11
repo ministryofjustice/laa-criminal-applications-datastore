@@ -20,13 +20,13 @@ module Deciding
   end
 
   class MaatRecordUpdated < Event
-    # :nocov:
+    # simplecov:disable
     def self.from_application(crime_application:, maat_record:)
       data = super(crime_application).data
       data[:maat_record] = maat_record.as_json
       new(data:)
     end
-    # :nocov:
+    # simplecov:enable
   end
 
   class Decided < Event
@@ -39,13 +39,13 @@ module Deciding
   end
 
   class DecisionUpdated < Event
-    # :nocov:
+    # simplecov:disable
     def self.from_application(crime_application:, decision:)
       data = super(crime_application).data
       data[:decision_id] = decision.id
       data[:overall_decision] = decision.overall_result
       new(data:)
     end
-    # :nocov:
+    # simplecov:enable
   end
 end
