@@ -6,11 +6,11 @@ module Events
       @crime_application = crime_application
     end
 
-    # :nocov:
+    # simplecov:disable
     def name
       raise 'implement in subclasses'
     end
-    # :nocov:
+    # simplecov:enable
 
     # Can be overridden in subclasses if required
     def message

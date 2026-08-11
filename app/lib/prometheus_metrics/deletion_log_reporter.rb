@@ -13,7 +13,7 @@ module PrometheusMetrics
       Rails.logger.warn("Failed to report deletion log metric: #{e.message}")
     end
 
-    # :nocov:
+    # simplecov:disable
     def self.start
       Rails.logger.info "[DeletionLogReporter] Starting background reporter (interval: #{REPORT_INTERVAL}s)"
 
@@ -27,6 +27,6 @@ module PrometheusMetrics
         end
       end
     end
-    # :nocov:
+    # simplecov:enable
   end
 end
