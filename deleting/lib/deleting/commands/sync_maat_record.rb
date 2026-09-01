@@ -80,10 +80,10 @@ module Deleting
       end
 
       def latest_maat_timestamp(maat_record, last_significant_event_at)
-        [maat_record.ioj_appeal_date, maat_record.date_means_created]
-          .compact
-          .select { |timestamp| timestamp > last_significant_event_at }
-          .max
+        dates = [maat_record.ioj_appeal_date, maat_record.date_means_created].compact
+        return last_significant_event_at if dates.empty?
+
+        dates.select { |timestamp| timestamp > last_significant_event_at }.max
       end
 
       def repository
