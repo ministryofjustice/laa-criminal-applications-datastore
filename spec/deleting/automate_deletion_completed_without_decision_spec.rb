@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
+# rubocop:disable-next RSpec/MultipleMemoizedHelpers
 RSpec.describe Deleting::AutomateDeletion do
   subject(:automate_deletion) { described_class }
 
@@ -419,4 +419,3 @@ RSpec.describe Deleting::AutomateDeletion do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers
