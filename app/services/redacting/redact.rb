@@ -7,7 +7,7 @@ module Redacting
       super
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Naming/PredicateMethod
+    # rubocop:disable-next Metrics/AbcSize, Metrics/MethodLength, Naming/PredicateMethod
     def process!(force: false)
       process_metadata!
 
@@ -37,7 +37,6 @@ module Redacting
 
       true
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Naming/PredicateMethod
 
     def process_metadata! # rubocop:disable Naming/PredicateMethod
       redacted_record.metadata.merge!(

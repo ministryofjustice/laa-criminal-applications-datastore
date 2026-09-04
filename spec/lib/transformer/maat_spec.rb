@@ -119,7 +119,7 @@ describe Transformer::MAAT do
         Class.new do
           include Transformer::MAAT
 
-          # rubocop:disable Metrics/MethodLength
+          # rubocop:disable-next Metrics/MethodLength
           def initialize
             @hash = {
               'client_details' => {
@@ -137,7 +137,6 @@ describe Transformer::MAAT do
               }
             }
           end
-          # rubocop:enable Metrics/MethodLength
 
           # NOTE: transform! called for each nested section of client_details
           # TOOD: transform! called once with top level client_details and RULES applied
@@ -155,7 +154,7 @@ describe Transformer::MAAT do
         end
       end
 
-      # rubocop:disable RSpec/ExampleLength
+      # rubocop:disable-next RSpec/ExampleLength
       it 'returns the transformed hash without recursively applying rules' do
         app = application.new
 
@@ -177,7 +176,6 @@ describe Transformer::MAAT do
           }
         )
       end
-      # rubocop:enable RSpec/ExampleLength
     end
   end
 end

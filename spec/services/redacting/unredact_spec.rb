@@ -9,7 +9,7 @@ describe Redacting::Unredact do
   let(:crime_application) { CrimeApplication.new(submitted_application:) }
   let(:redacted_application) { crime_application.redacted_crime_application }
 
-  # rubocop:disable RSpec/ExampleLength
+  # rubocop:disable-next RSpec/ExampleLength
   describe 'unredacting of a submitted application' do
     it 'matches the original application' do
       # redact the application
@@ -43,5 +43,4 @@ describe Redacting::Unredact do
       )
     end
   end
-  # rubocop:enable RSpec/ExampleLength
 end

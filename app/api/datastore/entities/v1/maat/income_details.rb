@@ -22,7 +22,7 @@ module Datastore
             transform!('manage_other_details', rule: %w[means_details income_details])
           end
 
-          # rubocop:disable Metrics/AbcSize
+          # rubocop:disable-next Metrics/AbcSize
           def income_payments
             dividends = []
             if object.dig('dividends', 'trust_fund_yearly_dividend')
@@ -36,7 +36,6 @@ module Datastore
               payments: (object['income_payments'] + dividends).map(&:deep_dup)
             ).call
           end
-          # rubocop:enable Metrics/AbcSize
 
           def dividend(amount, ownership_type)
             {
