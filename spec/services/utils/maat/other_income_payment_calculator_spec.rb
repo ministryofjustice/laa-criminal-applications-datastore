@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/ExampleLength
+# rubocop:disable-next RSpec/ExampleLength
 describe Utils::MAAT::OtherIncomePaymentCalculator do
   subject { described_class.new(payments:) }
 
@@ -70,7 +70,7 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
       ]
     end
 
-    # rubocop:disable Layout/LineLength
+    # rubocop:disable-next Layout/LineLength
     it 'returns annualized `other income` for both applicant and partner' do
       expect(subject.call).to contain_exactly(
         {
@@ -100,7 +100,6 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
         }
       )
     end
-    # rubocop:enable Layout/LineLength
   end
 
   context 'when `income_payments` are present without `other` payment_type' do
@@ -183,4 +182,3 @@ describe Utils::MAAT::OtherIncomePaymentCalculator do
     end
   end
 end
-# rubocop:enable RSpec/ExampleLength

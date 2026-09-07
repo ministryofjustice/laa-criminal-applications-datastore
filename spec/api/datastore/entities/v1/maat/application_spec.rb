@@ -480,7 +480,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             expect(validator).to be_valid, -> { validator.fully_validate }
           end
 
-          # rubocop:disable Layout/LineLength
+          # rubocop:disable-next Layout/LineLength
           it 'adds `student_loan_grant` amount to `other` payment amount' do
             income_payments = representation.dig('means_details', 'income_details', 'income_payments')
             expect(income_payments).to contain_exactly(
@@ -518,7 +518,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
               }
             )
           end
-          # rubocop:enable Layout/LineLength
         end
 
         context 'when income_payment of type `other` is missing' do
@@ -1126,7 +1125,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
           expect(validator).to be_valid, -> { validator.fully_validate }
         end
 
-        # rubocop:disable Layout/LineLength
+        # rubocop:disable-next Layout/LineLength
         it 'return updated income_payments' do
           income_payments = representation.dig('means_details', 'income_details', 'income_payments')
 
@@ -1165,7 +1164,6 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
             }
           )
         end
-        # rubocop:enable Layout/LineLength
 
         it 'return updated income_benefits' do
           income_benefits = representation.dig('means_details', 'income_details', 'income_benefits')
@@ -1276,7 +1274,7 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
     end
   end
 
-  # rubocop:disable Layout/LineLength
+  # rubocop:disable-next Layout/LineLength
   describe '#transform!' do
     context 'with excessive provider details' do
       let(:submitted_application) do
@@ -1634,5 +1632,4 @@ RSpec.describe Datastore::Entities::V1::MAAT::Application do
       end
     end
   end
-  # rubocop:enable Layout/LineLength
 end
