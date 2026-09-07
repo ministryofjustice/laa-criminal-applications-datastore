@@ -44,17 +44,16 @@ class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
     raise Errors::NotSoftDeleted unless soft_deleted?
     return false if hard_deleted?
 
-    # rubocop:disable Rails/SkipsModelValidations
+    # rubocop:disable-next Rails/SkipsModelValidations
     CrimeApplication.where(id:).update_all(
       submitted_application: anonymised_application,
       hard_deleted_at: Time.current,
       stored_searchable_text: nil
     ).positive?
-    # rubocop:enable Rails/SkipsModelValidations
   end
 
   def recompute_searchable_text # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Rails/SkipsModelValidations
+    # rubocop:disable-next Rails/SkipsModelValidations
     self.class.where(id:).update_all(<<~SQL.squish)
       stored_searchable_text = (
         to_tsvector('english', COALESCE(submitted_application #>> '{client_details,applicant,first_name}', ''))
@@ -69,7 +68,6 @@ class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
           )
       )
     SQL
-    # rubocop:enable Rails/SkipsModelValidations
   end
 
   def anonymised_application

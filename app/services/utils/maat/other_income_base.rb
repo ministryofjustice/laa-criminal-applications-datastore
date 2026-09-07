@@ -37,7 +37,7 @@ module Utils
         end
       end
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable-next Metrics/AbcSize
       def update_other_payment(ownership_type)
         other_payment = payments.find { |p| p['ownership_type'] == ownership_type && p['payment_type'] == OTHER }
         return unless other_payment
@@ -54,7 +54,6 @@ module Utils
           other_payment['metadata']['details']
         ].compact.join("\n")
       end
-      # rubocop:enable Metrics/AbcSize
 
       def create_other_payment(ownership_type)
         payments.push(

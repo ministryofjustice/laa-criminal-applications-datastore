@@ -1,11 +1,10 @@
 require 'rails_helper'
 
 describe PrometheusMetrics::GrapeMiddleware do
-  # rubocop:disable RSpec/VerifiedDoubles
+  # rubocop:disable-next RSpec/VerifiedDoubles
   let(:api_endpoint) do
     double('api.endpoint', namespace: '/applications', options: { method: ['GET'] })
   end
-  # rubocop:enable RSpec/VerifiedDoubles
 
   describe '#default_labels' do
     subject { described_class.new(nil, { instrument: nil }).default_labels(env, nil) }

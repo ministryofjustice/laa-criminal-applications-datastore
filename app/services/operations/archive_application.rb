@@ -4,7 +4,7 @@ module Operations
       @application = CrimeApplication.find(application_id)
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable-next Metrics/AbcSize
     def call
       raise Errors::AlreadyArchived if application.archived?
       raise Errors::CannotArchive unless application.returned?
@@ -22,7 +22,6 @@ module Operations
 
       application
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 

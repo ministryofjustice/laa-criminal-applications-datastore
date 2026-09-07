@@ -5,7 +5,7 @@ module Operations
       @return_details = return_details
     end
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable-next Metrics/MethodLength
     def call
       validate_application!
 
@@ -28,7 +28,6 @@ module Operations
 
       application
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
