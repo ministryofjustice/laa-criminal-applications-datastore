@@ -214,4 +214,128 @@ RSpec.describe Deleting::Commands::SyncMAATRecord do
       expect(maat_get_record).not_to have_received(:by_maat_id!)
     end
   end
+
+  context 'when the application has maat_ids and MAAT returns a granted decision with no dates' do
+    let(:events) do
+      [
+        Deleting::ApplicationMigrated, Time.zone.local(2022, 9, 4),
+        {
+          entity_id: entity_id,
+          entity_type: entity_type,
+          business_reference: business_reference,
+          maat_id: 6_563_959,
+          decision_id: nil,
+          overall_decision: nil,
+          submitted_at: Time.zone.local(2022, 9, 1),
+          returned_at: nil,
+          reviewed_at: Time.zone.local(2022, 9, 4),
+          last_updated_at: Time.zone.local(2022, 9, 4),
+          review_status: 'assessment_completed'
+        }
+      ]
+    end
+
+    # date_means_created and ioj_appeal_date are nil - an edge case that previously caused
+    # latest_maat_timestamp to return nil and skip the application
+    let(:maat_record) do
+      MAAT::Record.new(
+        maat_ref: 6_563_959,
+        usn: business_reference,
+        ioj_result: 'PASS',
+        ioj_assessor_name: 'Jo Bloggs',
+        passport_result: 'PASS',
+        passport_assessor_name: 'Jo Bloggs',
+        date_passport_created: Time.zone.local(2022, 9, 4).as_json,
+        means_result: nil,
+        date_means_created: nil,
+        ioj_appeal_date: nil,
+        app_created_date: Time.zone.local(2022, 9, 4).as_json,
+        funding_decision: 'GRANTED'
+      )
+    end
+
+    before do
+      allow(maat_get_record).to receive(:by_maat_id!).with(6_563_959).and_return(maat_record)
+
+      sync_maat_record.call
+    end
+
+    it 'publishes a MaatRecordUpdated event' do
+      maat_record_updated_events = events_in_stream.of_type([Deciding::MaatRecordUpdated])
+      expect(maat_record_updated_events.count).to eq(1)
+      expect(maat_record_updated_events.first.data).to eq(
+        {
+          business_reference: business_reference,
+          maat_record: maat_record.as_json
+        }
+      )
+    end
+
+    it 'publishes a DecisionUpdated event using the maat_id as decision_id' do
+      decision_updated_events = events_in_stream.of_type([Deciding::DecisionUpdated])
+      expect(decision_updated_events.count).to eq(1)
+      expect(decision_updated_events.first.data).to eq(
+        {
+          business_reference: business_reference,
+          decision_id: 6_563_959,
+          overall_decision: 'granted'
+        }
+      )
+    end
+
+    it 'sets deletion_at to last_significant_event_at plus the granted retention period' do
+      Deleting::DeletableRepository.new.with_deletable(business_reference) do |deletable|
+        expect(deletable.deletion_at).to eq(Time.zone.local(2022, 9, 4) + 7.years)
+      end
+    end
+  end
+
+  context 'when the application has maat_ids and MAAT returns dates that are \
+    not newer than last_significant_event_at' do
+    let(:events) do
+      [
+        Deleting::ApplicationMigrated, Time.zone.local(2022, 9, 4),
+        {
+          entity_id: entity_id,
+          entity_type: entity_type,
+          business_reference: business_reference,
+          maat_id: 6_563_959,
+          decision_id: nil,
+          overall_decision: nil,
+          submitted_at: Time.zone.local(2022, 9, 1),
+          returned_at: nil,
+          reviewed_at: Time.zone.local(2022, 9, 4),
+          last_updated_at: Time.zone.local(2022, 9, 4),
+          review_status: 'assessment_completed'
+        }
+      ]
+    end
+
+    let(:maat_record) do
+      MAAT::Record.new(
+        maat_ref: 6_563_959,
+        usn: business_reference,
+        ioj_result: 'PASS',
+        ioj_assessor_name: 'Jo Bloggs',
+        means_result: nil,
+        date_means_created: Time.zone.local(2022, 9, 4).as_json,
+        app_created_ate: Time.zone.local(2022, 9, 4).as_json,
+        funding_decision: 'GRANTED'
+      )
+    end
+
+    before do
+      allow(maat_get_record).to receive(:by_maat_id!).with(6_563_959).and_return(maat_record)
+
+      sync_maat_record.call
+    end
+
+    it 'does not publish a MaatRecordUpdated event' do
+      expect(events_in_stream.of_type([Deciding::MaatRecordUpdated]).count).to eq(0)
+    end
+
+    it 'does not publish a DecisionUpdated event' do
+      expect(events_in_stream.of_type([Deciding::DecisionUpdated]).count).to eq(0)
+    end
+  end
 end
