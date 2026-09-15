@@ -18,6 +18,7 @@ module LaaCriminalApplicationsDatastore
     config.paths.add 'reviewing/lib', eager_load: true
     config.paths.add 'applying/lib', eager_load: true
     config.paths.add 'deleting/lib', eager_load: true
+    config.paths.add 'auditing/lib', eager_load: true
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 

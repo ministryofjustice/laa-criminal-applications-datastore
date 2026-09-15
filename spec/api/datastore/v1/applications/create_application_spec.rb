@@ -17,7 +17,11 @@ RSpec.describe 'create application' do
     end
 
     let(:record) do
-      instance_double(CrimeApplication, id: application_id, application_type: 'initial', reference: 6_000_001)
+      instance_double(
+        CrimeApplication,
+        id: application_id, application_type: 'initial', reference: 6_000_001,
+        slipstream_audit_selection_outcome: nil
+      )
     end
     let(:payload) { LaaCrimeSchemas.fixture(1.0).read }
 

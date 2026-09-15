@@ -19,6 +19,7 @@ module Operations
         Events::Submission.new(@app).publish
 
         publish_to_event_store
+        record_slipstream_audit_outcome
       end
 
       { id: @app.id }
@@ -42,6 +43,14 @@ module Operations
     def publish_to_event_store
       Rails.configuration.event_store.publish(
         Applying::Submitted.from_application(@app)
+      )
+    end
+
+    def record_slipstream_audit_outcome
+      return unless @app.slipstream_audit_selection_outcome
+
+      Rails.configuration.event_store.publish(
+        Auditing::SlipstreamAuditSelectionRecorded.from_application(@app)
       )
     end
   end

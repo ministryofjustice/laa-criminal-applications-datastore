@@ -22,6 +22,10 @@ class CrimeApplication < ApplicationRecord # rubocop:disable Metrics/ClassLength
     submitted_application.fetch('application_type')
   end
 
+  def slipstream_audit_selection_outcome
+    submitted_application['slipstream_audit_selection_outcome']
+  end
+
   def archived?
     archived_at.present?
   end
