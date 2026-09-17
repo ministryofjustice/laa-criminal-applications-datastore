@@ -28,6 +28,24 @@ RSpec.describe Operations::CreateApplication do
       )
     end
 
+    it 'projects the offences from the submitted application onto the read model' do
+      create_application
+      outcome = SlipstreamAuditSelectionOutcome.find_by(business_reference: reference)
+
+      expect(outcome.offences).to eq(
+        payload.dig('case_details', 'offences').map do |offence|
+          offence.slice('name', 'offence_class', 'slipstreamable')
+        end
+      )
+    end
+
+    it 'leaves the post-submission attributes unset until the assessment completes' do
+      create_application
+      outcome = SlipstreamAuditSelectionOutcome.find_by(business_reference: reference)
+
+      expect(outcome).to have_attributes(maat_reference: nil, ioj_outcome: nil)
+    end
+
     it 'links a SlipstreamAuditSelectionRecorded event to the application audit stream' do
       create_application
       stream = event_store.read.stream(Auditing.stream_name(reference)).to_a

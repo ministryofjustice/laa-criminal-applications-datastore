@@ -17,8 +17,23 @@ module Reporting
         .map { |outcome| entry(outcome) }
     end
 
+    # Aggregates, over all outcomes submitted in the period, the volume of each
+    # offence and the percentage of those that were sampled (confirmed for
+    # audit). This is not filtered by the +status+ param, as the percentage
+    # needs both the sampled and total counts.
+    def offence_sampling
+      offence_totals.map do |offence, counts|
+        {
+          offence: offence,
+          volume: counts[:volume],
+          sampled: counts[:sampled],
+          percentage_sampled: percentage(counts[:sampled], counts[:volume])
+        }
+      end
+    end
+
     def as_json(_options = {})
-      { data: }
+      { data:, offence_sampling: }
     end
 
     def range
@@ -32,16 +47,27 @@ module Reporting
     private
 
     def entry(outcome)
-      {
-        reference: outcome.business_reference,
-        office_code: outcome.office_code,
-        application_type: outcome.application_type,
-        status: outcome.status,
-        sample_rate: outcome.sample_rate,
-        sampled_at: outcome.sampled_at,
-        status_determined_at: outcome.status_determined_at,
-        submitted_at: outcome.submitted_at
-      }
+      outcome.slice(
+        :office_code, :application_type, :maat_reference, :ioj_outcome,
+        :offences, :status, :sample_rate, :sampled_at, :status_determined_at, :submitted_at
+      ).symbolize_keys.merge(reference: outcome.business_reference)
+    end
+
+    def offence_totals
+      SlipstreamAuditSelectionOutcome.submitted_between(range).each_with_object(empty_totals) do |outcome, totals|
+        outcome.offences.each do |offence|
+          totals[offence['name']][:volume] += 1
+          totals[offence['name']][:sampled] += 1 if outcome.status == 'confirmed'
+        end
+      end
+    end
+
+    def empty_totals
+      Hash.new { |hash, key| hash[key] = { volume: 0, sampled: 0 } }
+    end
+
+    def percentage(sampled, volume)
+      volume.zero? ? 0 : ((sampled.to_f / volume) * 100).round
     end
   end
 end

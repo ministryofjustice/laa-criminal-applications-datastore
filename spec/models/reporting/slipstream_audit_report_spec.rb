@@ -9,8 +9,18 @@ RSpec.describe Reporting::SlipstreamAuditReport do
   let(:out_of_period) { Date.new(2025, 6, 1).in_time_zone('London') }
 
   before do
-    create_outcome(business_reference: 1, status: 'confirmed', submitted_at: in_period, office_code: 'AA')
-    create_outcome(business_reference: 2, status: 'withdrawn', submitted_at: in_period, office_code: 'BB')
+    create_outcome(
+      business_reference: 1, status: 'confirmed', submitted_at: in_period, office_code: 'AA',
+      maat_reference: 987_654, ioj_outcome: 'passed',
+      offences: [{ 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true }]
+    )
+    create_outcome(
+      business_reference: 2, status: 'withdrawn', submitted_at: in_period, office_code: 'BB',
+      offences: [
+        { 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true },
+        { 'name' => 'Theft', 'offence_class' => 'D', 'slipstreamable' => false }
+      ]
+    )
     create_outcome(business_reference: 3, status: 'confirmed', submitted_at: out_of_period, office_code: 'CC')
   end
 
@@ -41,6 +51,14 @@ RSpec.describe Reporting::SlipstreamAuditReport do
       )
     end
 
+    it 'includes the post-submission attributes and offences for each entry' do
+      expect(report.data.first).to include(
+        maat_reference: 987_654,
+        ioj_outcome: 'passed',
+        offences: [{ 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true }]
+      )
+    end
+
     context 'when a status is given' do
       let(:options) { { status: 'withdrawn' } }
 
@@ -50,9 +68,18 @@ RSpec.describe Reporting::SlipstreamAuditReport do
     end
   end
 
+  describe '#offence_sampling' do
+    it 'aggregates volume and percentage sampled per offence, regardless of status' do
+      expect(report.offence_sampling).to contain_exactly(
+        { offence: 'Robbery', volume: 2, sampled: 1, percentage_sampled: 50 },
+        { offence: 'Theft', volume: 1, sampled: 0, percentage_sampled: 0 }
+      )
+    end
+  end
+
   describe '#as_json' do
-    it 'wraps the entries under a data key' do
-      expect(report.as_json).to eq(data: report.data)
+    it 'wraps the entries and offence sampling under top-level keys' do
+      expect(report.as_json).to eq(data: report.data, offence_sampling: report.offence_sampling)
     end
   end
 end
