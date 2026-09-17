@@ -131,10 +131,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_09_121500) do
     t.integer "business_reference", null: false
     t.string "office_code"
     t.string "application_type"
+    t.jsonb "offences", default: [], null: false
     t.string "status", null: false
     t.integer "sample_rate", null: false
     t.datetime "sampled_at", null: false
     t.datetime "status_determined_at", null: false
+    t.integer "maat_reference"
+    t.string "ioj_outcome"
     t.datetime "submitted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

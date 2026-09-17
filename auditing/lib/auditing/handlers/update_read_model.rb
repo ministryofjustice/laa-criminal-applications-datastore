@@ -19,6 +19,7 @@ module Auditing
           business_reference: data.fetch(:business_reference),
           office_code: data.fetch(:office_code),
           application_type: data.fetch(:application_type),
+          offences: data.fetch(:offences),
           status: data.fetch(:status),
           sample_rate: data.fetch(:sample_rate),
           sampled_at: data.fetch(:sampled_at),

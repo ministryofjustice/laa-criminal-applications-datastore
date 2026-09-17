@@ -6,6 +6,7 @@ RSpec.describe 'Slipstream audit report by month' do
   end
 
   let(:data) { JSON.parse(response.body).fetch('data') }
+  let(:offence_sampling) { JSON.parse(response.body).fetch('offence_sampling') }
   let(:params) { {} }
   let(:period) { '2025-May' }
   let(:in_period) { Date.new(2025, 5, 11).in_time_zone('London') }
@@ -16,8 +17,14 @@ RSpec.describe 'Slipstream audit report by month' do
   end
 
   before do
-    create_outcome(business_reference: 1, status: 'confirmed', submitted_at: in_period)
-    create_outcome(business_reference: 2, status: 'withdrawn', submitted_at: in_period)
+    create_outcome(
+      business_reference: 1, status: 'confirmed', submitted_at: in_period,
+      offences: [{ 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true }]
+    )
+    create_outcome(
+      business_reference: 2, status: 'withdrawn', submitted_at: in_period,
+      offences: [{ 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true }]
+    )
     create_outcome(business_reference: 3, status: 'confirmed', submitted_at: out_of_period)
 
     api_request
@@ -39,6 +46,14 @@ RSpec.describe 'Slipstream audit report by month' do
   describe 'with the default status' do
     it 'returns confirmed outcomes submitted in the period' do
       expect(data.pluck('reference')).to eq([1])
+    end
+  end
+
+  describe 'the offence sampling aggregate' do
+    it 'summarises volume and percentage sampled per offence across the period' do
+      expect(offence_sampling).to eq(
+        [{ 'offence' => 'Robbery', 'volume' => 2, 'sampled' => 1, 'percentage_sampled' => 50 }]
+      )
     end
   end
 

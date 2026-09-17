@@ -6,10 +6,13 @@ class CreateSlipstreamAuditSelectionOutcomes < ActiveRecord::Migration[7.2]
                 index: { unique: true, name: 'index_slipstream_audit_outcomes_on_reference' }
       t.string :office_code
       t.string :application_type
+      t.jsonb :offences, null: false, default: []
       t.string :status, null: false
       t.integer :sample_rate, null: false
       t.datetime :sampled_at, null: false
       t.datetime :status_determined_at, null: false
+      t.integer :maat_reference
+      t.string :ioj_outcome
       t.datetime :submitted_at
       t.timestamps
 
