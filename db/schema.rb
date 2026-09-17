@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_09_121500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -124,6 +124,28 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_08_090834) do
     t.virtual "status", type: :string, as: "(metadata ->> 'status'::text)", stored: true
     t.index ["crime_application_id"], name: "index_redacted_crime_applications_on_crime_application_id", unique: true
     t.index ["status"], name: "index_redacted_crime_applications_on_status"
+  end
+
+  create_table "slipstream_audit_selection_outcomes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "crime_application_id", null: false
+    t.integer "business_reference", null: false
+    t.string "office_code"
+    t.string "application_type"
+    t.jsonb "offences", default: [], null: false
+    t.string "status", null: false
+    t.integer "sample_rate", null: false
+    t.datetime "sampled_at", null: false
+    t.datetime "status_determined_at", null: false
+    t.integer "maat_reference"
+    t.string "ioj_outcome"
+    t.datetime "submitted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_reference"], name: "index_slipstream_audit_outcomes_on_reference", unique: true
+    t.index ["status"], name: "index_slipstream_audit_selection_outcomes_on_status"
+    t.index ["submitted_at"], name: "index_slipstream_audit_selection_outcomes_on_submitted_at"
+    t.check_constraint "sample_rate >= 1 AND sample_rate <= 100", name: "slipstream_audit_read_model_sample_rate_check"
+    t.check_constraint "status::text = ANY (ARRAY['not_selected'::character varying, 'selected'::character varying, 'confirmed'::character varying, 'withdrawn'::character varying]::text[])", name: "slipstream_audit_read_model_status_check"
   end
 
   add_foreign_key "decisions", "crime_applications"

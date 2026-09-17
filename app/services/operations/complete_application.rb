@@ -46,19 +46,42 @@ module Operations
       File.join(LaaCrimeSchemas.root, 'schemas', schema_version, 'application.json')
     end
 
-    def publish_to_event_store # rubocop:disable Metrics/AbcSize
-      application.decisions.each do |decision|
-        if decision.maat_id.present?
-          Rails.configuration.event_store.publish(Deciding::MaatRecordCreated.from_application(
-                                                    crime_application: application, maat_id: decision.maat_id
-                                                  ))
-        end
-        Rails.configuration.event_store.publish(Deciding::Decided.from_application(crime_application: application,
-                                                                                   decision: decision))
-      end
+    def publish_to_event_store
+      application.decisions.each { |decision| publish_decision(decision) }
+
       Rails.configuration.event_store.publish(
         Reviewing::Completed.from_application(application)
       )
+      publish_assessment_outcome
+    end
+
+    def publish_decision(decision)
+      if decision.maat_id.present?
+        Rails.configuration.event_store.publish(
+          Deciding::MaatRecordCreated.from_application(crime_application: application, maat_id: decision.maat_id)
+        )
+      end
+
+      Rails.configuration.event_store.publish(
+        Deciding::Decided.from_application(crime_application: application, decision: decision)
+      )
+    end
+
+    # Records the post-submission audit attributes (MAAT reference, IoJ outcome)
+    # against the slipstream audit read model, but only for applications that
+    # were slipstream-audited at submission (i.e. have a read model row).
+    def publish_assessment_outcome
+      return unless SlipstreamAuditSelectionOutcome.exists?(business_reference: application.reference)
+
+      Rails.configuration.event_store.publish(
+        Auditing::AssessmentOutcomeRecorded.from_application(
+          crime_application: application, decision: primary_decision
+        )
+      )
+    end
+
+    def primary_decision
+      application.decisions.detect(&:maat_id) || application.decisions.first
     end
 
     attr_reader :application, :decisions
