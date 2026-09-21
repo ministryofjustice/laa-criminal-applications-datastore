@@ -69,10 +69,9 @@ RSpec.describe Reporting::SlipstreamAuditReport do
   end
 
   describe '#offence_sampling' do
-    it 'aggregates volume and percentage sampled per offence, regardless of status' do
+    it 'counts confirmed applications per offence in the period, ignoring other statuses' do
       expect(report.offence_sampling).to contain_exactly(
-        { offence: 'Robbery', volume: 2, sampled: 1, percentage_sampled: 50 },
-        { offence: 'Theft', volume: 1, sampled: 0, percentage_sampled: 0 }
+        { offence: 'Robbery', confirmed_applications: 1 }
       )
     end
   end

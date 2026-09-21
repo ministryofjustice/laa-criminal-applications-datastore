@@ -50,9 +50,9 @@ RSpec.describe 'Slipstream audit report by month' do
   end
 
   describe 'the offence sampling aggregate' do
-    it 'summarises volume and percentage sampled per offence across the period' do
+    it 'counts confirmed applications per offence across the period' do
       expect(offence_sampling).to eq(
-        [{ 'offence' => 'Robbery', 'volume' => 2, 'sampled' => 1, 'percentage_sampled' => 50 }]
+        [{ 'offence' => 'Robbery', 'confirmed_applications' => 1 }]
       )
     end
   end

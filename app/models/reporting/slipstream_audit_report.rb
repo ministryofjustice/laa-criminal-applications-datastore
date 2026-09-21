@@ -17,18 +17,13 @@ module Reporting
         .map { |outcome| entry(outcome) }
     end
 
-    # Aggregates, over all outcomes submitted in the period, the volume of each
-    # offence and the percentage of those that were sampled (confirmed for
-    # audit). This is not filtered by the +status+ param, as the percentage
-    # needs both the sampled and total counts.
+    # Counts, per offence, the applications confirmed for audit in the period.
+    # Percentages are intentionally deferred until the reporting requirement is
+    # agreed, as the meaningful denominator (eligible vs all submissions) is not
+    # yet settled.
     def offence_sampling
-      offence_totals.map do |offence, counts|
-        {
-          offence: offence,
-          volume: counts[:volume],
-          sampled: counts[:sampled],
-          percentage_sampled: percentage(counts[:sampled], counts[:volume])
-        }
+      confirmed_by_offence.map do |offence, count|
+        { offence: offence, confirmed_applications: count }
       end
     end
 
@@ -53,21 +48,13 @@ module Reporting
       ).symbolize_keys.merge(reference: outcome.business_reference)
     end
 
-    def offence_totals
-      SlipstreamAuditSelectionOutcome.submitted_between(range).each_with_object(empty_totals) do |outcome, totals|
-        outcome.offences.each do |offence|
-          totals[offence['name']][:volume] += 1
-          totals[offence['name']][:sampled] += 1 if outcome.status == 'confirmed'
+    def confirmed_by_offence
+      SlipstreamAuditSelectionOutcome
+        .submitted_between(range)
+        .with_status('confirmed')
+        .each_with_object(Hash.new(0)) do |outcome, totals|
+          outcome.offences.each { |offence| totals[offence['name']] += 1 }
         end
-      end
-    end
-
-    def empty_totals
-      Hash.new { |hash, key| hash[key] = { volume: 0, sampled: 0 } }
-    end
-
-    def percentage(sampled, volume)
-      volume.zero? ? 0 : ((sampled.to_f / volume) * 100).round
     end
   end
 end

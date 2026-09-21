@@ -69,9 +69,13 @@ module Operations
 
     # Records the post-submission audit attributes (MAAT reference, IoJ outcome)
     # against the slipstream audit read model, but only for applications that
-    # were slipstream-audited at submission (i.e. have a read model row).
+    # were slipstream-audited at submission (i.e. have a read model row). The
+    # business reference alone is not unique across an application family (PSE
+    # children share it), so match on the application id too.
     def publish_assessment_outcome
-      return unless SlipstreamAuditSelectionOutcome.exists?(business_reference: application.reference)
+      return unless SlipstreamAuditSelectionOutcome.exists?(
+        business_reference: application.reference, crime_application_id: application.id
+      )
 
       Rails.configuration.event_store.publish(
         Auditing::AssessmentOutcomeRecorded.from_application(

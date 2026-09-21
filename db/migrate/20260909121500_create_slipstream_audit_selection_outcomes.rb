@@ -16,12 +16,12 @@ class CreateSlipstreamAuditSelectionOutcomes < ActiveRecord::Migration[7.2]
       t.datetime :submitted_at
       t.timestamps
 
-      t.check_constraint "status IN ('not_selected', 'selected', 'confirmed', 'withdrawn')",
+      t.check_constraint "status IN ('not_selected', 'confirmed', 'withdrawn')",
                          name: 'slipstream_audit_read_model_status_check'
       t.check_constraint 'sample_rate BETWEEN 1 AND 100',
                          name: 'slipstream_audit_read_model_sample_rate_check'
 
-      t.index :status
+      t.index %i[status submitted_at], name: 'index_slipstream_audit_outcomes_on_status_submitted_at'
       t.index :submitted_at
     end
   end
