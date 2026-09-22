@@ -11,6 +11,7 @@ gem 'grape'
 gem 'grape-entity'
 gem 'grape_logging'
 gem 'grape-swagger'
+gem 'json', '< 3.0'
 gem 'kaminari-activerecord'
 gem 'rails', '~> 8.1'
 
