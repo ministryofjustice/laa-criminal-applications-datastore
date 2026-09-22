@@ -216,7 +216,7 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
-    json (3.0.2)
+    json (2.21.2)
     json-schema (4.0.0)
       addressable (>= 2.8)
     jwt (3.2.0)
@@ -464,6 +464,7 @@ DEPENDENCIES
   grape-entity
   grape-swagger
   grape_logging
+  json (< 3.0)
   kaminari-activerecord
   laa-criminal-legal-aid-schemas!
   moj-simple-jwt-auth (= 0.2.0)
