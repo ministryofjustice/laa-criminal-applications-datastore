@@ -22,7 +22,6 @@ class CreateSlipstreamAuditSelectionOutcomes < ActiveRecord::Migration[7.2]
                          name: 'slipstream_audit_read_model_sample_rate_check'
 
       t.index %i[status submitted_at], name: 'index_slipstream_audit_outcomes_on_status_submitted_at'
-      t.index :submitted_at
     end
   end
 end

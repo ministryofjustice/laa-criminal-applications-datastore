@@ -143,7 +143,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_09_121500) do
     t.datetime "updated_at", null: false
     t.index ["business_reference"], name: "index_slipstream_audit_outcomes_on_reference", unique: true
     t.index ["status", "submitted_at"], name: "index_slipstream_audit_outcomes_on_status_submitted_at"
-    t.index ["submitted_at"], name: "index_slipstream_audit_selection_outcomes_on_submitted_at"
     t.check_constraint "sample_rate >= 1 AND sample_rate <= 100", name: "slipstream_audit_read_model_sample_rate_check"
     t.check_constraint "status::text = ANY (ARRAY['not_selected'::character varying, 'confirmed'::character varying, 'withdrawn'::character varying]::text[])", name: "slipstream_audit_read_model_status_check"
   end
