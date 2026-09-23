@@ -28,6 +28,31 @@ module Datastore
             ::Reporting::VolumesByOfficeReport.new(params)
           end
         end
+
+        resource :slipstream_audit do
+          route_setting :authorised_consumers, %w[crime-review]
+
+          params do
+            requires(
+              :period,
+              type: String,
+              year_month_format: true,
+              desc: "Month in '%Y-%B' format (e.g. '2025-November')"
+            )
+
+            optional(
+              :status,
+              type: String,
+              values: SlipstreamAuditSelectionOutcome::STATUSES,
+              default: 'confirmed',
+              desc: "Selection outcome status to report on. Defaults to 'confirmed'."
+            )
+          end
+
+          get 'monthly/:period' do
+            ::Reporting::SlipstreamAuditReport.new(params)
+          end
+        end
       end
     end
   end
