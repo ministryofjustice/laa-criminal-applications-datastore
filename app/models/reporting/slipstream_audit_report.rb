@@ -44,7 +44,8 @@ module Reporting
     def entry(outcome)
       outcome.slice(
         :office_code, :application_type, :maat_reference, :ioj_outcome,
-        :offences, :status, :sample_rate, :sampled_at, :status_determined_at, :submitted_at
+        :offences, :status, :selection_reason, :sample_rate, :sampled_at,
+        :status_determined_at, :submitted_at
       ).symbolize_keys.merge(reference: outcome.business_reference)
     end
 

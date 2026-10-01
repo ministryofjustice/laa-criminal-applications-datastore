@@ -22,6 +22,7 @@ RSpec.describe Operations::CreateApplication do
       expect(outcome).to have_attributes(
         crime_application_id: payload.fetch('id'),
         status: outcome_data.fetch('status'),
+        selection_reason: outcome_data.fetch('selection_reason'),
         sample_rate: outcome_data.fetch('sample_rate'),
         office_code: payload.dig('provider_details', 'office_code'),
         application_type: payload.fetch('application_type')
@@ -51,6 +52,23 @@ RSpec.describe Operations::CreateApplication do
       stream = event_store.read.stream(Auditing.stream_name(reference)).to_a
 
       expect(stream.map(&:class)).to eq([Auditing::SlipstreamAuditSelectionRecorded])
+    end
+  end
+
+  context 'when the slipstream audit selection outcome omits the selection reason' do
+    let(:reference) { payload.fetch('reference') }
+    let(:payload) do
+      base_payload.merge(
+        'slipstream_audit_selection_outcome' =>
+          base_payload.fetch('slipstream_audit_selection_outcome').except('selection_reason')
+      )
+    end
+
+    it 'projects a nil selection reason onto the read model' do
+      create_application
+      outcome = SlipstreamAuditSelectionOutcome.find_by(business_reference: reference)
+
+      expect(outcome.selection_reason).to be_nil
     end
   end
 

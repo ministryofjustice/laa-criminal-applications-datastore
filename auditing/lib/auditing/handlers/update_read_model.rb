@@ -13,7 +13,7 @@ module Auditing
 
       private
 
-      def read_model_attributes(data)
+      def read_model_attributes(data) # rubocop:disable Metrics/MethodLength
         {
           crime_application_id: data.fetch(:entity_id),
           business_reference: data.fetch(:business_reference),
@@ -21,6 +21,7 @@ module Auditing
           application_type: data.fetch(:application_type),
           offences: data.fetch(:offences),
           status: data.fetch(:status),
+          selection_reason: data.fetch(:selection_reason, nil),
           sample_rate: data.fetch(:sample_rate),
           sampled_at: data.fetch(:sampled_at),
           status_determined_at: data.fetch(:status_determined_at),

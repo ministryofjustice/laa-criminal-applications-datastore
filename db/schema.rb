@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_09_121500) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_30_110300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -141,9 +141,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_09_121500) do
     t.datetime "submitted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "selection_reason"
     t.index ["business_reference"], name: "index_slipstream_audit_outcomes_on_reference", unique: true
     t.index ["status", "submitted_at"], name: "index_slipstream_audit_outcomes_on_status_submitted_at"
     t.check_constraint "sample_rate >= 1 AND sample_rate <= 100", name: "slipstream_audit_read_model_sample_rate_check"
+    t.check_constraint "selection_reason IS NULL OR selection_reason::text = ANY (ARRAY['offence'::character varying, 'age'::character varying]::text[])", name: "slipstream_audit_read_model_selection_reason_check"
     t.check_constraint "status::text = ANY (ARRAY['not_selected'::character varying, 'confirmed'::character varying, 'withdrawn'::character varying]::text[])", name: "slipstream_audit_read_model_status_check"
   end
 
