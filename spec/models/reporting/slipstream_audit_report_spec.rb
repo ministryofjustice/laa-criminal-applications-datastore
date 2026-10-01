@@ -11,7 +11,7 @@ RSpec.describe Reporting::SlipstreamAuditReport do
   before do
     create_outcome(
       business_reference: 1, status: 'confirmed', submitted_at: in_period, office_code: 'AA',
-      maat_reference: 987_654, ioj_outcome: 'passed',
+      maat_reference: 987_654, ioj_outcome: 'passed', selection_reason: 'age',
       offences: [{ 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true }]
     )
     create_outcome(
@@ -47,6 +47,7 @@ RSpec.describe Reporting::SlipstreamAuditReport do
         office_code: 'AA',
         application_type: 'initial',
         status: 'confirmed',
+        selection_reason: 'age',
         sample_rate: 10
       )
     end

@@ -18,7 +18,7 @@ RSpec.describe 'Slipstream audit report by month' do
 
   before do
     create_outcome(
-      business_reference: 1, status: 'confirmed', submitted_at: in_period,
+      business_reference: 1, status: 'confirmed', submitted_at: in_period, selection_reason: 'age',
       offences: [{ 'name' => 'Robbery', 'offence_class' => 'C', 'slipstreamable' => true }]
     )
     create_outcome(
@@ -46,6 +46,10 @@ RSpec.describe 'Slipstream audit report by month' do
   describe 'with the default status' do
     it 'returns confirmed outcomes submitted in the period' do
       expect(data.pluck('reference')).to eq([1])
+    end
+
+    it 'exposes the selection reason for each entry' do
+      expect(data.pluck('selection_reason')).to eq(['age'])
     end
   end
 
