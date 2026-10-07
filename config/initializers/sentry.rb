@@ -13,8 +13,24 @@ Rails.application.config.to_prepare do
     config.profiles_sample_rate = 0.05
     config.rails.register_error_subscriber = true
 
+    config.rails.structured_logging.enabled = false
+
     # Filtering
     # https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
+    
+    config.data_collection.user_info = false
+    config.data_collection.cookies = false
+    config.data_collection.http_headers.request.mode = :deny_list
+    config.data_collection.http_headers.request.terms = Sentry::DataCollection::PII_HEADER_SNIPPETS
+    config.data_collection.http_headers.response.mode = :deny_list
+    config.data_collection.http_headers.response.terms = Sentry::DataCollection::PII_HEADER_SNIPPETS
+    config.data_collection.http_bodies = []
+    config.data_collection.url_query_params = false
+    config.data_collection.graphql.document = false
+    config.data_collection.graphql.variables = false
+    config.data_collection.database_query_data = false
+    config.data_collection.queues = false
+    config.data_collection.stack_frame_variables = false
 
     params_filter = ActiveSupport::ParameterFilter.new(
       Rails.application.config.filter_parameters
