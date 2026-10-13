@@ -23,6 +23,8 @@ module Datastore
         expose :return_details, expose_nil: false
 
         expose :decisions, expose_nil: false
+
+        expose :slipstream_audit_selection_outcome, expose_nil: false
       end
     end
   end

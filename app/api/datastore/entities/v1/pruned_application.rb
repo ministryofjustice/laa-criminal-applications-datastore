@@ -19,7 +19,8 @@ module Datastore
                  :pre_cifc_usn,
                  :pre_cifc_reason,
                  :date_stamp_context,
-                 :decisions
+                 :decisions,
+                 :slipstream_audit_selection_outcome
 
         expose :client_details do
           expose :applicant do

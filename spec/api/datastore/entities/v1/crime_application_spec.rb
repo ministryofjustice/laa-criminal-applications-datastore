@@ -18,6 +18,7 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
       offence_class: Types::OffenceClass['C'],
       work_stream: Types::WorkStreamType['criminal_applications_team'],
       submitted_application: submitted_application,
+      slipstream_audit_selection_outcome: submitted_application&.dig('slipstream_audit_selection_outcome'),
       decisions: [],
       soft_deleted_at: nil,
       archived_at: nil
@@ -122,6 +123,24 @@ RSpec.describe Datastore::Entities::V1::CrimeApplication do
 
   it 'represents the overall offence class within the case details' do
     expect(representation.fetch('case_details').fetch('offence_class')).to eq crime_application.offence_class
+  end
+
+  context 'when the application has a slipstream audit selection outcome' do
+    it 'represents the slipstream audit selection outcome' do
+      expect(representation.fetch('slipstream_audit_selection_outcome')).to eq(
+        submitted_application.fetch('slipstream_audit_selection_outcome')
+      )
+    end
+  end
+
+  context 'when the application has no slipstream audit selection outcome' do
+    let(:submitted_application) do
+      super().except('slipstream_audit_selection_outcome')
+    end
+
+    it 'does not represent the slipstream audit selection outcome' do
+      expect(representation).not_to have_key('slipstream_audit_selection_outcome')
+    end
   end
 
   it 'represents the work stream' do
