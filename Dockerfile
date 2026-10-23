@@ -1,6 +1,10 @@
 FROM ruby:4.0.7-alpine3.23
 MAINTAINER LAA Crime Apply Team
 
+RUN apk add --no-cache --upgrade \
+    ca-certificates \
+    ca-certificates-bundle
+
 RUN apk --no-cache add --virtual build-deps build-base postgresql17-dev yaml-dev git bash curl \
   && apk --no-cache add postgresql17-client tzdata gcompat \
   && apk upgrade --no-cache zlib
